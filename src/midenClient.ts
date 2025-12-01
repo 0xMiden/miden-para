@@ -1,19 +1,14 @@
-import {
-  hexStringToBase64,
-  ParaWeb,
-  SuccessfulSignatureRes,
-  Wallet,
-} from "@getpara/web-sdk";
-import { keccak_256 } from "@noble/hashes/sha3.js";
-import { evmPkToCommitment, fromHexSig } from "./utils.js";
-import { jwtDecode } from "jwt-decode";
-import { MidenAccountOpts, MidenClientOpts, Opts } from "./types.js";
-import { bytesToHex, hexToBytes } from "@noble/hashes/utils.js";
+import { hexStringToBase64, ParaWeb, SuccessfulSignatureRes, Wallet } from '@getpara/web-sdk';
+import { keccak_256 } from '@noble/hashes/sha3.js';
+import { evmPkToCommitment, fromHexSig } from './utils.js';
+import { jwtDecode } from 'jwt-decode';
+import { MidenAccountOpts, MidenClientOpts, Opts } from './types.js';
+import { bytesToHex, hexToBytes } from '@noble/hashes/utils.js';
 
 /// Create a signing callback for the externalkeystore
 export const signCb = (para: ParaWeb, wallet: Wallet) => {
   return async (publicKeyCommitment: Uint8Array, signingInputs: Uint8Array) => {
-    const { SigningInputs } = await import("@demox-labs/miden-sdk");
+    const { SigningInputs } = await import('@demox-labs/miden-sdk');
     const inputs = SigningInputs.deserialize(signingInputs);
     // turn the singing inputs to commitment and then to hex without the '0x'
     let commitment = inputs.toCommitment().toHex().slice(2);
@@ -28,14 +23,8 @@ export const signCb = (para: ParaWeb, wallet: Wallet) => {
   };
 };
 
-async function createAccount(
-  midenClient: any,
-  publicKey: string,
-  opts: MidenAccountOpts
-) {
-  const { AccountBuilder, AccountComponent } = await import(
-    "@demox-labs/miden-sdk"
-  );
+async function createAccount(midenClient: any, publicKey: string, opts: MidenAccountOpts) {
+  const { AccountBuilder, AccountComponent } = await import('@demox-labs/miden-sdk');
 
   let pkc = await evmPkToCommitment(publicKey);
 
@@ -43,9 +32,7 @@ async function createAccount(
   const accountBuilder = new AccountBuilder(new Uint8Array(32).fill(0));
 
   const account = accountBuilder
-    .withAuthComponent(
-      AccountComponent.createAuthComponentFromCommitment(pkc, 1)
-    )
+    .withAuthComponent(AccountComponent.createAuthComponentFromCommitment(pkc, 1))
     .accountType(opts.type)
     .storageMode(opts.storageMode)
     .withBasicWalletComponent()
@@ -56,11 +43,7 @@ async function createAccount(
   return account.id().toString();
 }
 
-export async function createParaMidenClient(
-  para: ParaWeb,
-  wallet: Wallet,
-  opts: Opts
-) {
+export async function createParaMidenClient(para: ParaWeb, wallet: Wallet, opts: Opts) {
   let publicKey = wallet.publicKey;
 
   if (!!wallet.publicKey) {
@@ -69,11 +52,11 @@ export async function createParaMidenClient(
     const wallets = jwtDecode(token)?.data.connectedWallets;
     const w = wallets.find((w: any) => w.id == wallet.id);
     if (!w) {
-      throw new Error("Wallet Not Found in jwt data");
+      throw new Error('Wallet Not Found in jwt data');
     }
     publicKey = w.publicKey;
   }
-  const { WebClient } = await import("@demox-labs/miden-sdk");
+  const { WebClient } = await import('@demox-labs/miden-sdk');
 
   const client = await WebClient.createClientWithExternalKeystore(
     opts.endpoint,
@@ -81,12 +64,8 @@ export async function createParaMidenClient(
     opts.seed,
     undefined,
     undefined,
-    signCb(para, wallet)
+    signCb(para, wallet),
   );
-  const accountId = await createAccount(
-    client,
-    publicKey,
-    opts as MidenAccountOpts
-  );
+  const accountId = await createAccount(client, publicKey, opts as MidenAccountOpts);
   return { client, accountId };
 }

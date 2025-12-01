@@ -14,7 +14,10 @@ await fs.mkdir(`${distDir}/cjs`, { recursive: true });
 await fs.writeFile(`${distDir}/cjs/package.json`, JSON.stringify({ type: 'commonjs' }, null, 2));
 
 await fs.mkdir(`${distDir}/esm`, { recursive: true });
-await fs.writeFile(`${distDir}/esm/package.json`, JSON.stringify({ type: 'module', sideEffects: false }, null, 2));
+await fs.writeFile(
+  `${distDir}/esm/package.json`,
+  JSON.stringify({ type: 'module', sideEffects: false }, null, 2),
+);
 
 /** @type {import('esbuild').BuildOptions} */
 await esbuild.build({
