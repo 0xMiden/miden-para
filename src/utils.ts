@@ -1,7 +1,7 @@
 /// Create a valid serialized miden `Signature` from the hex signature given by para
 export const fromHexSig = (hexString: string) => {
-  if (hexString.length % 2 != 0) {
-    throw new Error("Invalid string len");
+  if (hexString.length % 2 !== 0) {
+    throw new Error('Invalid string len');
   }
   // 1 -> Auth scheme for ECDSA
   const bytes: number[] = [1];
@@ -39,7 +39,7 @@ function bigintFromLeBytes(bytes: Uint8Array | number[]): bigint {
 
 // assumes the format '0x04' | X | Y
 export const evmPkToCommitment = async (uncompressedPublicKey: string) => {
-  const { Felt, Rpo256, FeltArray } = await import("@demox-labs/miden-sdk");
+  const { Felt, Rpo256, FeltArray } = await import('@demox-labs/miden-sdk');
   const withoutPrefix = uncompressedPublicKey.slice(4);
   const x = withoutPrefix.slice(0, 64);
   const y = withoutPrefix.slice(64); // hex encoded string
