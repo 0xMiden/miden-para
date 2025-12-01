@@ -3,9 +3,13 @@
   "version": "2.0.0-alpha.64",
   "packageManager": "yarn@1.22.22",
   "dependencies": {
-    "@getpara/web-sdk": "2.0.0-alpha.73",
+    "@demox-labs/miden-sdk": "^0.12.3",
+    "@getpara/web-sdk": "2.0.0-alpha.72",
     "@noble/hashes": "^2.0.1",
-    "jwt-decode": "^4.0.0"
+    "@typescript-eslint/parser": "^8.48.0",
+    "eslint": "^9.39.1",
+    "jwt-decode": "^4.0.0",
+    "prettier": "^3.7.3"
   },
   "devDependencies": {
     "esbuild": "^0.24.0",
@@ -32,6 +36,7 @@
     "build:cjs": "rm -rf dist/cjs && tsc --module commonjs --outDir dist/cjs && printf '{\"type\":\"commonjs\"}' > dist/cjs/package.json",
     "build:esm": "rm -rf dist/esm && tsc --module es6 --outDir dist/esm && printf '{\"type\":\"module\",\"sideEffects\":false}' > dist/esm/package.json",
     "build:types": "rm -rf dist/types && tsc --module es2020 --declarationDir dist/types --emitDeclarationOnly --declaration",
+    "format": "yarn prettier . --write && yarn eslint . --fix",
     "old-build": "yarn build:cjs && yarn build:esm && yarn build:types"
   },
   "sideEffects": false,
