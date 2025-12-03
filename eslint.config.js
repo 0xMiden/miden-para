@@ -1,41 +1,47 @@
 module.exports = [
   {
     // Ignore patterns
-    ignores: ['target/**/*', '**/target/**/*', '**/*.d.ts', 'docs/**/*'],
+    ignores: [
+      "target/**/*",
+      "**/target/**/*",
+      "**/*.d.ts",
+      "docs/**/*",
+      "dist/**/*",
+    ],
   },
   {
     // Configuration for JavaScript files
-    files: ['**/*.js', '**/*.jsx'],
+    files: ["**/*.js", "**/*.jsx"],
     languageOptions: {
       parserOptions: {
         ecmaVersion: 2022,
-        sourceType: 'module',
+        sourceType: "module",
       },
     },
     rules: {
-      camelcase: ['error', { properties: 'always' }],
-      semi: ['error', 'always'],
-      'keyword-spacing': [
-        'error',
+      camelcase: ["error", { properties: "always" }],
+      semi: ["error", "always"],
+      "keyword-spacing": [
+        "error",
         {
           before: true,
           after: true,
         },
       ],
-      'comma-dangle': [
-        'error',
+      "comma-dangle": [
+        "error",
         {
-          arrays: 'always-multiline',
-          objects: 'always-multiline',
-          imports: 'always-multiline',
-          exports: 'always-multiline',
-          functions: 'never',
+          arrays: "always-multiline",
+          objects: "always-multiline",
+          imports: "always-multiline",
+          exports: "always-multiline",
+          functions: "never",
         },
       ],
-      'eol-last': ['error', 'always'],
-      'space-before-blocks': ['error', 'always'],
-      'no-multiple-empty-lines': [
-        'error',
+      "eol-last": ["error", "always"],
+      "space-before-blocks": ["error", "always"],
+      "no-multiple-empty-lines": [
+        "error",
         {
           max: 1,
           maxBOF: 0,
@@ -45,41 +51,41 @@ module.exports = [
     },
   },
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ["**/*.ts", "**/*.tsx"],
     ignores: [],
     languageOptions: {
-      parser: require('@typescript-eslint/parser'),
+      parser: require("@typescript-eslint/parser"),
       parserOptions: {
         ecmaVersion: 2022,
-        sourceType: 'module',
-        project: 'tsconfig.json',
+        sourceType: "module",
+        project: "tsconfig.json",
         tsconfigRootDir: __dirname,
       },
     },
     rules: {
-      camelcase: ['error', { properties: 'always' }],
-      semi: ['error', 'always'],
-      'keyword-spacing': [
-        'error',
+      camelcase: ["error", { properties: "always" }],
+      semi: ["error", "always"],
+      "keyword-spacing": [
+        "error",
         {
           before: true,
           after: true,
         },
       ],
-      'comma-dangle': [
-        'error',
+      "comma-dangle": [
+        "error",
         {
-          arrays: 'always-multiline',
-          objects: 'always-multiline',
-          imports: 'always-multiline',
-          exports: 'always-multiline',
-          functions: 'never',
+          arrays: "always-multiline",
+          objects: "always-multiline",
+          imports: "always-multiline",
+          exports: "always-multiline",
+          functions: "never",
         },
       ],
-      'eol-last': ['error', 'always'],
-      'space-before-blocks': ['error', 'always'],
-      'no-multiple-empty-lines': [
-        'error',
+      "eol-last": ["error", "always"],
+      "space-before-blocks": ["error", "always"],
+      "no-multiple-empty-lines": [
+        "error",
         {
           max: 1,
           maxBOF: 0,

@@ -1,1 +1,1 @@
-export * from './midenClient.js';
+export * from "./midenClient.js";

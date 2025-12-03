@@ -1,6 +1,6 @@
 # miden-para
 
-The Miden x Para SDK integration
+This is the Miden x Para SDK integration. Below, you'll find instructions for local building and linking the library. If you're looking for integrations, see [INTEGRATIONS.md](./docs/INTEGRATIONS.md).
 
 ## Requirements
 
@@ -43,7 +43,7 @@ In your project that uses `@getpara/react-sdk`:
 
 ```bash
 # Link to the local version
-yarn link "@getpara/viem-v2-integration"
+yarn link "miden-para"
 
 # Install other dependencies normally
 yarn install
@@ -66,12 +66,6 @@ In your project:
 
 ```bash
 # Remove the link and restore the npm version
-yarn unlink "@getpara/viem-v2-integration"
+yarn unlink "miden-para"
 yarn install --force
 ```
-
-## Notes
-
-- This package depends on `@getpara/core-sdk` at version `2.0.0-alpha.64`
-- Ensure your project's SDK versions are compatible when using `yarn link`
-- The `react-sdk` from npm should work seamlessly with a locally-linked version of this package

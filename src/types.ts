@@ -5,7 +5,7 @@ export interface MidenClientOpts {
 }
 
 export interface MidenAccountOpts {
-  type: any;
-  storageMode: any;
+  type: import("@demox-labs/miden-sdk").AccountType;
+  storageMode: import("@demox-labs/miden-sdk").AccountStorageMode;
 }
 export type Opts = MidenClientOpts & MidenAccountOpts;

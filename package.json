@@ -1,20 +1,18 @@
 {
-  "name": "@getpara/miden-integration",
-  "version": "2.0.0-alpha.64",
+  "name": "miden-para",
+  "version": "0.0.1",
   "packageManager": "yarn@1.22.22",
   "dependencies": {
-    "@demox-labs/miden-sdk": "^0.12.3",
     "@getpara/web-sdk": "2.0.0-alpha.72",
-    "@noble/hashes": "^2.0.1",
-    "@typescript-eslint/parser": "^8.48.0",
-    "eslint": "^9.39.1",
-    "jwt-decode": "^4.0.0",
-    "prettier": "^3.7.3"
+    "@noble/hashes": "^2.0.1"
   },
   "devDependencies": {
     "esbuild": "^0.24.0",
     "glob": "^11.0.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "@typescript-eslint/parser": "^8.48.0",
+    "eslint": "^9.39.1",
+    "prettier": "^3.7.3"
   },
   "exports": {
     ".": {
