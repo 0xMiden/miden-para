@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ParaProvider, useAccount, useModal, useWallet} from "@getpara/react-sdk";
-import { useMiden } from "../hooks/useMiden";
+import { useParaMiden } from "miden-para-react";
 import "@getpara/react-sdk/styles.css";
 
 const queryClient = new QueryClient();
@@ -9,8 +9,7 @@ const Consumer = () => {
   const { openModal } = useModal();
   const { isConnected } = useAccount();
   const { data: wallet } = useWallet();
-  // Create the miden client the default node endpoint is testnet
-  const { client, para, accountId, evmWallets } = useMiden('https://rpc.testnet.miden.io');
+  const { client, para, accountId, evmWallets } = useParaMiden('https://rpc.testnet.miden.io');
 
   if (!para || !evmWallets || !client) {
     return;

@@ -5495,6 +5495,11 @@ micro-ftch@^0.3.1:
   resolved "https://registry.yarnpkg.com/micro-ftch/-/micro-ftch-0.3.1.tgz#6cb83388de4c1f279a034fb0cf96dfc050853c5f"
   integrity sha512-/0LLxhzP0tfiR5hcQebtudP56gUurs2CLkGarnCiB/OqEyUFQ6U3paQi/tgLv0hBJYt2rnr9MNpxz4fiiugstg==
 
+miden-para-react@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/miden-para-react/-/miden-para-react-0.0.2.tgz#94bee6ebbb8e616b79833527c1105ff00a06610c"
+  integrity sha512-M7tezYflIJ6LVkP+tAXEVzDQO8BZKXg9laZQgIWujmolcnktf1Sa6Nmu/qutLn68ZGm2FbOOMY9Lzfm8EdLUvw==
+
 miden-para@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/miden-para/-/miden-para-0.0.2.tgz#b05896f725842bbd1e3ee2725850a0d69b93d71e"
