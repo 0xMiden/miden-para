@@ -1,6 +1,6 @@
 # miden-para
 
-This is the Miden x Para SDK integration. Below, you'll find instructions for local building and linking the library. If you're looking for integrations, see [INTEGRATIONS.md](./docs/INTEGRATIONS.md).
+This is the Miden x Para SDK integration. Below, you'll find instructions for local building and linking the library. If you're looking for React integration, see [Miden x Para x React](./packages/use-miden-para-react/README.md).
 
 ## Requirements
 
