@@ -3,8 +3,12 @@
 import { useClient, useAccount, type Wallet } from '@getpara/react-sdk';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createParaMidenClient } from 'miden-para';
+import { AccountStorageMode } from '@demox-labs/miden-sdk';
 
-export function useParaMiden(nodeUrl?: string) {
+export function useParaMiden(
+  nodeUrl: string,
+  storageMode: AccountStorageMode = AccountStorageMode.public()
+) {
   const para = useClient();
   const { isConnected, embedded } = useAccount();
   const clientRef = useRef<import('@demox-labs/miden-sdk').WebClient | null>(
@@ -25,15 +29,13 @@ export function useParaMiden(nodeUrl?: string) {
         return;
       }
 
-      const { AccountType, AccountStorageMode } = await import(
-        '@demox-labs/miden-sdk'
-      );
+      const { AccountType } = await import('@demox-labs/miden-sdk');
 
       const { client: midenParaClient, accountId: aId } =
         await createParaMidenClient(para, evmWallets[0] as Wallet, {
           endpoint: nodeUrl,
           type: AccountType.RegularAccountImmutableCode,
-          storageMode: AccountStorageMode.private(),
+          storageMode: storageMode,
         });
 
       if (cancelled) {
