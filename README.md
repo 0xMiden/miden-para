@@ -34,56 +34,6 @@ yarn install
 yarn build
 ```
 
-## Local Development & Testing
-
-If you want to test local changes to this package with `@getpara/react-sdk` (or any other Para SDK), you can override the npm-published version using `yarn link`:
-
-### Step 1: Link this package locally
-
-In this repository directory:
-
-```bash
-# Build the package
-yarn build
-
-# Create a global symlink
-yarn link
-```
-
-### Step 2: Use the linked package in your project
-
-In your project that uses `@getpara/react-sdk`:
-
-```bash
-# Link to the local version
-yarn link "miden-para"
-
-# Install other dependencies normally
-yarn install
-```
-
-### Step 3: Develop and test
-
-Any changes you make to this package:
-
-```bash
-# In viem-v2-integration directory
-yarn build
-
-# Your linked project will automatically use the updated build
-```
-
-### Step 4: Unlink when done
-
-In your project:
-
-```bash
-# Remove the link and restore the npm version
-yarn unlink "miden-para"
-# Restore the registry version
-yarn install --force
-```
-
 ## Publishing to npm
 
 1. Update the version in `package.json` (the published package is `miden-para`).
