@@ -13,6 +13,7 @@ import {
 } from './utils.js';
 import { MidenAccountOpts, Opts } from './types.js';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils.js';
+import { showSigningModal } from './modalClient.js';
 
 /// Create a signing callback for the externalkeystore
 export const signCb = (para: ParaWeb, wallet: Wallet) => {
@@ -21,6 +22,10 @@ export const signCb = (para: ParaWeb, wallet: Wallet) => {
     const inputs = SigningInputs.deserialize(signingInputs);
     let commitment = inputs.toCommitment().toHex().slice(2);
     const hashed = bytesToHex(keccak256(hexToBytes(commitment)));
+    const confirmed = await showSigningModal(hashed);
+    if (!confirmed) {
+      throw new Error('User cancelled signing');
+    }
     const res = await para.signMessage({
       walletId: wallet.id,
       messageBase64: hexStringToBase64(hashed),
