@@ -6,6 +6,7 @@ import {
 } from '@getpara/web-sdk';
 import { keccak_256 as keccak256 } from '@noble/hashes/sha3.js';
 import {
+  accountSeedFromStr,
   evmPkToCommitment,
   fromHexSig,
   getUncompressedPublicKeyFromWallet,
@@ -18,7 +19,6 @@ export const signCb = (para: ParaWeb, wallet: Wallet) => {
   return async (_: Uint8Array, signingInputs: Uint8Array) => {
     const { SigningInputs } = await import('@demox-labs/miden-sdk');
     const inputs = SigningInputs.deserialize(signingInputs);
-    // turn the singing inputs to commitment and then to hex without the '0x'
     let commitment = inputs.toCommitment().toHex().slice(2);
     const hashed = bytesToHex(keccak256(hexToBytes(commitment)));
     const res = await para.signMessage({
@@ -36,32 +36,42 @@ async function createAccount(
   publicKey: string,
   opts: MidenAccountOpts
 ) {
-  const { AccountBuilder, AccountComponent, WebClient } =
+  const { AccountBuilder, AccountComponent, AccountStorageMode } =
     await import('@demox-labs/miden-sdk');
-  let pkc = await evmPkToCommitment(publicKey);
-  if (midenClient instanceof WebClient) {
-    // create a new account
-    const accountBuilder = new AccountBuilder(new Uint8Array(32).fill(1));
 
-    const account = accountBuilder
-      .withAuthComponent(
-        AccountComponent.createAuthComponentFromCommitment(pkc, 1)
-      )
-      .accountType(opts.type)
-      .storageMode(opts.storageMode)
-      .withBasicWalletComponent()
-      .build().account;
-    // check if account exists
-    const existing = await midenClient.getAccount(account.id());
-    if (!existing) {
-      // insert the account if it does not exist
-      await midenClient.newAccount(account, false);
-    }
-    await midenClient.syncState();
-    return account.id().toString();
+  await midenClient.syncState();
+  let pkc = await evmPkToCommitment(publicKey);
+  // create a new account
+  const accountBuilder = new AccountBuilder(
+    accountSeedFromStr(opts.accountSeed) ?? new Uint8Array(32).fill(0)
+  );
+
+  let accountStorageMode;
+
+  if (opts.storageMode === 'public') {
+    accountStorageMode = AccountStorageMode.public();
+  } else if (opts.storageMode === 'private') {
+    accountStorageMode = AccountStorageMode.private();
   } else {
-    throw new Error('Invalid Miden Client');
+    accountStorageMode = AccountStorageMode.network();
   }
+
+  const account = accountBuilder
+    .withAuthComponent(
+      AccountComponent.createAuthComponentFromCommitment(pkc, 1)
+    )
+    .accountType(opts.type)
+    .storageMode(accountStorageMode)
+    .withBasicWalletComponent()
+    .build().account;
+  // check if account exists
+  const existing = await midenClient.getAccount(account.id());
+  if (!existing) {
+    // insert the account if it does not exist
+    await midenClient.newAccount(account, false);
+  }
+  await midenClient.syncState();
+  return account.id().toString();
 }
 
 export async function createParaMidenClient(

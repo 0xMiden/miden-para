@@ -26,8 +26,8 @@ const { client: midenParaClient, accountId } = await createParaMidenClient(
   {
     endpoint: nodeUrl,
     type: AccountType.RegularAccountImmutableCode,
-    storageMode: AccountStorageMode.private(),
-  },
+    storageMode: 'public',
+  }
 );
 
 // use it as the normal `WebClient` instance

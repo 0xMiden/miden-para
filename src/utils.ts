@@ -1,4 +1,5 @@
 import ParaWeb, { Wallet } from '@getpara/web-sdk';
+import { utf8ToBytes } from '@noble/hashes/utils.js';
 
 /// Create a valid serialized miden `Signature` from the hex signature given by para
 export const fromHexSig = (hexString: string) => {
@@ -24,6 +25,18 @@ export const hexToBytes = (hexString: string) => {
   }
 
   return bytes;
+};
+
+export const accountSeedFromStr = (str: string) => {
+  const buffer = new Uint8Array(32);
+  const bytes = utf8ToBytes(str);
+  if (bytes.length !== 32) {
+    buffer.set(bytes);
+    buffer.fill(0, 32 - bytes.length);
+    return buffer;
+  }
+  buffer.set(bytes.slice(0, 32));
+  return buffer;
 };
 
 const TAG_EVEN = 2;
