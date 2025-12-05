@@ -1,0 +1,1 @@
+export { useParaMiden } from './useParaMiden';
