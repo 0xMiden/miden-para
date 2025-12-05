@@ -8,7 +8,20 @@ React hook that wires Para accounts into a Miden client.
 npm install miden-para-react
 ```
 
-Peer deps you must also provide: `react`, `@getpara/react-sdk`, `miden-para`, `@demox-labs/miden-sdk`.
+## Peer Dependencies
+
+`miden-para-react` expects these packages to be provided by the consuming app. Install matching versions alongside this package to avoid duplicate copies:
+
+- `@demox-labs/miden-sdk@^0.12.5`
+- `@getpara/react-sdk@^2.0.0-alpha.73`
+- `miden-para@^0.0.2`
+- `react@^18.0.0 || ^19.0.0`
+
+Example install:
+
+```bash
+yarn add miden-para-react @demox-labs/miden-sdk@^0.12.5 @getpara/react-sdk@^2.0.0-alpha.73 miden-para@^0.0.2 react@^18.0.0
+```
 
 ## Usage
 
