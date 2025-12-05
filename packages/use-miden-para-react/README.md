@@ -15,6 +15,9 @@ Peer deps you must also provide: `react`, `@getpara/react-sdk`, `miden-para`, `@
 ```tsx
 import { ParaProvider } from '@getpara/react-sdk';
 import { useParaMiden } from 'miden-para-react';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   const { client, accountId } = useParaMiden(
@@ -22,12 +25,19 @@ function App() {
   );
 
   return (
-    <ParaProvider appId="your-app-id">
-      <div>
-        <p>Account: {accountId}</p>
-        <p>Client ready: {Boolean(client) ? 'yes' : 'no'}</p>
-      </div>
-    </ParaProvider>
+    <QueryClientProvider client={queryClient}>
+      <ParaProvider
+        paraClientConfig={{
+          apiKey: import.meta.env.VITE_PARA_API_KEY,
+        }}
+        config={{ appName: "Starter for MidenxPara" }}
+      >
+        <div>
+          <p>Account: {accountId}</p>
+          <p>Client ready: {Boolean(client) ? 'yes' : 'no'}</p>
+        </div>
+      </ParaProvider>
+    </QueryClientProvider>
   );
 }
 ```
