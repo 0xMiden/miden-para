@@ -9,6 +9,19 @@ This is the Miden x Para SDK integration. Below, you'll find instructions for lo
 
 This project uses Yarn 1.22.22. The version is locked in `package.json` and will be automatically enforced by modern package managers that support the `packageManager` field.
 
+## Peer Dependencies
+
+`miden-para` expects these packages to be provided by the consuming app. Install matching versions alongside this package to avoid duplicate copies:
+
+- `@demox-labs/miden-sdk@^0.12.5`
+- `@getpara/web-sdk@2.0.0-alpha.73`
+
+Example install:
+
+```bash
+yarn add miden-para @demox-labs/miden-sdk@^0.12.5 @getpara/web-sdk@2.0.0-alpha.73
+```
+
 ## Installation
 
 ```bash
