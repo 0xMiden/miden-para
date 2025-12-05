@@ -19,7 +19,7 @@
     "allowJs": true
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "dist", "examples"],
+  "exclude": ["node_modules", "dist", "examples", "packages"],
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs"

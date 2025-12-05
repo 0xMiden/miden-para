@@ -17,6 +17,10 @@ jobs:
           cache: yarn
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+      - name: Install use-miden-para-react deps
+        run: yarn install --cwd packages/use-miden-para-react --frozen-lockfile
+      - name: Build use-miden-para-react
+        run: yarn --cwd packages/use-miden-para-react build
       - name: Prepare build directory
         run: mkdir -p build
       - name: Run build
