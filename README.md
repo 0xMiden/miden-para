@@ -67,5 +67,13 @@ In your project:
 ```bash
 # Remove the link and restore the npm version
 yarn unlink "miden-para"
+# Restore the registry version
 yarn install --force
 ```
+
+## Publishing to npm
+
+1. Update the version in `package.json` (the published package is `miden-para`).
+2. Authenticate with npm if needed: `npm login`.
+3. Publish: `npm run publish`. The `prepack` hook rebuilds `dist/` and the `postpack` hook moves the generated tarball into `build/`.
+4. (Optional) Inspect the packed artifact without publishing via `npm pack` and check `build/` for the resulting `miden-para-<version>.tgz`.

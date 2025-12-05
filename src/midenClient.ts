@@ -71,7 +71,13 @@ export async function createParaMidenClient(
 ) {
   let publicKey = await getUncompressedPublicKeyFromWallet(para, wallet);
   const { WebClient } = await import('@demox-labs/miden-sdk');
-  const client = await WebClient.createClientWithExternalKeystore(
+  // SDK typings currently miss createClientWithExternalKeystore, so cast to any here.
+  const createClientWithExternalKeystore = (
+    WebClient as unknown as {
+      createClientWithExternalKeystore: (...args: any[]) => Promise<any>;
+    }
+  ).createClientWithExternalKeystore;
+  const client = await createClientWithExternalKeystore(
     opts.endpoint,
     opts.nodeTransportUrl,
     opts.seed,

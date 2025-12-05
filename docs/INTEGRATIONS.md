@@ -7,10 +7,10 @@
 2. **Miden Client Creation**:
 
 ```bash
-npm install miden-para
+npm install miden-para @getpara/web-sdk
 ```
 
-Use the `createParaMidenClient` function from `"miden-para"` to create a Miden `WebClient` :
+Use the `createParaMidenClient` function from `'miden-para'` to create a Miden `WebClient`:
 
 ```typescript
 import { ParaWeb } from '@getpara/web-sdk'; // or your framework's sdk

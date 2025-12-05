@@ -9,27 +9,51 @@ const entryPoints = await glob('src/**/*.{ts,tsx,js,jsx}');
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = path.resolve(__dirname, '../dist');
+const buildTargets = [
+  {
+    dir: 'esm',
+    format: 'esm',
+    packageJson: { type: 'module', sideEffects: false },
+    splitting: true,
+  },
+  {
+    dir: 'cjs',
+    format: 'cjs',
+    packageJson: { type: 'commonjs' },
+    splitting: false,
+  },
+];
 
-await fs.mkdir(`${distDir}/esm`, { recursive: true });
-await fs.writeFile(
-  `${distDir}/esm/package.json`,
-  JSON.stringify({ type: 'module', sideEffects: false }, null, 2),
-);
-
-/** @type {import('esbuild').BuildOptions} */
-await esbuild.build({
+/** @type {Omit<import('esbuild').BuildOptions, 'format' | 'outdir' | 'splitting'>} */
+const sharedOptions = {
   bundle: false,
   write: true,
-  format: 'esm',
   loader: {
     '.json': 'text',
   },
   platform: 'browser',
   entryPoints,
-  outdir: 'dist/esm',
   allowOverwrite: true,
-  splitting: true, // Required for tree shaking
   minify: false,
   target: ['es2022'],
   packages: 'external',
-});
+};
+
+for (const target of buildTargets) {
+  const outDir = path.join(distDir, target.dir);
+  await fs.mkdir(outDir, { recursive: true });
+  await fs.writeFile(
+    path.join(outDir, 'package.json'),
+    JSON.stringify(target.packageJson, null, 2),
+  );
+
+  /** @type {import('esbuild').BuildOptions} */
+  const buildOptions = {
+    ...sharedOptions,
+    format: target.format,
+    splitting: target.splitting,
+    outdir: outDir,
+  };
+
+  await esbuild.build(buildOptions);
+}

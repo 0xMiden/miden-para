@@ -1,18 +1,31 @@
 {
   "name": "miden-para",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "description": "Miden x Para Integration",
   "packageManager": "yarn@1.22.22",
+  "license": "MIT",
+  "author": "Miden Labs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xMiden/miden-para.git"
+  },
+  "homepage": "https://miden.xyz/",
+  "readmeFilename": "docs/INTEGRATIONS.md",
+  "bugs": {
+    "url": "https://github.com/0xMiden/miden-para/issues"
+  },
   "dependencies": {
-    "@getpara/web-sdk": "2.0.0-alpha.72",
+    "@demox-labs/miden-sdk": "^0.12.5",
     "@noble/hashes": "^2.0.1"
   },
   "devDependencies": {
-    "esbuild": "^0.24.0",
-    "glob": "^11.0.1",
-    "typescript": "^5.8.3",
+    "@getpara/web-sdk": "2.0.0-alpha.72",
     "@typescript-eslint/parser": "^8.48.0",
+    "esbuild": "^0.24.0",
     "eslint": "^9.39.1",
-    "prettier": "^3.7.3"
+    "glob": "^11.0.1",
+    "prettier": "^3.7.3",
+    "typescript": "^5.8.3"
   },
   "exports": {
     ".": {
@@ -23,12 +36,14 @@
   },
   "files": [
     "dist",
-    "package.json"
+    "package.json",
+    "docs/INTEGRATIONS.md"
   ],
-  "gitHead": "e6e791d4e4f9afd94f2093d6045d686b85e5a682",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
-  "peerDependencies": {},
+  "peerDependencies": {
+    "@getpara/web-sdk": "2.0.0-alpha.72"
+  },
   "scripts": {
     "build": "rm -rf dist && node ./scripts/build.mjs && npm run build:types",
     "build:cjs": "rm -rf dist/cjs && tsc --module commonjs --outDir dist/cjs && printf '{\"type\":\"commonjs\"}' > dist/cjs/package.json",
@@ -36,9 +51,21 @@
     "build:types": "rm -rf dist/types && tsc --module es2020 --declarationDir dist/types --emitDeclarationOnly --declaration",
     "format": "yarn prettier . --write && yarn eslint . --fix",
     "format-check": "yarn prettier . && yarn eslint",
-    "old-build": "yarn build:cjs && yarn build:esm && yarn build:types"
+    "old-build": "yarn build:cjs && yarn build:esm && yarn build:types",
+    "prepack": "npm run build && node -e \"require('fs').mkdirSync('build', { recursive: true });\"",
+    "postpack": "node ./scripts/postpack.mjs",
+    "publish": "npm publish --access public"
   },
   "sideEffects": false,
   "types": "dist/types/index.d.ts",
-  "typings": "dist/types/index.d.ts"
+  "typings": "dist/types/index.d.ts",
+  "keywords": [
+    "miden",
+    "para",
+    "zk",
+    "wallet"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
