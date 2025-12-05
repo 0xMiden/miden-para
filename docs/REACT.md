@@ -13,7 +13,7 @@ export function useMiden(nodeUrl?: string) {
   const para = useClient();
   const { isConnected, embedded } = useAccount();
   const clientRef = useRef<import('@demox-labs/miden-sdk').WebClient | null>(
-    null,
+    null
   );
   const [accountId, setAccountId] = useState<string>('');
 
@@ -30,7 +30,7 @@ export function useMiden(nodeUrl?: string) {
           await createParaMidenClient(para, evmWallets[0] as Wallet, {
             endpoint: nodeUrl,
             type: AccountType.RegularAccountImmutableCode,
-            storageMode: AccountStorageMode.private(),
+            storageMode: 'private',
           });
 
         clientRef.current = midenParaClient;
