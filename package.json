@@ -1,6 +1,6 @@
 {
   "name": "miden-para",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "Miden x Para Integration",
   "packageManager": "yarn@1.22.22",
   "license": "MIT",
@@ -15,17 +15,21 @@
     "url": "https://github.com/0xMiden/miden-para/issues"
   },
   "dependencies": {
-    "@demox-labs/miden-sdk": "^0.12.5",
-    "@getpara/web-sdk": "2.0.0-alpha.73",
     "@noble/hashes": "^2.0.1"
   },
   "devDependencies": {
+    "@demox-labs/miden-sdk": "^0.12.5",
+    "@getpara/web-sdk": "2.0.0-alpha.73",
     "@typescript-eslint/parser": "^8.48.0",
     "esbuild": "^0.24.0",
     "eslint": "^9.39.1",
     "glob": "^11.0.1",
     "prettier": "^3.7.3",
     "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "@demox-labs/miden-sdk": "^0.12.5",
+    "@getpara/web-sdk": "2.0.0-alpha.73"
   },
   "exports": {
     ".": {
