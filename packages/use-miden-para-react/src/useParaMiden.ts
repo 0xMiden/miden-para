@@ -25,12 +25,7 @@ export function useParaMiden(
     let cancelled = false;
 
     async function setupClient() {
-      if (
-        !isConnected ||
-        !para ||
-        !embedded.wallets?.length ||
-        clientRef.current
-      ) {
+      if (!isConnected || !para || !evmWallets?.length || clientRef.current) {
         return;
       }
 
@@ -56,7 +51,7 @@ export function useParaMiden(
     return () => {
       cancelled = true;
     };
-  }, [isConnected, evmWallets, para, nodeUrl]);
+  }, [isConnected, para, opts]);
 
-  return { client: clientRef.current, accountId, para, evmWallets, nodeUrl };
+  return { client: clientRef.current, accountId, para, opts };
 }
