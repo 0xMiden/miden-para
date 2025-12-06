@@ -106,7 +106,7 @@ export async function createParaMidenClient(
   ).createClientWithExternalKeystore;
   const client = await createClientWithExternalKeystore(
     opts.endpoint,
-    opts.nodeTransportUrl,
+    opts.noteTransportUrl,
     opts.seed,
     undefined,
     undefined,

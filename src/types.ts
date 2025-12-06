@@ -1,6 +1,6 @@
 export interface MidenClientOpts {
   endpoint?: string;
-  nodeTransportUrl?: string;
+  noteTransportUrl?: string;
   seed?: string;
 }
 

@@ -28,13 +28,18 @@ yarn add miden-para-react @demox-labs/miden-sdk@^0.12.5 @getpara/react-sdk@^2.0.
 ```tsx
 import { ParaProvider } from '@getpara/react-sdk';
 import { useParaMiden } from 'miden-para-react';
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const queryClient = new QueryClient();
 
 function App() {
+
   const { client, accountId } = useParaMiden(
-    'https://miden-node.yourdomain.com',
+    'https://rpc.testnet.miden.io' // miden node endpoint optional defaults to testnet
+    'private', // public or private storage mode, optional defaults to public
+    { // add optinals client opts like note transport url and seed
+      noteTransportUrl: 'https://transport.miden.io"',
+      accountSeed: 'midenxpara',
+    }
   );
 
   return (
@@ -43,7 +48,7 @@ function App() {
         paraClientConfig={{
           apiKey: import.meta.env.VITE_PARA_API_KEY,
         }}
-        config={{ appName: "Starter for MidenxPara" }}
+        config={{ appName: 'Starter for MidenxPara' }}
       >
         <div>
           <p>Account: {accountId}</p>

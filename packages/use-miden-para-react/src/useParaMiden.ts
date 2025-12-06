@@ -2,12 +2,12 @@
 
 import { useClient, useAccount, type Wallet } from '@getpara/react-sdk';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { createParaMidenClient, MidenAccountOpts } from 'miden-para';
-import { MidenAccountStorageMode } from 'miden-para/dist/types/types';
+import { createParaMidenClient, type Opts } from 'miden-para';
 
 export function useParaMiden(
-  nodeUrl: string,
-  storageMode: MidenAccountStorageMode = 'public'
+  nodeUrl?: string,
+  storageMode: Opts['storageMode'] = 'public',
+  opts: Omit<Opts, 'endpoint' | 'type' | 'storageMode'> = {}
 ) {
   const para = useClient();
   const { isConnected, embedded } = useAccount();
@@ -25,12 +25,7 @@ export function useParaMiden(
     let cancelled = false;
 
     async function setupClient() {
-      if (
-        !isConnected ||
-        !para ||
-        !embedded.wallets?.length ||
-        clientRef.current
-      ) {
+      if (!isConnected || !para || !evmWallets || clientRef.current) {
         return;
       }
 
@@ -38,6 +33,7 @@ export function useParaMiden(
 
       const { client: midenParaClient, accountId: aId } =
         await createParaMidenClient(para, evmWallets as Wallet[], {
+          ...opts,
           endpoint: nodeUrl,
           type: AccountType.RegularAccountImmutableCode,
           storageMode,
@@ -56,7 +52,7 @@ export function useParaMiden(
     return () => {
       cancelled = true;
     };
-  }, [isConnected, evmWallets, para, nodeUrl]);
+  }, [isConnected, para, opts]);
 
-  return { client: clientRef.current, accountId, para, evmWallets, nodeUrl };
+  return { client: clientRef.current, accountId, para, opts };
 }
