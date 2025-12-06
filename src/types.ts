@@ -4,9 +4,11 @@ export interface MidenClientOpts {
   seed?: string;
 }
 
+export type MidenAccountStorageMode = 'public' | 'private' | 'network';
+
 export interface MidenAccountOpts {
   accountSeed?: string;
   type: import('@demox-labs/miden-sdk').AccountType;
-  storageMode: 'public' | 'private' | 'network';
+  storageMode: MidenAccountStorageMode;
 }
 export type Opts = MidenClientOpts & MidenAccountOpts;

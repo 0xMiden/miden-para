@@ -13,7 +13,7 @@ import {
 } from './utils.js';
 import { MidenAccountOpts, Opts } from './types.js';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils.js';
-import { showSigningModal } from './modalClient.js';
+import { showAccountSelectionModal, showSigningModal } from './modalClient.js';
 
 /// Create a signing callback for the externalkeystore
 export const signCb = (para: ParaWeb, wallet: Wallet) => {
@@ -81,10 +81,22 @@ async function createAccount(
 
 export async function createParaMidenClient(
   para: ParaWeb,
-  wallet: Wallet,
+  wallets: Wallet[],
   opts: Opts
 ) {
-  let publicKey = await getUncompressedPublicKeyFromWallet(para, wallet);
+  const evmWallets = wallets.filter((wallet) => wallet.type === 'EVM');
+
+  if (!evmWallets?.length) {
+    throw new Error('No EVM wallets provided');
+  }
+
+  const accountKeys = await Promise.all(
+    evmWallets.map((w) => getUncompressedPublicKeyFromWallet(para, w))
+  );
+  const selectedIndex = await showAccountSelectionModal(accountKeys);
+  const wallet = evmWallets[selectedIndex] ?? evmWallets[0];
+  const publicKey = accountKeys[selectedIndex] ?? accountKeys[0];
+
   const { WebClient } = await import('@demox-labs/miden-sdk');
   // SDK typings currently miss createClientWithExternalKeystore, so cast to any here.
   const createClientWithExternalKeystore = (

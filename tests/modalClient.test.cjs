@@ -159,3 +159,59 @@ test('clicking No resolves the modal promise with false', async () => {
   assert.strictEqual(document.getElementById('para-signing-modal'), undefined);
   tearDownDocument();
 });
+
+test('account selection modal returns chosen index and cleans up overlay', async () => {
+  const document = setUpDocument();
+  const { showAccountSelectionModal } = loadModalClient();
+
+  const accounts = ['0xabc', '0xdef'];
+  const modalPromise = showAccountSelectionModal(accounts);
+
+  const overlay = document.getElementById('para-signing-modal');
+  assert.ok(overlay, 'modal overlay should exist');
+
+  const buttons = collectByTag(overlay, 'button');
+  const okButton = buttons.find((button) => button.textContent === 'Ok');
+  assert.ok(okButton, 'Ok button should be rendered');
+
+  const secondAccountButton = buttons.find(
+    (button) => button.textContent === accounts[1]
+  );
+  assert.ok(secondAccountButton, 'Second account button should be rendered');
+
+  secondAccountButton.click();
+  okButton.click();
+
+  const selectedIndex = await modalPromise;
+  assert.strictEqual(selectedIndex, 1);
+  assert.strictEqual(document.getElementById('para-signing-modal'), undefined);
+  tearDownDocument();
+});
+
+test('account selection modal with no accounts disables Ok and defaults to index 0', async () => {
+  const document = setUpDocument();
+  const { showAccountSelectionModal } = loadModalClient();
+
+  const modalPromise = showAccountSelectionModal([]);
+  const overlay = document.getElementById('para-signing-modal');
+  assert.ok(overlay, 'modal overlay should exist');
+
+  const okButton = collectByTag(overlay, 'button').find(
+    (button) => button.textContent === 'Ok'
+  );
+  assert.ok(okButton, 'Ok button should be rendered');
+  assert.strictEqual(
+    okButton.disabled,
+    true,
+    'Ok should be disabled with no accounts'
+  );
+
+  // enable to complete the promise so the test can finish
+  okButton.disabled = false;
+  okButton.click();
+
+  const selectedIndex = await modalPromise;
+  assert.strictEqual(selectedIndex, 0);
+  assert.strictEqual(document.getElementById('para-signing-modal'), undefined);
+  tearDownDocument();
+});
