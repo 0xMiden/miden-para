@@ -10,7 +10,7 @@
 
 ## Flow (bin/create-miden-para-react.mjs)
 1. Parse args: first non-flag is the target dir (default `miden-para-react-app`); `--skip-install`/`--no-install` suppress dependency install.
-2. Resolve `targetDir` and run `npm create vite@latest <basename>` from `dirname(targetDir)` so absolute targets work.
+2. Resolve `targetDir` and run `npm create vite@latest <basename> --no-install` from `dirname(targetDir)` so absolute targets work and template patches won’t get overwritten by the upstream install step.
 3. Copy `template/vite.config.ts` into the new project root.
 4. Replace `src/App.tsx` with the starter from `template/src/App.tsx`.
 5. Patch `package.json` to ensure `devDependencies.vite-plugin-node-polyfills = ^0.24.0` and add Para/Miden deps (`@getpara/react-sdk`, `@tanstack/react-query`, `miden-para`, `miden-para-react`).
