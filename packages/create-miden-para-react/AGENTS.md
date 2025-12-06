@@ -10,11 +10,13 @@
 
 ## Flow (bin/create-miden-para-react.mjs)
 1. Parse args: first non-flag is the target dir (default `miden-para-react-app`); `--skip-install`/`--no-install` suppress dependency install.
-2. Resolve `targetDir` and run `npm create vite@latest <basename> --yes --no-install` from `dirname(targetDir)` so absolute targets work, prompts are suppressed, and template patches won’t get overwritten by the upstream install step.
+2. Resolve `targetDir` and run `npm create vite@latest <basename> --yes --no-install` from `dirname(targetDir)`, piping “n” to install prompts so the scaffold returns control before we patch files.
 3. Copy `template/vite.config.ts` into the new project root.
 4. Replace `src/App.tsx` with the starter from `template/src/App.tsx`.
-5. Patch `package.json` to ensure `devDependencies.vite-plugin-node-polyfills = ^0.24.0` and add Para/Miden deps (`@getpara/react-sdk`, `@tanstack/react-query`, `miden-para`, `miden-para-react`).
-6. Detect package manager from `npm_config_user_agent` (`pnpm`, `yarn`, `bun`, fallback `npm`) and install deps unless skipped.
+5. Patch `package.json` to ensure `devDependencies.vite-plugin-node-polyfills = ^0.24.0` and add Para/Miden + connector deps (mirror `examples/react`: miden-para, miden-para-react, @getpara/react-sdk, @demox-labs/miden-sdk, tanstack query, wagmi stack, graz, CosmJS, Solana adapters, etc.).
+6. Write `.npmrc` with `legacy-peer-deps=true` so `npm install` succeeds despite the miden-para-react/miden-para peer mismatch.
+7. Copy `template/src/polyfills.ts` and inject `import "./polyfills";` into `src/main.tsx` if missing.
+8. Detect package manager from `npm_config_user_agent` (`pnpm`, `yarn`, `bun`, fallback `npm`) and install deps unless skipped.
 
 ## Build & Publish
 - No build step needed; published assets are the CLI, template config, and docs listed in `files`.

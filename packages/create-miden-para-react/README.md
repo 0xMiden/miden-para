@@ -1,17 +1,20 @@
 # create-miden-para-react
 
-`npm create miden-para-react@latest my-app` scaffolds the latest Vite `react-ts` starter, overwrites it with this repo's `vite.config.ts`, swaps in a Para + Miden-ready `App.tsx`, and adds the deps needed to run it out of the box. The scaffold always runs `create-vite` with `--yes --no-install` so dependencies are added after we patch the template and no interactive install can revert files.
+`npm create miden-para-react@latest my-app` scaffolds the latest Vite `react-ts` starter, overwrites it with this repo's `vite.config.ts`, swaps in a Para + Miden-ready `App.tsx`, and adds the deps needed to run it out of the box. The scaffold always runs `create-vite` with `--yes --no-install` and pipes “no” to the install prompt to prevent upstream installs from overwriting the template before we patch it.
 
 ## What it does
 - Runs `npm create vite@latest <target> -- --template react-ts` so you always start from the upstream default.
 - Replaces `vite.config.ts` with the Para + Miden-friendly config (dedupe/exclude and WASM asset handling).
 - Replaces `src/App.tsx` with a ParaProvider + `useParaMiden` starter that reports the account ID and client readiness.
-- Adds `miden-para-react`, `miden-para`, `@getpara/react-sdk`, `@tanstack/react-query`, and `vite-plugin-node-polyfills` to `package.json`.
-- Installs dependencies using your detected package manager (`pnpm`, `yarn`, `bun`, or falls back to `npm`); `create-vite` is invoked with `--yes --no-install` to avoid reverting the patched files.
+- Adds Para/Miden + connector deps (matching `examples/react`) so Para SDK peers resolve: `miden-para`, `miden-para-react`, `@getpara/react-sdk`, `@demox-labs/miden-sdk`, `@tanstack/react-query`, `wagmi`, `@wagmi/core`, `viem`, `graz`, Solana + CosmJS deps, and `vite-plugin-node-polyfills`.
+- Installs dependencies using your detected package manager (`pnpm`, `yarn`, `bun`, or falls back to `npm`); `create-vite` is invoked with `--yes --no-install` and auto-answers “no” to install prompts to avoid reverting the patched files.
+- Writes `.npmrc` with `legacy-peer-deps=true` so `npm install` works despite a known peer mismatch between `miden-para-react` and `miden-para`.
+- Adds `src/polyfills.ts` and injects it into `src/main.tsx` to provide `Buffer`/`process` in the browser.
 
 ## Usage
 - Standard: `npm create miden-para-react@latest my-new-app`
 - Skip install: add `--skip-install` if you want to install later.
 - Set `VITE_PARA_API_KEY` in a `.env.local` (or similar) file so the generated `App.tsx` can initialize Para.
+- Recommended next steps: `cd my-new-app && npm install && npm run dev` (`.npmrc` opts into legacy peer deps so npm works).
 
 Publish from this folder with `npm publish --access public` when you're ready. For local testing, run `node ./packages/create-miden-para-react/bin/create-miden-para-react.mjs my-app`.

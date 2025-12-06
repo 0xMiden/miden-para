@@ -12,6 +12,11 @@ export default defineConfig({
       "@demox-labs/miden-sdk",
       "@getpara/react-components",
       "@getpara/core-components",
+      "@getpara/cosmos-wallet-connectors",
+      "@getpara/evm-wallet-connectors",
+      "@getpara/solana-wallet-connectors",
+      "@getpara/wagmi-v2-connector",
+      "@getpara/cosmjs-v0-integration",
     ],
   },
   resolve: {
