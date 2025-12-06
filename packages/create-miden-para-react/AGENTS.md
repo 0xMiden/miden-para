@@ -1,18 +1,20 @@
 ## Mission
-- Ship a `npm create miden-para-react` helper that bootstraps the stock Vite `react-ts` template and applies Para + Miden defaults so developers get a working dev server without manual config.
+- Ship a `npm create miden-para-react` helper that bootstraps the stock Vite `react-ts` template and applies Para + Miden defaults (config + starter UI) so developers get a working dev server without manual setup.
 - Keep the CLI minimal (no custom prompts), ESM-only, and compatible with Node 18+.
 
 ## Package Layout
-- `bin/create-miden-para-react.mjs` — CLI entry. Invokes `npm create vite@latest`, overwrites `vite.config.ts`, adds the node polyfill plugin, and installs deps via the detected package manager (unless skipped).
+- `bin/create-miden-para-react.mjs` — CLI entry. Invokes `npm create vite@latest`, overwrites `vite.config.ts`, replaces `src/App.tsx` with a Para + Miden starter, adds deps, and installs via the detected package manager (unless skipped).
 - `template/vite.config.ts` — opinionated Vite config: React plugin, `vite-plugin-node-polyfills`, excludes/dedupes Para/Miden bundles, and treats `.wasm` as assets.
+- `template/src/App.tsx` — minimal ParaProvider + `useParaMiden` example wired with TanStack Query and a node URL placeholder.
 - `README.md` — user-facing usage notes and publish command.
 
 ## Flow (bin/create-miden-para-react.mjs)
 1. Parse args: first non-flag is the target dir (default `miden-para-react-app`); `--skip-install`/`--no-install` suppress dependency install.
-2. Run `npm create vite@latest <target> -- --template react-ts`.
+2. Resolve `targetDir` and run `npm create vite@latest <basename>` from `dirname(targetDir)` so absolute targets work.
 3. Copy `template/vite.config.ts` into the new project root.
-4. Patch `package.json` to ensure `devDependencies.vite-plugin-node-polyfills = ^0.24.0`.
-5. Detect package manager from `npm_config_user_agent` (`pnpm`, `yarn`, `bun`, fallback `npm`) and install deps unless skipped.
+4. Replace `src/App.tsx` with the starter from `template/src/App.tsx`.
+5. Patch `package.json` to ensure `devDependencies.vite-plugin-node-polyfills = ^0.24.0` and add Para/Miden deps (`@getpara/react-sdk`, `@tanstack/react-query`, `miden-para`, `miden-para-react`).
+6. Detect package manager from `npm_config_user_agent` (`pnpm`, `yarn`, `bun`, fallback `npm`) and install deps unless skipped.
 
 ## Build & Publish
 - No build step needed; published assets are the CLI, template config, and docs listed in `files`.
@@ -20,6 +22,7 @@
 
 ## Agent Playbooks
 - **Config updates**: edit `template/vite.config.ts` to track Para/Miden bundling rules or polyfill needs; keep it minimal and framework-agnostic.
+- **Starter UI tweaks**: update `template/src/App.tsx` to showcase new flows; mirror deps in the `ensureMidenParaDependencies` patcher.
 - **New flags**: add parsing to the CLI but preserve current defaults and backward compatibility; log steps clearly.
 - **Dependency pins**: bump `vite-plugin-node-polyfills` version in both the patch logic and template if upstream requires.
 - **E2E checks**: when changing flow, run the CLI against a temp dir and confirm `npm run dev` works with Para/Miden packages.
