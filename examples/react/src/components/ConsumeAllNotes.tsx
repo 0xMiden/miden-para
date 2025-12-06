@@ -11,9 +11,7 @@ const Consumer = () => {
   const { data: wallet } = useWallet();
   const { client, para, accountId, evmWallets } = useParaMiden('https://rpc.testnet.miden.io');
 
-  if (!para || !evmWallets || !client) {
-    return;
-  }
+  const notReady = !para || !evmWallets || !client;
 
   const consumeAllNotes = async () => {
     const { WebClient, AccountId } = await import("@demox-labs/miden-sdk");
@@ -45,14 +43,18 @@ const Consumer = () => {
   return (
     <div>
       {!isConnected ? (
-        <button onClick={() => openModal()}>Connect Wallet</button>
+        <button onClick={() => openModal()} disabled={!para}>
+          {para ? 'Connect Wallet' : 'Loading Para...'}
+        </button>
       ) : (
         <div>
           <p>Connected: {wallet?.address}</p>
         </div>
       )}
 
-      <button onClick={consumeAllNotes}>ConsumeNotes </button>
+      <button onClick={consumeAllNotes} disabled={notReady}>
+        {notReady ? 'Preparing client...' : 'ConsumeNotes'}
+      </button>
     </div>
   );
 }

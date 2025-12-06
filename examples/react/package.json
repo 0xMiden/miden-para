@@ -19,7 +19,7 @@
     "@cosmjs/proto-signing": "^0.37.0",
     "@cosmjs/stargate": "^0.37.0",
     "@cosmjs/tendermint-rpc": "^0.37.0",
-    "@getpara/react-sdk": "^2.0.0-alpha.73",
+    "@getpara/react-sdk": "2.0.0-alpha.73",
     "@keplr-wallet/types": "^0.12.299",
     "@solana-mobile/wallet-adapter-mobile": "^2.2.5",
     "@solana/wallet-adapter-base": "^0.9.27",
@@ -37,6 +37,10 @@
     "viem": "^2.41.2",
     "vite-plugin-node-polyfills": "^0.24.0",
     "wagmi": "^3.1.0"
+  },
+  "resolutions": {
+    "@getpara/react-sdk": "2.0.0-alpha.73",
+    "@getpara/web-sdk": "2.0.0-alpha.73"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
