@@ -1,13 +1,13 @@
 # create-miden-para-react
 
-`npm create miden-para-react@latest my-app` scaffolds the latest Vite `react-ts` starter, overwrites it with this repo's `vite.config.ts`, swaps in a Para + Miden-ready `App.tsx`, and adds the deps needed to run it out of the box. The scaffold always runs `create-vite` with `--no-install` so dependencies are added after we patch the template.
+`npm create miden-para-react@latest my-app` scaffolds the latest Vite `react-ts` starter, overwrites it with this repo's `vite.config.ts`, swaps in a Para + Miden-ready `App.tsx`, and adds the deps needed to run it out of the box. The scaffold always runs `create-vite` with `--yes --no-install` so dependencies are added after we patch the template and no interactive install can revert files.
 
 ## What it does
 - Runs `npm create vite@latest <target> -- --template react-ts` so you always start from the upstream default.
 - Replaces `vite.config.ts` with the Para + Miden-friendly config (dedupe/exclude and WASM asset handling).
 - Replaces `src/App.tsx` with a ParaProvider + `useParaMiden` starter that reports the account ID and client readiness.
 - Adds `miden-para-react`, `miden-para`, `@getpara/react-sdk`, `@tanstack/react-query`, and `vite-plugin-node-polyfills` to `package.json`.
-- Installs dependencies using your detected package manager (`pnpm`, `yarn`, `bun`, or falls back to `npm`); `create-vite` is invoked with `--no-install` to avoid reverting the patched files.
+- Installs dependencies using your detected package manager (`pnpm`, `yarn`, `bun`, or falls back to `npm`); `create-vite` is invoked with `--yes --no-install` to avoid reverting the patched files.
 
 ## Usage
 - Standard: `npm create miden-para-react@latest my-new-app`

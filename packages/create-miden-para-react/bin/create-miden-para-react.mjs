@@ -50,6 +50,7 @@ function runCreateVite(targetArg) {
     "--",
     "--template",
     "react-ts",
+    "--yes", // avoid interactive prompts that might install/revert files
     "--no-install", // we handle installs after patching package.json
   ];
   logStep(
