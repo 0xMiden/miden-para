@@ -156,7 +156,7 @@ function ensureMidenParaDependencies(targetRoot) {
     "cosmjs-types": "^0.11.0",
     graz: "^0.4.2",
     "miden-para": "0.0.9",
-    "miden-para-react": "^0.0.9",
+    "miden-para-react": "^0.10.0",
     react: "^19.2.0",
     "react-dom": "^19.2.0",
     viem: "^2.41.2",
