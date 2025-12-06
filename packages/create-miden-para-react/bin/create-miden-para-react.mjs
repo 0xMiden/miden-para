@@ -50,6 +50,7 @@ function runCreateVite(targetArg) {
     "--",
     "--template",
     "react-ts",
+    "--no-install", // we handle installs after patching package.json
   ];
   logStep(
     `Scaffolding react-ts via npm ${scaffoldArgs.join(" ")} (cwd: ${targetParent})`,
