@@ -69,10 +69,20 @@ async function createAccount(
     .storageMode(accountStorageMode)
     .withBasicWalletComponent()
     .build().account;
-  // check if account exists
+
+  // If the account already exists on-chain (e.g. public/network), hydrate it instead of
+  // recreating a “new” account with zero commitment, which causes submission to fail.
+  if (opts.storageMode !== 'private') {
+    try {
+      await midenClient.importAccountById(account.id());
+    } catch {
+      // Import will fail for non-existent accounts; fall through to creation path.
+    }
+  }
+
+  // check if account exists locally after the import attempt
   const existing = await midenClient.getAccount(account.id());
   if (!existing) {
-    // insert the account if it does not exist
     await midenClient.newAccount(account, false);
   }
   await midenClient.syncState();
@@ -104,9 +114,13 @@ export async function createParaMidenClient(
       createClientWithExternalKeystore: (...args: any[]) => Promise<any>;
     }
   ).createClientWithExternalKeystore;
+  const noteTransportUrl =
+    opts.noteTransportUrl ||
+    opts.nodeTransportUrl ||
+    'https://transport.miden.io';
   const client = await createClientWithExternalKeystore(
     opts.endpoint,
-    opts.nodeTransportUrl,
+    noteTransportUrl,
     opts.seed,
     undefined,
     undefined,
