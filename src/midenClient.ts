@@ -15,7 +15,10 @@ import { MidenAccountOpts, Opts } from './types.js';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils.js';
 import { showAccountSelectionModal, showSigningModal } from './modalClient.js';
 
-/// Create a signing callback for the externalkeystore
+/**
+ * Creates a signing callback that routes Miden signing requests through Para.
+ * Prompts the user with a modal before delegating the keccak-hashed message to Para's signer.
+ */
 export const signCb = (para: ParaWeb, wallet: Wallet) => {
   return async (_: Uint8Array, signingInputs: Uint8Array) => {
     const { SigningInputs } = await import('@demox-labs/miden-sdk');
@@ -36,6 +39,10 @@ export const signCb = (para: ParaWeb, wallet: Wallet) => {
   };
 };
 
+/**
+ * Ensures a Miden account exists for the given Para wallet public key.
+ * Attempts to import an existing account for public/network modes before creating a new one.
+ */
 async function createAccount(
   midenClient: import('@demox-labs/miden-sdk').WebClient,
   publicKey: string,
@@ -89,6 +96,11 @@ async function createAccount(
   return account.id().toString();
 }
 
+/**
+ * Builds a Miden WebClient wired to Para wallets and ensures an account exists for the user.
+ * Filters to EVM wallets, prompts for selection, creates the external keystore client, and
+ * hydrates or creates the corresponding Miden account before returning the client + account id.
+ */
 export async function createParaMidenClient(
   para: ParaWeb,
   wallets: Wallet[],

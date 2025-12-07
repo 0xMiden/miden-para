@@ -1,7 +1,10 @@
 import ParaWeb, { Wallet } from '@getpara/web-sdk';
 import { utf8ToBytes } from '@noble/hashes/utils.js';
 
-/// Create a valid serialized miden `Signature` from the hex signature given by para
+/**
+ * Converts a Para hex signature into the serialized format expected by Miden.
+ * Prefixes the auth scheme byte and appends the extra padding byte required by current crypto libs.
+ */
 export const fromHexSig = (hexString: string) => {
   if (hexString.length % 2 !== 0) {
     throw new Error('Invalid string len');
@@ -16,6 +19,9 @@ export const fromHexSig = (hexString: string) => {
   return Uint8Array.from(bytes);
 };
 
+/**
+ * Converts a hex string (without 0x prefix) into a Uint8Array.
+ */
 export const hexToBytes = (hexString: string) => {
   const length = hexString.length / 2;
   const bytes = new Uint8Array(length);
@@ -27,6 +33,9 @@ export const hexToBytes = (hexString: string) => {
   return bytes;
 };
 
+/**
+ * Derives a 32-byte seed buffer from a UTF-8 string, truncating when longer than 32 bytes.
+ */
 export const accountSeedFromStr = (str?: string) => {
   if (!str) return;
   const buffer = new Uint8Array(32);
@@ -38,6 +47,9 @@ export const accountSeedFromStr = (str?: string) => {
 const TAG_EVEN = 2;
 const TAG_ODD = 3;
 
+/**
+ * Builds a bigint from little-endian byte order.
+ */
 function bigintFromLeBytes(bytes: Uint8Array | number[]): bigint {
   let result = BigInt(0);
 
@@ -48,7 +60,10 @@ function bigintFromLeBytes(bytes: Uint8Array | number[]): bigint {
   return result;
 }
 
-// assumes the format '0x04' | X | Y
+/**
+ * Converts an uncompressed EVM public key into a Miden commitment (RPO hash of tagged X coord).
+ * Assumes input format `0x04${x}${y}` where x and y are 64-char hex strings.
+ */
 export const evmPkToCommitment = async (uncompressedPublicKey: string) => {
   const { Felt, Rpo256, FeltArray } = await import('@demox-labs/miden-sdk');
   const withoutPrefix = uncompressedPublicKey.slice(4);
@@ -82,6 +97,9 @@ export const evmPkToCommitment = async (uncompressedPublicKey: string) => {
   return Rpo256.hashElements(new FeltArray(felts));
 };
 
+/**
+ * Retrieves the uncompressed public key for a Para wallet, falling back to JWT data when absent.
+ */
 export const getUncompressedPublicKeyFromWallet = async (
   para: ParaWeb,
   wallet: Wallet
