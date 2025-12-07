@@ -82,6 +82,10 @@ const createSecondaryButton = (label: string) => {
   return button;
 };
 
+/**
+ * Shows a lightweight confirmation modal for signing a hashed transaction.
+ * Resolves to true when the user confirms, false when cancelled; no-op on the server.
+ */
 export const showSigningModal = (hashed: string) => {
   if (typeof document === 'undefined') return Promise.resolve(true);
 
@@ -127,6 +131,10 @@ export const showSigningModal = (hashed: string) => {
   });
 };
 
+/**
+ * Shows a selectable list of account commitments and resolves with the chosen index.
+ * Returns 0 immediately when only one account is provided or when running server-side.
+ */
 export const showAccountSelectionModal = (accounts: string[]) => {
   if (accounts.length === 1 || typeof document === 'undefined') {
     return Promise.resolve(0);
