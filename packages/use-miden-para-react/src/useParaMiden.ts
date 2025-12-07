@@ -2,12 +2,13 @@
 
 import { useClient, useAccount, type Wallet } from '@getpara/react-sdk';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { createParaMidenClient, MidenAccountOpts } from 'miden-para';
+import { createParaMidenClient, MidenAccountOpts, type Opts } from 'miden-para';
 import { MidenAccountStorageMode } from 'miden-para/dist/types/types';
 
 export function useParaMiden(
   nodeUrl: string,
-  storageMode: MidenAccountStorageMode = 'public'
+  storageMode: MidenAccountStorageMode = 'public',
+  opts: Omit<Opts, 'endpoint' | 'type' | 'storageMode'> = {}
 ) {
   const para = useClient();
   const { isConnected, embedded } = useAccount();
@@ -38,6 +39,7 @@ export function useParaMiden(
 
       const { client: midenParaClient, accountId: aId } =
         await createParaMidenClient(para, evmWallets as Wallet[], {
+          ...opts,
           endpoint: nodeUrl,
           type: AccountType.RegularAccountImmutableCode,
           storageMode,
@@ -58,5 +60,12 @@ export function useParaMiden(
     };
   }, [isConnected, evmWallets, para, nodeUrl]);
 
-  return { client: clientRef.current, accountId, para, evmWallets, nodeUrl };
+  return {
+    client: clientRef.current,
+    accountId,
+    para,
+    evmWallets,
+    nodeUrl,
+    opts,
+  };
 }
