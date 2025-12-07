@@ -70,6 +70,8 @@ function Content() {
 }
 ```
 
+If you switch the hook to `storageMode` set to `private`, pass an `accountSeed` via the third argument so the underlying client can initialize; this is required for private accounts and the hook will throw if it is omitted.
+
 ## Build
 
 ```bash

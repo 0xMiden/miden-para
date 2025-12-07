@@ -26,6 +26,8 @@ Example install:
 yarn add miden-para @demox-labs/miden-sdk@^0.12.5 @getpara/web-sdk@2.0.0-alpha.73
 ```
 
+When creating a client with `storageMode` set to `private`, supply an `accountSeed`; the initializer will throw if it is missing so that private accounts remain recoverable.
+
 ## Installation
 
 ```bash

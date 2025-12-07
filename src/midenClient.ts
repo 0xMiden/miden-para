@@ -114,6 +114,9 @@ export async function createParaMidenClient(
       createClientWithExternalKeystore: (...args: any[]) => Promise<any>;
     }
   ).createClientWithExternalKeystore;
+  if (opts.storageMode === 'private' && !opts.accountSeed) {
+    throw new Error('accountSeed is required when using private storage mode');
+  }
   const noteTransportUrl =
     opts.noteTransportUrl ||
     opts.nodeTransportUrl ||
