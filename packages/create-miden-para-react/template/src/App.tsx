@@ -29,19 +29,15 @@ function Content() {
   return (
     <div>
       {!isConnected ? (
-        <button
-          type="button"
-          onClick={() => openModal?.()}
-          style={{ marginBottom: '0.5rem' }}
-          disabled={!openModal}
-        >
-          {openModal ? 'Connect with Para' : 'Loading Para...'}
+        <button onClick={() => openModal?.()}>
+          Connect with Para
         </button>
       ) : (
-        <p>Connected to Para</p>
+        <>
+          <p>Account: {accountId ?? '—'}</p>
+          <p>Client ready: {client ? 'yes' : 'no'}</p>
+        </>
       )}
-      <p>Account: {accountId ?? '—'}</p>
-      <p>Client ready: {client ? 'yes' : 'no'}</p>
     </div>
   );
 }
