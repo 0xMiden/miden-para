@@ -22,22 +22,21 @@ function App() {
 }
 
 function Content() {
-  const { client, accountId } = useParaMiden('https://rpc.testnet.miden.io');
+  const { client, accountId, para } = useParaMiden('https://rpc.testnet.miden.io');
   const { isConnected } = useAccount();
   const { openModal } = useModal();
 
   return (
     <div>
-      {!isConnected ? (
-        <button onClick={() => openModal?.()}>
-          Connect with Para
-        </button>
-      ) : (
+      <button onClick={() => isConnected ? para.logout() : openModal?.()}>
+        {isConnected ? 'Disconnect Para' : 'Connect with Para'}
+      </button>
+      {isConnected &&
         <>
           <p>Account: {accountId ?? '—'}</p>
           <p>Client ready: {client ? 'yes' : 'no'}</p>
         </>
-      )}
+      }
     </div>
   );
 }
