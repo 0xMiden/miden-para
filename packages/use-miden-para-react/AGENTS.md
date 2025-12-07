@@ -28,5 +28,5 @@
 
 ## External Contracts
 - `@getpara/react-sdk` — supplies `useClient`, `useAccount`, `useWallet`, and Para configuration context. Hook must only run when `useAccount().isConnected` is true.
-- `miden-para` — root SDK; `createParaMidenClient` handles modal UX and signing. Ensure versions stay compatible (`peerDependencies` enforce `^0.10.3`+).
+- `miden-para` — root SDK; `createParaMidenClient` handles modal UX and signing. Ensure versions stay compatible (`peerDependencies` enforce `^0.10.4`+).
 - `@demox-labs/miden-sdk` — dynamically imported for runtime helpers like `AccountType`. Keep it externalized to avoid bundling WASM assets.
