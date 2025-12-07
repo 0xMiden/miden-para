@@ -188,6 +188,20 @@ test('account selection modal returns chosen index and cleans up overlay', async
   tearDownDocument();
 });
 
+test('single account resolves immediately without rendering', async () => {
+  const document = setUpDocument();
+  const { showAccountSelectionModal } = loadModalClient();
+
+  const selectedIndexPromise = showAccountSelectionModal(['0xsolo']);
+  const overlay = document.getElementById('para-signing-modal');
+
+  assert.strictEqual(overlay, undefined);
+  const selectedIndex = await selectedIndexPromise;
+  assert.strictEqual(selectedIndex, 0);
+
+  tearDownDocument();
+});
+
 test('account selection modal with no accounts disables Ok and defaults to index 0', async () => {
   const document = setUpDocument();
   const { showAccountSelectionModal } = loadModalClient();

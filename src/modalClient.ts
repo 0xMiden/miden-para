@@ -128,7 +128,9 @@ export const showSigningModal = (hashed: string) => {
 };
 
 export const showAccountSelectionModal = (accounts: string[]) => {
-  if (typeof document === 'undefined') return Promise.resolve(0);
+  if (accounts.length === 1 || typeof document === 'undefined') {
+    return Promise.resolve(0);
+  }
 
   return new Promise<number>((resolve) => {
     const { overlay, modal } = createModalShell('Choose an account to use');
