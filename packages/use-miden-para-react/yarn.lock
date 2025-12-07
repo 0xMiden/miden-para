@@ -3075,8 +3075,8 @@ micro-ftch@^0.3.1:
 
 miden-para@^0.10.5:
   version "0.10.5"
-  resolved "https://registry.yarnpkg.com/miden-para/-/miden-para-0.10.5.tgz#434c2d80ceda946b2915d514581d9ca90b801eec"
-  integrity sha512-sfysEj4vmfI8KDux601LbLq2wrdz8uKiLkXDxLosJpBfNr8JYIaRTRKJC5nhyjjDvcrTxnPJ1sDuIpSbSFgphg==
+  resolved "https://registry.yarnpkg.com/miden-para/-/miden-para-0.10.5.tgz#c020eab441c137f238636dd4983de984417e690e"
+  integrity sha512-PzDMAJyoMEhWyoLPIZtusWQWgBAY+c3r+dYHlM19wZ3JmqHPeJTcRHDSFUAgJz+i4Bbd3kR16n5gO+iY0bBhWg==
   dependencies:
     "@noble/hashes" "^2.0.1"
 
