@@ -1,5 +1,6 @@
 import ParaWeb, { Wallet } from '@getpara/web-sdk';
-import { utf8ToBytes } from '@noble/hashes/utils.js';
+import { hexToBytes, utf8ToBytes } from '@noble/hashes/utils.js';
+export { hexToBytes };
 
 /**
  * Converts a Para hex signature into the serialized format expected by Miden.
@@ -9,28 +10,12 @@ export const fromHexSig = (hexString: string) => {
   if (hexString.length % 2 !== 0) {
     throw new Error('Invalid string len');
   }
-  // 1 -> Auth scheme for ECDSA
-  const bytes: number[] = [1];
-  for (let i = 0; i < hexString.length; i += 2) {
-    bytes.push(parseInt(`${hexString[i]}${hexString[i + 1]}`, 16));
-  }
-  //TODO: bug in miden crypto where there is an extra byte in the serialized signature
-  bytes.push(0);
-  return Uint8Array.from(bytes);
-};
-
-/**
- * Converts a hex string (without 0x prefix) into a Uint8Array.
- */
-export const hexToBytes = (hexString: string) => {
-  const length = hexString.length / 2;
-  const bytes = new Uint8Array(length);
-
-  for (let i = 0; i < length; i++) {
-    bytes[i] = parseInt(`${hexString[2 * i]}${hexString[2 * i + 1]}`, 16);
-  }
-
-  return bytes;
+  const sigBytes = hexToBytes(hexString);
+  const serialized = new Uint8Array(sigBytes.length + 2);
+  serialized[0] = 1; // Auth scheme for ECDSA
+  serialized.set(sigBytes, 1);
+  // TODO: bug in miden crypto where there is an extra byte in the serialized signature
+  return serialized;
 };
 
 /**
@@ -44,22 +29,6 @@ export const accountSeedFromStr = (str?: string) => {
   return buffer;
 };
 
-const TAG_EVEN = 2;
-const TAG_ODD = 3;
-
-/**
- * Builds a bigint from little-endian byte order.
- */
-function bigintFromLeBytes(bytes: Uint8Array | number[]): bigint {
-  let result = BigInt(0);
-
-  for (let i = bytes.length - 1; i >= 0; i--) {
-    result = (result << BigInt(8)) + BigInt(bytes[i]);
-  }
-
-  return result;
-}
-
 /**
  * Converts an uncompressed EVM public key into a Miden commitment (RPO hash of tagged X coord).
  * Assumes input format `0x04${x}${y}` where x and y are 64-char hex strings.
@@ -71,28 +40,22 @@ export const evmPkToCommitment = async (uncompressedPublicKey: string) => {
   const y = withoutPrefix.slice(64); // hex encoded string
 
   // check if y is odd or even for tag
-  let tag: number;
-  if (parseInt(y[63], 16) % 2 === 0) {
-    tag = TAG_EVEN;
-  } else {
-    tag = TAG_ODD;
-  }
+  const tag = parseInt(y.slice(-1), 16) % 2 === 0 ? 2 : 3;
   // create the serialized bytes array
-  const bytes = [tag];
-  for (let i = 0; i < 64; i += 2) {
-    bytes.push(parseInt(`${x[i]}${x[i + 1]}`, 16));
-  }
+  const bytes = new Uint8Array(33);
+  bytes[0] = tag;
+  bytes.set(hexToBytes(x), 1);
+
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
 
   // convert bytes to a felt array
   // 4 bytes per felt therefore a 9 felt array
   // each fe
-  const felts = [];
-  // process first 8
-  for (let i = 0; i < 8; i++) {
-    felts.push(new Felt(bigintFromLeBytes(bytes.slice(i * 4, i * 4 + 4))));
-  }
+  const felts = Array.from({ length: 8 }, (_, i) =>
+    new Felt(BigInt(view.getUint32(i * 4, true)))
+  );
   // push the last 33rd byte
-  felts.push(new Felt(bigintFromLeBytes(bytes.slice(32))));
+  felts.push(new Felt(BigInt(bytes[32])));
 
   return Rpo256.hashElements(new FeltArray(felts));
 };
