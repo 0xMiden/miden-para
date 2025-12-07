@@ -27,14 +27,10 @@ export const hexToBytes = (hexString: string) => {
   return bytes;
 };
 
-export const accountSeedFromStr = (str: string) => {
+export const accountSeedFromStr = (str?: string) => {
+  if (!str) return;
   const buffer = new Uint8Array(32);
   const bytes = utf8ToBytes(str);
-  if (bytes.length !== 32) {
-    buffer.set(bytes);
-    buffer.fill(0, 32 - bytes.length);
-    return buffer;
-  }
   buffer.set(bytes.slice(0, 32));
   return buffer;
 };
