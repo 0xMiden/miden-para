@@ -3073,10 +3073,10 @@ micro-ftch@^0.3.1:
   resolved "https://registry.yarnpkg.com/micro-ftch/-/micro-ftch-0.3.1.tgz#6cb83388de4c1f279a034fb0cf96dfc050853c5f"
   integrity sha512-/0LLxhzP0tfiR5hcQebtudP56gUurs2CLkGarnCiB/OqEyUFQ6U3paQi/tgLv0hBJYt2rnr9MNpxz4fiiugstg==
 
-miden-para@^0.10.2:
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/miden-para/-/miden-para-0.10.2.tgz#d44f001b5ebd0bddeb7247c6c8465c89d8c0729c"
-  integrity sha512-22ms343/N773/qq5EOVTWE97Wfeqb4kcyppiYF87CO3f7keekh19Q/UqBn/ubIl2DeycqUkTPGTIgmIgJ27Jfg==
+miden-para@^0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/miden-para/-/miden-para-0.10.3.tgz#baedb0030c871fa04b09f1f5ebb1890b749706db"
+  integrity sha512-hG2wUNgTs5V5A7Bxa/zAPF8shbm3GAX7/pzke4Z6czdRa6Y7sc3kAIL8BCWKZB9jzN4c91GcQ1jsYoGJQIuQzQ==
   dependencies:
     "@noble/hashes" "^2.0.1"
 

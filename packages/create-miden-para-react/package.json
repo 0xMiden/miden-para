@@ -1,6 +1,6 @@
 {
   "name": "create-miden-para-react",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "description": "Create a Vite react-ts app preconfigured with Miden + Para's Vite setup",
   "type": "module",
   "bin": {
@@ -35,5 +35,8 @@
     "typescript",
     "miden",
     "para"
-  ]
+  ],
+  "scripts": {
+    "publish": "npm publish"
+  }
 }
