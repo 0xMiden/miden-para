@@ -14,7 +14,7 @@ import {
 } from './utils.js';
 import type { MidenAccountOpts, Opts, TxSummaryJson } from './types.js';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils.js';
-import { showAccountSelectionModal, signingModal } from './modalClient.js';
+import { accountSelectionModal, signingModal } from './modalClient.js';
 
 export type CustomSignConfirmStep = (
   txSummaryJson: TxSummaryJson
@@ -136,7 +136,7 @@ export async function createParaMidenClient(
   const accountKeys = await Promise.all(
     evmWallets.map((w) => getUncompressedPublicKeyFromWallet(para, w))
   );
-  const selectedIndex = await showAccountSelectionModal(accountKeys);
+  const selectedIndex = await accountSelectionModal(accountKeys);
   const wallet = evmWallets[selectedIndex] ?? evmWallets[0];
   const publicKey = accountKeys[selectedIndex] ?? accountKeys[0];
 

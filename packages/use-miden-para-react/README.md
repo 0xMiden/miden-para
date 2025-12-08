@@ -80,6 +80,7 @@ const { client } = useParaMiden(
   'https://rpc.testnet.miden.io',
   'public',
   {},
+  true, // set to false to skip the built-in modal
   confirmTx
 );
 ```

@@ -196,7 +196,7 @@ export const signingModal = (txSummaryJson: TxSummaryJson) => {
  * Shows a selectable list of account commitments and resolves with the chosen index.
  * Returns 0 immediately when only one account is provided or when running server-side.
  */
-export const showAccountSelectionModal = (accounts: string[]) => {
+export const accountSelectionModal = (accounts: string[]) => {
   if (accounts.length === 1 || typeof document === 'undefined') {
     return Promise.resolve(0);
   }

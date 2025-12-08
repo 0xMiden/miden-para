@@ -20,12 +20,14 @@ import {
  * - evmWallets: filtered list of Para wallets with type === 'EVM'
  * - nodeUrl: Miden node endpoint used for the client
  * - opts: forwarded options used when creating the client
+ * - showSigningModal: toggles the built-in signing modal
  * - customSignConfirmStep: optional callback for custom transaction confirmation flows
  */
 export function useParaMiden(
   nodeUrl: string,
   storageMode: MidenAccountStorageMode = 'public',
   opts: Omit<Opts, 'endpoint' | 'type' | 'storageMode'> = {},
+  showSigningModal: boolean = true,
   customSignConfirmStep?: CustomSignConfirmStep
 ) {
   const para = useClient();
@@ -65,7 +67,7 @@ export function useParaMiden(
             type: AccountType.RegularAccountImmutableCode,
             storageMode,
           },
-          true,
+          showSigningModal,
           customSignConfirmStep
         );
 
@@ -82,7 +84,14 @@ export function useParaMiden(
     return () => {
       cancelled = true;
     };
-  }, [isConnected, evmWallets, para, nodeUrl]);
+  }, [
+    isConnected,
+    evmWallets,
+    para,
+    nodeUrl,
+    showSigningModal,
+    customSignConfirmStep,
+  ]);
 
   return {
     client: clientRef.current,

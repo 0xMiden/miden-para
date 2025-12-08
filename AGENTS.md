@@ -21,7 +21,7 @@
 ## Key Flows & Files
 
 1. **Para + Miden bootstrap (`src/midenClient.ts`)**
-   - `createParaMidenClient(para, wallets, opts)` filters wallet list to EVM entries, fetches uncompressed public keys (`getUncompressedPublicKeyFromWallet`), and lets the user choose one (`showAccountSelectionModal`).
+   - `createParaMidenClient(para, wallets, opts)` filters wallet list to EVM entries, fetches uncompressed public keys (`getUncompressedPublicKeyFromWallet`), and lets the user choose one (`accountSelectionModal`).
    - It calls the SDK’s `WebClient.createClientWithExternalKeystore`, injecting `signCb` to pipe signing prompts through Para’s `signMessage`.
    - `createAccount` guarantees a Miden account exists for the chosen wallet using commitment data derived via `evmPkToCommitment`.
 2. **Modal UX (`src/modalClient.ts`)**

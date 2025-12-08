@@ -174,10 +174,10 @@ test('clicking No resolves the modal promise with false', async () => {
 
 test('account selection modal returns chosen index and cleans up overlay', async () => {
   const document = setUpDocument();
-  const { showAccountSelectionModal } = loadModalClient();
+  const { accountSelectionModal } = loadModalClient();
 
   const accounts = ['0xabc', '0xdef'];
-  const modalPromise = showAccountSelectionModal(accounts);
+  const modalPromise = accountSelectionModal(accounts);
 
   const overlay = document.getElementById('para-signing-modal');
   assert.ok(overlay, 'modal overlay should exist');
@@ -202,9 +202,9 @@ test('account selection modal returns chosen index and cleans up overlay', async
 
 test('single account resolves immediately without rendering', async () => {
   const document = setUpDocument();
-  const { showAccountSelectionModal } = loadModalClient();
+  const { accountSelectionModal } = loadModalClient();
 
-  const selectedIndexPromise = showAccountSelectionModal(['0xsolo']);
+  const selectedIndexPromise = accountSelectionModal(['0xsolo']);
   const overlay = document.getElementById('para-signing-modal');
 
   assert.strictEqual(overlay, undefined);
@@ -216,9 +216,9 @@ test('single account resolves immediately without rendering', async () => {
 
 test('account selection modal with no accounts disables Ok and defaults to index 0', async () => {
   const document = setUpDocument();
-  const { showAccountSelectionModal } = loadModalClient();
+  const { accountSelectionModal } = loadModalClient();
 
-  const modalPromise = showAccountSelectionModal([]);
+  const modalPromise = accountSelectionModal([]);
   const overlay = document.getElementById('para-signing-modal');
   assert.ok(overlay, 'modal overlay should exist');
 
