@@ -14,13 +14,13 @@ npm install miden-para-react
 
 - `@demox-labs/miden-sdk@^0.12.5`
 - `@getpara/react-sdk@^2.0.0-alpha.73`
-- `miden-para@^0.10.7`
+- `miden-para@^0.10.8`
 - `react@^18.0.0 || ^19.0.0`
 
 Example install:
 
 ```bash
-yarn add miden-para-react @demox-labs/miden-sdk@^0.12.5 @getpara/react-sdk@^2.0.0-alpha.73 miden-para@^0.10.7 react@^18.0.0
+yarn add miden-para-react @demox-labs/miden-sdk@^0.12.5 @getpara/react-sdk@^2.0.0-alpha.73 miden-para@^0.10.8 react@^18.0.0
 ```
 
 ## Usage
