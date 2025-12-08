@@ -14,13 +14,13 @@ npm install miden-para-react
 
 - `@demox-labs/miden-sdk@^0.12.5`
 - `@getpara/react-sdk@^2.0.0-alpha.73`
-- `miden-para@^0.10.6`
+- `miden-para@^0.10.8`
 - `react@^18.0.0 || ^19.0.0`
 
 Example install:
 
 ```bash
-yarn add miden-para-react @demox-labs/miden-sdk@^0.12.5 @getpara/react-sdk@^2.0.0-alpha.73 miden-para@^0.10.6 react@^18.0.0
+yarn add miden-para-react @demox-labs/miden-sdk@^0.12.5 @getpara/react-sdk@^2.0.0-alpha.73 miden-para@^0.10.8 react@^18.0.0
 ```
 
 ## Usage
@@ -67,6 +67,21 @@ function Content() {
     </div>
   );
 }
+```
+
+Pass a custom transaction confirmation step as the optional fourth argument if you want to show your own popup before Para signs:
+
+```tsx
+const confirmTx = async (summary) => {
+  await openCustomModal(summary);
+};
+
+const { client } = useParaMiden(
+  'https://rpc.testnet.miden.io',
+  'public',
+  {},
+  confirmTx
+);
 ```
 
 If you switch the hook to `storageMode` set to `private`, pass an `accountSeed` via the third argument so the underlying client can initialize; this is required for private accounts and the hook will throw if it is omitted.

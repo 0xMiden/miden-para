@@ -1,6 +1,6 @@
 {
   "name": "miden-para",
-  "version": "0.10.6",
+  "version": "0.10.8",
   "description": "Miden x Para Integration",
   "packageManager": "yarn@1.22.22",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "url": "https://github.com/0xMiden/miden-para.git"
   },
   "homepage": "https://miden.xyz/",
-  "readmeFilename": "docs/INTEGRATIONS.md",
+  "readmeFilename": "README.md",
   "bugs": {
     "url": "https://github.com/0xMiden/miden-para/issues"
   },
