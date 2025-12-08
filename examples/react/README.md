@@ -1,37 +1,31 @@
 # Miden + Para React Example
 
-Minimal Vite + React app that wires Para’s React SDK to the `miden-para` packages so you can connect a wallet, spin up a Para-backed Miden client, and consume notes on testnet.
+Vite + React app that connects Para wallets, spins up a Para-backed Miden WebClient via `miden-para-react`, and lets you mint from a faucet, view balances, and send assets on testnet.
 
 ## Quickstart
-- Install deps: `yarn install` (or `npm install`)
-- Add env: create `.env.local` with `VITE_PARA_API_KEY=<your_para_api_key>`
-- Dev server: `yarn dev` (runs `clean:ts` before Vite)
-- Build: `yarn build` (`tsc -b` then `vite build`), Preview: `yarn preview`
-- Lint: `yarn lint`
+- Install deps: `pnpm install`
+- Env: create `.env.local` with `VITE_PARA_API_KEY=<your_para_api_key>`
+- Dev server: `pnpm dev`
+- Build: `pnpm build`, Preview: `pnpm preview`, Lint: `pnpm lint`
 
-## How it works
-- `ParaProvider` wraps the app with your API key and app name.
-- `useParaMiden('https://rpc.testnet.miden.io')` builds a Miden WebClient that delegates signing to Para’s modal flow.
-- `ConsumeAllNotes` shows wallet connection state, syncs the client, fetches consumable notes for the connected account, and submits a consume transaction.
-- `polyfills.ts` installs `Buffer` and `process` on `globalThis` so browser builds satisfy Node expectations.
-- `vite.config.ts` keeps the Miden SDK unbundled, dedupes Para packages, and enables node polyfills + WASM assets.
+## Flow
+1) `ParaProvider` in `src/main.tsx` injects your API key and app name.
+2) `useParaMiden('https://rpc.testnet.miden.io', 'public', { accountSeed: 'hello world', noteTransportUrl: 'https://transport.miden.io' })` boots the Miden client and account inside `src/App.tsx`.
+3) UI actions in `App.tsx`:
+   - **Connect Wallet** toggles Para modal (connects/disconnects).
+   - **Mint & Consume** uses `createFaucetMintAndConsume` to mint from the faucet then consume.
+   - **View Balances** reads balances via `getBalance` and shows them in a dialog.
+   - **Send** opens `SendDialog` to transfer to a Bech32 address using `send`.
 
-## Files to know
-- `src/components/ConsumeAllNotes.tsx` — Para provider + demo action
-- `src/polyfills.ts` — Node globals for the browser
-- `src/main.tsx` — imports polyfills first, renders `App`
-- `vite.config.ts` — bundling guards for Para/Miden SDKs
-- `scripts/clean-ts-artifacts.mjs` — removes generated JS alongside TS sources
+## Key files
+- `src/App.tsx` — main UI wiring Para state to mint/consume/balance/send actions.
+- `src/components/MintConsumeDialog.tsx` — progress + errors for faucet mint/consume.
+- `src/components/SendDialog.tsx` — send form wired to the `send` helper.
+- `src/components/BalanceDialog.tsx` — balance modal (rendered inline in App).
+- `src/lib/` — `mint`, `send`, and `getBalance` helpers plus shared types/utils.
+- `src/main.tsx` — mounts the app with `ParaProvider` and React Query.
 
-## Running the flow
-1) Start dev server (`yarn dev`) and open the app.
-2) Click **Connect Wallet** to launch Para’s modal; pick an EVM wallet.
-3) After connection, click **ConsumeNotes** to:
-   - sync client state
-   - fetch consumable notes for the connected account
-   - submit a consume transaction (logs tx id to console)
-
-## Troubleshooting
-- Missing API key: set `VITE_PARA_API_KEY` in an env file Vite can read.
-- No consumable notes: the demo logs “No notes to consume.”; mint or fund the account first.
-- WASM/SDK bundling errors: ensure you kept `@demox-labs/miden-sdk` excluded and Para packages deduped per `vite.config.ts`.
+## Notes
+- Para environment is set to `Environment.BETA` in `main.tsx`; adjust if you need prod.
+- The seed in `useParaMiden` is for demo purposes only; replace it for private mode or persistent accounts.
+- If bundling complaints appear around WASM or node shims, ensure Vite plugins in `vite.config.ts` stay intact (`vite-plugin-node-polyfills`, top-level await, WASM).
