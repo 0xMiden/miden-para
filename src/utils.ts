@@ -1,5 +1,6 @@
 import ParaWeb, { Wallet } from '@getpara/web-sdk';
 import { hexToBytes, utf8ToBytes } from '@noble/hashes/utils.js';
+import { TxSummaryJson } from './types';
 export { hexToBytes };
 
 /**
@@ -51,8 +52,9 @@ export const evmPkToCommitment = async (uncompressedPublicKey: string) => {
   // convert bytes to a felt array
   // 4 bytes per felt therefore a 9 felt array
   // each fe
-  const felts = Array.from({ length: 8 }, (_, i) =>
-    new Felt(BigInt(view.getUint32(i * 4, true)))
+  const felts = Array.from(
+    { length: 8 },
+    (_, i) => new Felt(BigInt(view.getUint32(i * 4, true)))
   );
   // push the last 33rd byte
   felts.push(new Felt(BigInt(bytes[32])));
@@ -83,3 +85,60 @@ export const getUncompressedPublicKeyFromWallet = async (
   }
   return publicKey;
 };
+
+export const txSummaryToJosn = (
+  txSummary: import('@demox-labs/miden-sdk').TransactionSummary
+): TxSummaryJson => {
+  const inputNotes = txSummary
+    .inputNotes()
+    .notes()
+    .map((inputNote) => ({
+      id: inputNote.id().toString(),
+      assets: inputNote
+        .note()
+        .assets()
+        .fungibleAssets()
+        .map((asset) => {
+          return {
+            assetId: asset.faucetId().toString(),
+            amount: asset.amount().toString(),
+          };
+        }),
+      sender: inputNote.note().metadata().sender().toString(),
+    }));
+
+  const outputNotes = txSummary
+    .outputNotes()
+    .notes()
+    .map((outputNote) => ({
+      id: outputNote.id().toString(),
+      assets: outputNote
+        .assets()
+        .fungibleAssets()
+        .map((asset) => {
+          return {
+            assetId: asset.faucetId().toString(),
+            amount: asset.amount().toString(),
+          };
+        }),
+      noteType: noteTypeToString(outputNote.metadata().noteType()),
+    }));
+
+  return {
+    inputNotes,
+    outputNotes,
+  };
+};
+
+function noteTypeToString(noteType: import('@demox-labs/miden-sdk').NoteType) {
+  switch (noteType) {
+    case 1:
+      return 'public';
+    case 2:
+      return 'private';
+    case 3:
+      return 'encrypted';
+    default:
+      return 'UNKNOWN';
+  }
+}

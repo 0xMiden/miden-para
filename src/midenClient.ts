@@ -10,29 +10,40 @@ import {
   evmPkToCommitment,
   fromHexSig,
   getUncompressedPublicKeyFromWallet,
+  txSummaryToJosn,
 } from './utils.js';
 import { MidenAccountOpts, Opts } from './types.js';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils.js';
-import { showAccountSelectionModal, showSigningModal } from './modalClient.js';
+import { showAccountSelectionModal, signingModal } from './modalClient.js';
 
 /**
  * Creates a signing callback that routes Miden signing requests through Para.
  * Prompts the user with a modal before delegating the keccak-hashed message to Para's signer.
  */
-export const signCb = (para: ParaWeb, wallet: Wallet) => {
+export const signCb = (
+  para: ParaWeb,
+  wallet: Wallet,
+  showSigningModal: boolean
+) => {
   return async (_: Uint8Array, signingInputs: Uint8Array) => {
     const { SigningInputs } = await import('@demox-labs/miden-sdk');
     const inputs = SigningInputs.deserialize(signingInputs);
     let commitment = inputs.toCommitment().toHex().slice(2);
     const hashed = bytesToHex(keccak256(hexToBytes(commitment)));
-    const confirmed = await showSigningModal(hashed);
-    if (!confirmed) {
-      throw new Error('User cancelled signing');
+    if (showSigningModal) {
+      const confirmed = await signingModal(
+        txSummaryToJosn(inputs.transactionSummaryPayload())
+      );
+      if (!confirmed) {
+        throw new Error('User cancelled signing');
+      }
     }
+    console.time('Para Signing Time');
     const res = await para.signMessage({
       walletId: wallet.id,
       messageBase64: hexStringToBase64(hashed),
     });
+    console.timeEnd('Para Signing Time');
     const signature = (res as SuccessfulSignatureRes).signature;
     const sig = fromHexSig(signature);
     return sig;
@@ -104,7 +115,8 @@ async function createAccount(
 export async function createParaMidenClient(
   para: ParaWeb,
   wallets: Wallet[],
-  opts: Opts
+  opts: Opts,
+  showSigningModal: boolean = true
 ) {
   const evmWallets = wallets.filter((wallet) => wallet.type === 'EVM');
 
@@ -139,7 +151,7 @@ export async function createParaMidenClient(
     opts.seed,
     undefined,
     undefined,
-    signCb(para, wallet)
+    signCb(para, wallet, showSigningModal)
   );
   const accountId = await createAccount(
     client,
