@@ -25,7 +25,9 @@ class MockElement {
 
   remove() {
     if (!this.parent) return;
-    this.parent.children = this.parent.children.filter((child) => child !== this);
+    this.parent.children = this.parent.children.filter(
+      (child) => child !== this
+    );
     this.parent = null;
   }
 
@@ -60,14 +62,15 @@ class MockDocument {
 }
 
 const loadModalClient = () => {
+  console.log('Loading modalClient.ts...');
   const filePath = path.resolve(__dirname, '../src/modalClient.ts');
   const source = fs.readFileSync(filePath, 'utf8');
   const { outputText } = ts.transpileModule(source, {
     compilerOptions: {
       module: ts.ModuleKind.CommonJS,
-      target: ts.ScriptTarget.ES2020
+      target: ts.ScriptTarget.ES2020,
     },
-    fileName: filePath
+    fileName: filePath,
   });
 
   const compiledModule = new Module(filePath, module);
@@ -101,9 +104,12 @@ const collectByTag = (node, tagName) => {
 
 test('opens signing modal with visible buttons', async () => {
   const document = setUpDocument();
-  const { showSigningModal } = loadModalClient();
+  const { signingModal } = loadModalClient();
 
-  const modalPromise = showSigningModal('hashed-value');
+  const modalPromise = signingModal({
+    inputNotes: [],
+    outputNotes: [],
+  });
 
   const overlay = document.getElementById('para-signing-modal');
   assert.ok(overlay, 'modal overlay should be appended to the document');
@@ -122,9 +128,12 @@ test('opens signing modal with visible buttons', async () => {
 
 test('clicking Yes resolves the modal promise with true', async () => {
   const document = setUpDocument();
-  const { showSigningModal } = loadModalClient();
+  const { signingModal } = loadModalClient();
 
-  const modalPromise = showSigningModal('another-hash');
+  const modalPromise = signingModal({
+    inputNotes: [],
+    outputNotes: [],
+  });
 
   const overlay = document.getElementById('para-signing-modal');
   const yesButton = collectByTag(overlay, 'button').find(
@@ -142,9 +151,12 @@ test('clicking Yes resolves the modal promise with true', async () => {
 
 test('clicking No resolves the modal promise with false', async () => {
   const document = setUpDocument();
-  const { showSigningModal } = loadModalClient();
+  const { signingModal } = loadModalClient();
 
-  const modalPromise = showSigningModal('yet-another-hash');
+  const modalPromise = signingModal({
+    inputNotes: [],
+    outputNotes: [],
+  });
 
   const overlay = document.getElementById('para-signing-modal');
   const noButton = collectByTag(overlay, 'button').find(
