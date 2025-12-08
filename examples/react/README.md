@@ -3,10 +3,10 @@
 Vite + React app that connects Para wallets, spins up a Para-backed Miden WebClient via `miden-para-react`, and lets you mint from a faucet, view balances, and send assets on testnet.
 
 ## Quickstart
-- Install deps: `pnpm install`
+- Install deps: `yarn install`
 - Env: create `.env.local` with `VITE_PARA_API_KEY=<your_para_api_key>`
-- Dev server: `pnpm dev`
-- Build: `pnpm build`, Preview: `pnpm preview`, Lint: `pnpm lint`
+- Dev server: `yarn dev`
+- Build: `yarn build`, Preview: `yarn preview`, Lint: `yarn lint`
 
 ## Flow
 1) `ParaProvider` in `src/main.tsx` injects your API key and app name.
