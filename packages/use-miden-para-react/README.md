@@ -69,6 +69,21 @@ function Content() {
 }
 ```
 
+Pass a custom transaction confirmation step as the optional fourth argument if you want to show your own popup before Para signs:
+
+```tsx
+const confirmTx = async (summary) => {
+  await openCustomModal(summary);
+};
+
+const { client } = useParaMiden(
+  'https://rpc.testnet.miden.io',
+  'public',
+  {},
+  confirmTx
+);
+```
+
 If you switch the hook to `storageMode` set to `private`, pass an `accountSeed` via the third argument so the underlying client can initialize; this is required for private accounts and the hook will throw if it is omitted.
 
 ## Build

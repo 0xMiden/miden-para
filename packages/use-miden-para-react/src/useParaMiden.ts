@@ -2,8 +2,12 @@
 
 import { useClient, useAccount, type Wallet } from '@getpara/react-sdk';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { createParaMidenClient, MidenAccountOpts, type Opts } from 'miden-para';
-import { MidenAccountStorageMode } from 'miden-para/dist/types/types';
+import {
+  createParaMidenClient,
+  type Opts,
+  type MidenAccountStorageMode,
+  type CustomSignConfirmStep,
+} from 'miden-para';
 
 /**
  * React hook that converts Para React SDK context into a ready-to-use Miden WebClient.
@@ -16,11 +20,13 @@ import { MidenAccountStorageMode } from 'miden-para/dist/types/types';
  * - evmWallets: filtered list of Para wallets with type === 'EVM'
  * - nodeUrl: Miden node endpoint used for the client
  * - opts: forwarded options used when creating the client
+ * - customSignConfirmStep: optional callback for custom transaction confirmation flows
  */
 export function useParaMiden(
   nodeUrl: string,
   storageMode: MidenAccountStorageMode = 'public',
-  opts: Omit<Opts, 'endpoint' | 'type' | 'storageMode'> = {}
+  opts: Omit<Opts, 'endpoint' | 'type' | 'storageMode'> = {},
+  customSignConfirmStep?: CustomSignConfirmStep
 ) {
   const para = useClient();
   const { isConnected, embedded } = useAccount();
@@ -50,12 +56,18 @@ export function useParaMiden(
       const { AccountType } = await import('@demox-labs/miden-sdk');
 
       const { client: midenParaClient, accountId: aId } =
-        await createParaMidenClient(para, evmWallets as Wallet[], {
-          ...opts,
-          endpoint: nodeUrl,
-          type: AccountType.RegularAccountImmutableCode,
-          storageMode,
-        });
+        await createParaMidenClient(
+          para,
+          evmWallets as Wallet[],
+          {
+            ...opts,
+            endpoint: nodeUrl,
+            type: AccountType.RegularAccountImmutableCode,
+            storageMode,
+          },
+          true,
+          customSignConfirmStep
+        );
 
       if (cancelled) {
         return;

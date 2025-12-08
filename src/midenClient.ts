@@ -12,31 +12,39 @@ import {
   getUncompressedPublicKeyFromWallet,
   txSummaryToJosn,
 } from './utils.js';
-import { MidenAccountOpts, Opts } from './types.js';
+import type { MidenAccountOpts, Opts, TxSummaryJson } from './types.js';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils.js';
 import { showAccountSelectionModal, signingModal } from './modalClient.js';
 
+export type CustomSignConfirmStep = (
+  txSummaryJson: TxSummaryJson
+) => Promise<unknown>;
+
 /**
  * Creates a signing callback that routes Miden signing requests through Para.
- * Prompts the user with a modal before delegating the keccak-hashed message to Para's signer.
+ * Prompts the user with a modal before delegating the keccak-hashed message to Para's signer,
+ * and optionally runs a custom confirmation step in between.
  */
 export const signCb = (
   para: ParaWeb,
   wallet: Wallet,
-  showSigningModal: boolean
+  showSigningModal: boolean,
+  customSignConfirmStep?: CustomSignConfirmStep
 ) => {
   return async (_: Uint8Array, signingInputs: Uint8Array) => {
     const { SigningInputs } = await import('@demox-labs/miden-sdk');
     const inputs = SigningInputs.deserialize(signingInputs);
     let commitment = inputs.toCommitment().toHex().slice(2);
     const hashed = bytesToHex(keccak256(hexToBytes(commitment)));
+    const txSummaryJson = txSummaryToJosn(inputs.transactionSummaryPayload());
     if (showSigningModal) {
-      const confirmed = await signingModal(
-        txSummaryToJosn(inputs.transactionSummaryPayload())
-      );
+      const confirmed = await signingModal(txSummaryJson);
       if (!confirmed) {
         throw new Error('User cancelled signing');
       }
+    }
+    if (customSignConfirmStep) {
+      await customSignConfirmStep(txSummaryJson);
     }
     console.time('Para Signing Time');
     const res = await para.signMessage({
@@ -116,7 +124,8 @@ export async function createParaMidenClient(
   para: ParaWeb,
   wallets: Wallet[],
   opts: Opts,
-  showSigningModal: boolean = true
+  showSigningModal: boolean = true,
+  customSignConfirmStep?: CustomSignConfirmStep
 ) {
   const evmWallets = wallets.filter((wallet) => wallet.type === 'EVM');
 
@@ -151,7 +160,7 @@ export async function createParaMidenClient(
     opts.seed,
     undefined,
     undefined,
-    signCb(para, wallet, showSigningModal)
+    signCb(para, wallet, showSigningModal, customSignConfirmStep)
   );
   const accountId = await createAccount(
     client,
