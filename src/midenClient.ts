@@ -38,10 +38,12 @@ export const signCb = (
         throw new Error('User cancelled signing');
       }
     }
+    console.time('Para Signing Time');
     const res = await para.signMessage({
       walletId: wallet.id,
       messageBase64: hexStringToBase64(hashed),
     });
+    console.timeEnd('Para Signing Time');
     const signature = (res as SuccessfulSignatureRes).signature;
     const sig = fromHexSig(signature);
     return sig;
