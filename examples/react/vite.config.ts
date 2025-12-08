@@ -1,28 +1,51 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import { nodePolyfills } from "vite-plugin-node-polyfills";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import path from 'path';
+import wasm from 'vite-plugin-wasm';
+import topLevelAwait from 'vite-plugin-top-level-await';
+import tailwindcss from '@tailwindcss/vite';
 
-// Keep the miden SDK unbundled so its WASM asset path stays valid in dev.
 export default defineConfig({
-  plugins: [react(), nodePolyfills()],
+  plugins: [
+    tailwindcss(),
+    wasm(),
+    topLevelAwait(),
+    react(),
+    nodePolyfills({
+      include: ['buffer', 'crypto', 'stream', 'util'],
+    }),
+  ],
+  assetsInclude: ['**/*.wasm'],
   optimizeDeps: {
-    // Keep Miden SDK unbundled and avoid prebundling Para's Stencil component bundles
-    // to prevent multiple runtimes in dev.
-    exclude: [
-      "@demox-labs/miden-sdk",
-      "@getpara/react-components",
-      "@getpara/core-components",
-    ],
+    exclude: ['@demox-labs/miden-sdk'],
+    esbuildOptions: {
+      target: 'esnext',
+    },
   },
-  resolve: {
-    dedupe: [
-      "@getpara/web-sdk",
-      "@getpara/react-sdk",
-      "@getpara/react-sdk-lite",
-      "@getpara/react-components",
-      "@getpara/core-components",
-    ],
+  build: {
+    target: 'esnext',
   },
-  // Ensure Vite treats wasm as a static asset with the correct MIME type.
-  assetsInclude: ["**/*.wasm"],
+  worker: {
+    format: 'es',
+  },
+  server: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+    fs: {
+      allow: [
+        // allow your project
+        process.cwd(),
+
+        // ✅ allow node_modules wasm access
+        path.resolve(
+          __dirname,
+          'node_modules/@demox-labs/miden-sdk/dist/assets/miden_client_web.wasm'
+        ),
+      ],
+    },
+  },
+  // ... other configurations
 });

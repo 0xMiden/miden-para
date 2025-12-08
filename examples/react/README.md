@@ -1,46 +1,97 @@
-# Miden + Para React example
+# Miden Para Integration
 
-This example shows how to wire the Para React SDK and `miden-para-react` into a Vite + React app, connect a wallet with Para's modal, and run a Miden flow (consuming all consumable notes for the connected account).
-
-- React 19 + Vite starter with TanStack Query and basic Node polyfills for browser usage
-- Para provider and hooks for wallet connection and account data
-- `useParaMiden` helper to bootstrap the Miden WebClient against `https://rpc.testnet.miden.io`
-- Sample `consumeAllNotes` action that reads notes and submits a consume transaction
-
-## Prerequisites
-- Node.js 18+ and Yarn or npm
-- A Para API key (create one in the Para dashboard)
+React app integrating Miden blockchain with Para embedded wallets.
 
 ## Setup
-1) Install dependencies  
-`yarn install`  
-or  
-`npm install`
 
-2) Add your Para API key to `.env.local` (or any Vite-supported env file in the project root):
-```
-VITE_PARA_API_KEY=your_api_key_here
+```bash
+pnpm install
 ```
 
-3) Start the dev server  
-`yarn dev`  
-or  
-`npm run dev`
+Create `.env`:
 
-Build, preview, and lint:
-- `yarn build` / `npm run build`
-- `yarn preview` / `npm run preview`
-- `yarn lint` / `npm run lint`
+```
+VITE_PARA_API_KEY=your_api_key
+```
 
-## How the integration works
-- `src/components/ConsumeAllNotes.tsx` wraps the app with `ParaProvider`, supplying your API key and a friendly app name.
-- The component uses `useParaMiden('https://rpc.testnet.miden.io')` to initialize the Miden WebClient via Para, and exposes the current `accountId`, Para client instance, and EVM wallets.
-- `useModal` and `useAccount` from `@getpara/react-sdk` drive the "Connect Wallet" button and connection state, while `useWallet` surfaces the connected address.
-- `consumeAllNotes` dynamically imports `@demox-labs/miden-sdk`, syncs state, fetches consumable notes for the connected account, and submits a consume transaction.
-- `vite.config.ts` keeps the Miden SDK unbundled (so WASM assets resolve) and applies Node polyfills (`Buffer`, `process`) for browser compatibility via `src/polyfills.ts`.
+Run:
 
-## Using this in your app
-- Reuse `ParaProvider` near the root of your app and pass your own `apiKey` and `config.appName`.
-- Point `useParaMiden` to the Miden RPC you need (the sample uses testnet).
-- Replace `consumeAllNotes` with your own business logic: mint notes, transfer them, or consume specific notes by ID.
-- Keep the Vite polyfill setup (or an equivalent) if you depend on Node globals in the browser.
+```bash
+pnpm dev
+```
+
+## Using miden-para-react
+
+### 1. Wrap app with ParaProvider
+
+```tsx
+import { ParaProvider, Environment } from "@getpara/react-sdk";
+
+<ParaProvider
+  paraClientConfig={{
+    env: Environment.BETA,
+    apiKey: import.meta.env.VITE_PARA_API_KEY,
+  }}
+  config={{ appName: "Your App Name" }}
+>
+  <App />
+</ParaProvider>;
+```
+
+### 2. Use the hook
+
+```tsx
+import { useParaMiden } from "miden-para-react";
+
+function App() {
+  const { client, accountId } = useParaMiden(
+    "https://rpc.testnet.miden.io", // RPC endpoint
+    "public", // storage mode: "public" | "private"
+    {
+      accountSeed: "hello world", // seed for account generation
+      noteTransportUrl: "https://transport.miden.io",
+    }
+  );
+
+  // client: Miden WebClient instance
+  // accountId: Account ID (hex format)
+}
+```
+
+### 3. Use the client
+
+```tsx
+// Mint tokens
+const mintTxRequest = client.newMintTransactionRequest(
+  toAccountId,
+  faucetId,
+  NoteType.Public,
+  amount
+);
+await client.submitNewTransaction(faucetId, mintTxRequest);
+
+// Send tokens
+const sendTxRequest = client.newSendTransactionRequest(
+  fromAccountId,
+  toAccountId,
+  faucetId,
+  NoteType.Private,
+  amount
+);
+const executedTx = await client.executeTransaction(
+  fromAccountId,
+  sendTxRequest
+);
+const provenTx = await client.proveTransaction(executedTx);
+await client.submitProvenTransaction(provenTx, executedTx);
+
+// Get balance
+await client.syncState();
+const account = await client.getAccount(accountId);
+const assets = account.vault().fungibleAssets();
+```
+
+- Para handles wallet authentication and signing
+- `useParaMiden` returns a configured Miden client that works with Para wallets
+- All Miden SDK operations work as normal after getting the client
+- Account ID is in hex format, convert to Bech32 for display
