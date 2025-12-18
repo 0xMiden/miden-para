@@ -69,7 +69,7 @@ function Content() {
 }
 ```
 
-Pass a custom transaction confirmation step as the optional fourth argument if you want to show your own popup before Para signs:
+Pass a custom transaction confirmation step as the optional fourth argument if you want to show your own pop-up before Para signs:
 
 ```tsx
 const confirmTx = async (summary) => {
