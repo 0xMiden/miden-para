@@ -27,5 +27,5 @@ Vite + React app that connects Para wallets, spins up a Para-backed Miden WebCli
 
 ## Notes
 - Para environment is set to `Environment.BETA` in `main.tsx`; adjust if you need prod.
-- The seed in `useParaMiden` is for demo purposes only; replace it for private mode or persistent accounts.
+- The seed in `useParaMiden` is for demo purposes only; replace it with private mode or persistent accounts.
 - If bundling complaints appear around WASM or node shims, ensure Vite plugins in `vite.config.ts` stay intact (`vite-plugin-node-polyfills`, top-level await, WASM).
