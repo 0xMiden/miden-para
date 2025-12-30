@@ -3,7 +3,7 @@ import './index.css';
 import App from './App.tsx';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Environment, ParaProvider } from '@getpara/react-sdk';
+import { Environment, ParaProvider } from '@getpara/react-sdk-lite';
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
