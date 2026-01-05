@@ -1,6 +1,6 @@
 import './App.css';
-import '@getpara/react-sdk/styles.css';
-import { ParaProvider, useAccount, useModal } from '@getpara/react-sdk';
+import '@getpara/react-sdk-lite/styles.css';
+import { ParaProvider, useAccount, useModal } from '@getpara/react-sdk-lite';
 import { useParaMiden } from 'miden-para-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -22,21 +22,23 @@ function App() {
 }
 
 function Content() {
-  const { client, accountId, para } = useParaMiden('https://rpc.testnet.miden.io');
+  const { client, accountId, para } = useParaMiden(
+    'https://rpc.testnet.miden.io'
+  );
   const { isConnected } = useAccount();
   const { openModal } = useModal();
 
   return (
     <div>
-      <button onClick={() => isConnected ? para.logout() : openModal?.()}>
+      <button onClick={() => (isConnected ? para?.logout() : openModal?.())}>
         {isConnected ? 'Disconnect Para' : 'Connect with Para'}
       </button>
-      {isConnected &&
+      {isConnected && (
         <>
           <p>Account: {accountId ?? '—'}</p>
           <p>Client ready: {client ? 'yes' : 'no'}</p>
         </>
-      }
+      )}
     </div>
   );
 }

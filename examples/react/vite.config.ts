@@ -30,20 +30,10 @@ export default defineConfig({
     format: 'es',
   },
   server: {
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
-    },
     fs: {
       allow: [
         // allow your project
         process.cwd(),
-
-        // ✅ allow node_modules wasm access
-        path.resolve(
-          __dirname,
-          'node_modules/@demox-labs/miden-sdk/dist/assets/miden_client_web.wasm'
-        ),
       ],
     },
   },

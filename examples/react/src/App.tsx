@@ -35,7 +35,7 @@ function App() {
     'https://rpc.testnet.miden.io',
     'public',
     {
-      accountSeed: 'hello world',
+      accountSeed: 'your-account-seed-here',
       noteTransportUrl: 'https://transport.miden.io',
     }
   );
