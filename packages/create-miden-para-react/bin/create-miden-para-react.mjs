@@ -137,6 +137,7 @@ function ensureMidenParaDependencies(targetRoot) {
   pkg.scripts = pkg.scripts ?? {};
   // Align with examples/react so Para SDK connector peers are satisfied
   Object.assign(pkg.dependencies, {
+    ...pkg.dependencies,
     "@getpara/react-sdk-lite": "2.0.0-alpha.73",
     "@getpara/evm-wallet-connectors": "^2.3.0",
     "@tanstack/react-query": "^5.90.12",
@@ -144,35 +145,16 @@ function ensureMidenParaDependencies(targetRoot) {
     "@demox-labs/miden-sdk": "^0.12.5",
     "miden-para": "0.10.9",
     "miden-para-react": "^0.10.9",
-    react: "^19.2.0",
-    "react-dom": "^19.2.0",
     viem: "^2.41.2",
-    "vite-plugin-node-polyfills": "^0.24.0",
     wagmi: "^3.1.0",
   });
 
   Object.assign(pkg.devDependencies, {
-    "@eslint/js": "^9.39.1",
-    "@tailwindcss/postcss": "^4.1.17",
-    "@tailwindcss/vite": "^4.1.17",
-    "@types/node": "^24.10.1",
-    "@types/react": "^19.2.5",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
-    "autoprefixer": "^10.4.22",
-    "eslint": "^9.39.1",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.24",
-    "globals": "^16.5.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.17",
-    "typescript": "~5.9.3",
-    "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4",
-    "vite-plugin-node-polyfills": "^0.24.0",
-    "vite-plugin-top-level-await": "^1.6.0",
-    "vite-plugin-wasm": "^3.5.0"
-  })
+    ...pkg.devDependencies,
+    "@types/node": "^20.4.2",
+        "vite-plugin-node-polyfills": "^0.24.0",
+  });
+
 
   Object.assign(pkg.resolutions, {
     "@getpara/react-sdk": "2.0.0-alpha.73",
