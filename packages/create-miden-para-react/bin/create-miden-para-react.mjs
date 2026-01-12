@@ -151,8 +151,7 @@ function ensureMidenParaDependencies(targetRoot) {
 
   Object.assign(pkg.devDependencies, {
     ...pkg.devDependencies,
-    "@types/node": "^20.4.2",
-        "vite-plugin-node-polyfills": "^0.24.0",
+    "vite-plugin-node-polyfills": "^0.24.0",
   });
 
 
