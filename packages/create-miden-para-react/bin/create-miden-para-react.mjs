@@ -22,6 +22,9 @@ const target = args.find((arg) => !arg.startsWith("-")) ?? "miden-para-react-app
 const skipInstall = args.some(
   (flag) => flag === "--skip-install" || flag === "--no-install",
 );
+const skipScaffold =
+  args.some((flag) => flag === "--skip-scaffold" || flag === "--no-scaffold") ||
+  process.env.MIDEN_PARA_TEST_MODE === "1";
 const targetDir = resolve(process.cwd(), target);
 const targetParent = dirname(targetDir);
 const targetName = basename(targetDir);
@@ -32,7 +35,11 @@ const baseEnv = {
 };
 
 ensureTargetParent();
-runCreateVite(targetName);
+if (skipScaffold) {
+  scaffoldMinimalProject(targetDir, targetName);
+} else {
+  runCreateVite(targetName);
+}
 overrideViteConfig(targetDir);
 overrideApp(targetDir);
 ensurePolyfills(targetDir);
@@ -63,6 +70,50 @@ function runCreateVite(targetArg) {
     "--no-install", // we handle installs after patching package.json
   ];
   runOrExit("npm", scaffoldArgs, targetParent, baseEnv, "n\n");
+}
+
+function scaffoldMinimalProject(targetRoot, name) {
+  mkdirSync(targetRoot, { recursive: true });
+  const pkgPath = join(targetRoot, "package.json");
+  if (!existsSync(pkgPath)) {
+    const pkg = {
+      name,
+      private: true,
+      version: "0.0.0",
+      type: "module",
+      scripts: {
+        dev: "vite",
+        build: "vite build",
+        preview: "vite preview",
+      },
+      dependencies: {
+        react: "^18.2.0",
+        "react-dom": "^18.2.0",
+      },
+      devDependencies: {
+        "@types/react": "^18.2.0",
+        "@types/react-dom": "^18.2.0",
+        "@vitejs/plugin-react": "^4.2.0",
+        typescript: "^5.2.2",
+        vite: "^5.2.0",
+      },
+    };
+    writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
+  }
+
+  const srcDir = join(targetRoot, "src");
+  mkdirSync(srcDir, { recursive: true });
+  const mainPath = join(srcDir, "main.tsx");
+  if (!existsSync(mainPath)) {
+    writeFileSync(
+      mainPath,
+      `import React from "react";\nimport ReactDOM from "react-dom/client";\nimport App from "./App";\n\nReactDOM.createRoot(document.getElementById("root")!).render(<App />);\n`
+    );
+  }
+  const appPath = join(srcDir, "App.tsx");
+  if (!existsSync(appPath)) {
+    writeFileSync(appPath, "export default function App() { return null; }\n");
+  }
 }
 
 function overrideViteConfig(targetRoot) {
