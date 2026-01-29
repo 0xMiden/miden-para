@@ -80,7 +80,7 @@ const getFreePort = () =>
 
 test(
   'example app renders Connect Wallet button',
-  { skip: !runExample },
+  { skip: !runExample, timeout: 300000 },
   async (t) => {
     const tmpRoot = fs.mkdtempSync(
       path.join(os.tmpdir(), 'miden-para-example-e2e-')
@@ -102,7 +102,7 @@ test(
 
     const install = spawnSync(
       'npm',
-      ['install', '--no-audit', '--no-fund', '--no-package-lock'],
+      ['install', '--no-audit', '--no-fund', '--no-package-lock', '--ignore-scripts'],
       {
         cwd: tempExample,
         stdio: 'inherit',

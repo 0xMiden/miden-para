@@ -16,6 +16,13 @@ const __dirname = dirname(__filename);
 const templateConfigPath = resolve(__dirname, "..", "template", "vite.config.ts");
 const templateAppPath = resolve(__dirname, "..", "template", "src", "App.tsx");
 const templatePolyfillsPath = resolve(__dirname, "..", "template", "src", "polyfills.ts");
+const templateOptionalConnectorsPath = resolve(
+  __dirname,
+  "..",
+  "template",
+  "src",
+  "optional-connectors.ts"
+);
 const repoRoot = resolve(__dirname, "..", "..", "..");
 const localMidenParaPath =
   process.env.MIDEN_PARA_LOCAL_MIDEN_PARA_PATH ?? repoRoot;
@@ -50,6 +57,7 @@ if (skipScaffold) {
 overrideViteConfig(targetDir);
 overrideApp(targetDir);
 ensurePolyfills(targetDir);
+ensureOptionalConnectorsShim(targetDir);
 ensurePolyfillDependency(targetDir);
 ensureMidenParaDependencies(targetDir);
 ensureNpmRc(targetDir);
@@ -148,6 +156,12 @@ function ensurePolyfills(targetRoot) {
       logStep(`Injected polyfills import into ${mainPath}`);
     }
   }
+}
+
+function ensureOptionalConnectorsShim(targetRoot) {
+  const dest = join(targetRoot, "src", "optional-connectors.ts");
+  mkdirSync(join(targetRoot, "src"), { recursive: true });
+  copyFileSync(templateOptionalConnectorsPath, dest);
 }
 
 function ensurePolyfillDependency(targetRoot) {

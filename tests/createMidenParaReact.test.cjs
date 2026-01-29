@@ -121,6 +121,10 @@ test('CLI scaffolds template and patches package.json in test mode', () => {
     'polyfills.ts should be created'
   );
   assert.ok(
+    fs.existsSync(path.join(targetDir, 'src', 'optional-connectors.ts')),
+    'optional-connectors.ts should be created'
+  );
+  assert.ok(
     fs.existsSync(path.join(targetDir, 'vite.config.ts')),
     'vite.config.ts should be written'
   );
@@ -134,7 +138,7 @@ const runE2E = process.env.RUN_CREATE_MIDEN_PARA_E2E === '1';
 
 test(
   'CLI scaffold installs and builds (e2e)',
-  { skip: !runE2E },
+  { skip: !runE2E, timeout: 300000 },
   () => {
     const tmpRoot = fs.mkdtempSync(
       path.join(os.tmpdir(), 'miden-para-create-e2e-')
@@ -147,6 +151,7 @@ test(
 
     runCli(targetDir, [], {
       npm_config_yes: 'true',
+      npm_config_ignore_scripts: 'true',
       MIDEN_PARA_LOCAL_DEPS: '1',
       MIDEN_PARA_LOCAL_MIDEN_PARA_PATH: rootTarball,
       MIDEN_PARA_LOCAL_USE_PARA_REACT_PATH: hookTarball,

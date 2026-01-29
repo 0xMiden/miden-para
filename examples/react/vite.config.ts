@@ -2,9 +2,17 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import wasm from 'vite-plugin-wasm';
 import topLevelAwait from 'vite-plugin-top-level-await';
 import tailwindcss from '@tailwindcss/vite';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const optionalConnectorsPath = path.resolve(
+  __dirname,
+  'src',
+  'optional-connectors.ts'
+);
 
 export default defineConfig({
   plugins: [
@@ -18,13 +26,34 @@ export default defineConfig({
   ],
   assetsInclude: ['**/*.wasm'],
   optimizeDeps: {
-    exclude: ['@demox-labs/miden-sdk'],
+    exclude: [
+      '@demox-labs/miden-sdk',
+      '@getpara/solana-wallet-connectors',
+      '@getpara/cosmos-wallet-connectors',
+    ],
     esbuildOptions: {
       target: 'esnext',
+      external: [
+        '@getpara/solana-wallet-connectors',
+        '@getpara/cosmos-wallet-connectors',
+      ],
     },
   },
   build: {
     target: 'esnext',
+    rollupOptions: {
+      external: [
+        '@getpara/solana-wallet-connectors',
+        '@getpara/cosmos-wallet-connectors',
+      ],
+    },
+  },
+  resolve: {
+    dedupe: ['@getpara/web-sdk', '@getpara/react-sdk-lite'],
+    alias: {
+      '@getpara/solana-wallet-connectors': optionalConnectorsPath,
+      '@getpara/cosmos-wallet-connectors': optionalConnectorsPath,
+    },
   },
   worker: {
     format: 'es',
