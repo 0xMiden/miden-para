@@ -1,10 +1,10 @@
 # Miden + Para React Example
 
-Vite + React app that connects Para wallets, spins up a Para-backed Miden WebClient via `miden-para-react`, and lets you mint from a faucet, view balances, and send assets on testnet.
+Vite + React app that connects Para wallets, spins up a Para-backed Miden WebClient via `@miden-sdk/use-miden-para-react`, and lets you mint from a faucet, view balances, and send assets on testnet.
 
 ## Quickstart
 - Install deps: `yarn install`
-- Env: create `.env.local` with `VITE_PARA_API_KEY=<your_para_api_key>`
+- Env: create `.env.local` with `VITE_PARA_API_KEY=<your_para_api_key>`. **Production deployments require a Para production API key.**
 - Dev server: `yarn dev`
 - Build: `yarn build`, Preview: `yarn preview`, Lint: `yarn lint`
 

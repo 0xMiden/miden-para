@@ -9,8 +9,8 @@ export default defineConfig({
   target: 'es2019',
   external: [
     'react',
-    '@getpara/react-sdk',
-    'miden-para',
+    '@getpara/react-sdk-lite',
+    '@miden-sdk/miden-para',
     '@demox-labs/miden-sdk',
   ],
 });

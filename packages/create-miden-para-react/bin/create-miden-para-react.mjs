@@ -143,8 +143,8 @@ function ensureMidenParaDependencies(targetRoot) {
     "@tanstack/react-query": "^5.90.12",
     "@wagmi/core": "^3.0.0",
     "@demox-labs/miden-sdk": "^0.12.5",
-    "miden-para": "0.10.9",
-    "miden-para-react": "^0.10.9",
+    "@miden-sdk/miden-para": "0.10.10",
+    "@miden-sdk/use-miden-para-react": "^0.10.10",
     viem: "^2.41.2",
     wagmi: "^3.1.0",
   });

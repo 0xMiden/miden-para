@@ -7,7 +7,7 @@ import {
   type Opts,
   type MidenAccountStorageMode,
   type CustomSignConfirmStep,
-} from 'miden-para';
+} from '@miden-sdk/miden-para';
 
 /**
  * React hook that converts Para React SDK context into a ready-to-use Miden WebClient.

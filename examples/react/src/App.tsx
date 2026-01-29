@@ -15,7 +15,7 @@ import {
   useWallet,
 } from '@getpara/react-sdk-lite';
 import '@getpara/react-sdk-lite/styles.css';
-import { useParaMiden } from 'miden-para-react';
+import { useParaMiden } from '@miden-sdk/use-miden-para-react';
 import { createFaucetMintAndConsume } from './lib/mint';
 import {
   MintConsumeDialog,
