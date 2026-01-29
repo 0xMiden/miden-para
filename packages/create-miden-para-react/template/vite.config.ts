@@ -33,10 +33,6 @@ export default defineConfig({
     ],
     esbuildOptions: {
       target: 'esnext',
-      external: [
-        '@getpara/solana-wallet-connectors',
-        '@getpara/cosmos-wallet-connectors',
-      ],
     },
   },
   build: {
