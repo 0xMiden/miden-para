@@ -25,6 +25,7 @@
     "eslint": "^9.39.1",
     "glob": "^11.0.1",
     "prettier": "^3.7.3",
+    "puppeteer": "^24.4.0",
     "react": "^19.2.0",
     "react-test-renderer": "^19.2.0",
     "typescript": "^5.8.3"

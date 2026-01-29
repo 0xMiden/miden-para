@@ -12,7 +12,10 @@ const cliPath = path.resolve(
 const repoRoot = path.resolve(__dirname, '..');
 
 const packPackage = (cwd) => {
-  const result = spawnSync('npm', ['pack', '--silent'], {
+  const destDir = fs.mkdtempSync(
+    path.join(os.tmpdir(), 'miden-para-pack-')
+  );
+  const result = spawnSync('npm', ['pack', '--silent', '--pack-destination', destDir], {
     cwd,
     encoding: 'utf8',
   });
@@ -30,15 +33,10 @@ const packPackage = (cwd) => {
   }
 
   const tarballName = matches[matches.length - 1];
-  const directPath = path.join(cwd, tarballName);
-  const buildPath = path.join(cwd, 'build', tarballName);
+  const tarballPath = path.join(destDir, tarballName);
+  if (fs.existsSync(tarballPath)) return tarballPath;
 
-  if (fs.existsSync(directPath)) return directPath;
-  if (fs.existsSync(buildPath)) return buildPath;
-
-  throw new Error(
-    `Tarball ${tarballName} not found in ${cwd} or ${path.join(cwd, 'build')}`
-  );
+  throw new Error(`Tarball ${tarballName} not found in ${destDir}`);
 };
 
 const runCli = (targetDir, args = [], env = {}) => {
