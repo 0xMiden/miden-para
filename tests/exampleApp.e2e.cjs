@@ -153,7 +153,10 @@ test(
 
     await waitForServer(url, 90000);
 
-    const browser = await puppeteer.launch({ headless: 'new' });
+    const browser = await puppeteer.launch({
+      headless: 'new',
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     try {
       const page = await browser.newPage();
       await page.goto(url, { waitUntil: 'networkidle2' });
