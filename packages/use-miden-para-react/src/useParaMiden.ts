@@ -1,6 +1,6 @@
 'use client';
 
-import { useClient, useAccount, type Wallet } from '@getpara/react-sdk';
+import { useClient, useAccount, type Wallet } from '@getpara/react-sdk-lite';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   createParaMidenClient,

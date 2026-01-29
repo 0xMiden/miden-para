@@ -134,39 +134,35 @@ function ensureMidenParaDependencies(targetRoot) {
   pkg.dependencies = pkg.dependencies ?? {};
   pkg.devDependencies = pkg.devDependencies ?? {};
   pkg.resolutions = pkg.resolutions ?? {};
-
+  pkg.scripts = pkg.scripts ?? {};
   // Align with examples/react so Para SDK connector peers are satisfied
   Object.assign(pkg.dependencies, {
-    "@cosmjs/amino": "^0.37.0",
-    "@cosmjs/cosmwasm-stargate": "^0.37.0",
-    "@cosmjs/encoding": "^0.37.0",
-    "@cosmjs/proto-signing": "^0.37.0",
-    "@cosmjs/stargate": "^0.37.0",
-    "@cosmjs/tendermint-rpc": "^0.37.0",
-    "@getpara/react-sdk": "2.0.0-alpha.73",
-    "@keplr-wallet/types": "^0.12.299",
-    "@solana-mobile/wallet-adapter-mobile": "^2.2.5",
-    "@solana/wallet-adapter-base": "^0.9.27",
-    "@solana/wallet-adapter-react": "^0.15.39",
-    "@solana/wallet-adapter-walletconnect": "^0.1.21",
-    "@solana/web3.js": "^1.98.4",
+    ...pkg.dependencies,
+    "@getpara/react-sdk-lite": "2.0.0-alpha.73",
+    "@getpara/evm-wallet-connectors": "^2.3.0",
     "@tanstack/react-query": "^5.90.12",
     "@wagmi/core": "^3.0.0",
     "@demox-labs/miden-sdk": "^0.12.5",
-    "cosmjs-types": "^0.11.0",
-    graz: "^0.4.2",
     "miden-para": "0.10.9",
     "miden-para-react": "^0.10.9",
-    react: "^19.2.0",
-    "react-dom": "^19.2.0",
     viem: "^2.41.2",
-    "vite-plugin-node-polyfills": "^0.24.0",
     wagmi: "^3.1.0",
   });
+
+  Object.assign(pkg.devDependencies, {
+    ...pkg.devDependencies,
+    "vite-plugin-node-polyfills": "^0.24.0",
+  });
+
 
   Object.assign(pkg.resolutions, {
     "@getpara/react-sdk": "2.0.0-alpha.73",
     "@getpara/web-sdk": "2.0.0-alpha.73",
+  });
+
+  Object.assign(pkg.scripts, {
+    ...pkg.scripts,
+    'postinstall': 'setup-para'
   });
 
   delete pkg.peerDependencies;

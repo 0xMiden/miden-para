@@ -8,8 +8,13 @@ import {
   TableRow,
 } from './components/ui/table';
 import { Wallet, Coins, Send, Eye } from 'lucide-react';
-import { useAccount, useLogout, useModal, useWallet } from '@getpara/react-sdk';
-import '@getpara/react-sdk/styles.css';
+import {
+  useAccount,
+  useLogout,
+  useModal,
+  useWallet,
+} from '@getpara/react-sdk-lite';
+import '@getpara/react-sdk-lite/styles.css';
 import { useParaMiden } from 'miden-para-react';
 import { createFaucetMintAndConsume } from './lib/mint';
 import {
@@ -30,7 +35,7 @@ function App() {
     'https://rpc.testnet.miden.io',
     'public',
     {
-      accountSeed: 'hello world',
+      accountSeed: 'your-account-seed-here',
       noteTransportUrl: 'https://transport.miden.io',
     }
   );
