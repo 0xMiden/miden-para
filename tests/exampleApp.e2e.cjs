@@ -58,7 +58,10 @@ const waitForServer = async (url, timeoutMs = 60000) => {
   const start = Date.now();
   while (Date.now() - start < timeoutMs) {
     try {
-      const res = await fetch(url);
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3000);
+      const res = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeout);
       if (res.ok) return;
     } catch (error) {
       // ignore until timeout
@@ -86,8 +89,10 @@ test(
       path.join(os.tmpdir(), 'miden-para-example-e2e-')
     );
     const tempExample = path.join(tmpRoot, 'app');
+    console.log('Copying example app to temp dir');
     copyExample(tempExample);
 
+    console.log('Packing local SDK tarballs');
     const rootTarball = packPackage(path.resolve(__dirname, '..'));
     const hookTarball = packPackage(
       path.resolve(__dirname, '../packages/use-miden-para-react')
@@ -100,10 +105,15 @@ test(
     pkg.dependencies['@miden-sdk/use-miden-para-react'] = `file:${hookTarball}`;
     fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
 
+    console.log('Installing example dependencies');
     const install = spawnSync('yarn', ['install', '--ignore-scripts'], {
       cwd: tempExample,
       stdio: 'inherit',
+      timeout: 180000,
     });
+    if (install.error && install.error.code === 'ETIMEDOUT') {
+      throw new Error('yarn install timed out after 180s');
+    }
     assert.strictEqual(install.status, 0);
 
     const port = await getFreePort();
@@ -115,6 +125,7 @@ test(
       BROWSER: 'none',
     };
 
+    console.log('Starting Vite dev server');
     const child = spawn(
       'yarn',
       ['dev', '--host', '127.0.0.1', '--port', String(port), '--strictPort'],
@@ -127,10 +138,14 @@ test(
 
     let output = '';
     child.stdout.on('data', (data) => {
-      output += data.toString();
+      const text = data.toString();
+      output += text;
+      process.stdout.write(text);
     });
     child.stderr.on('data', (data) => {
-      output += data.toString();
+      const text = data.toString();
+      output += text;
+      process.stderr.write(text);
     });
 
     const shutdown = async () => {
@@ -147,7 +162,20 @@ test(
       await shutdown();
     });
 
-    await waitForServer(url, 90000);
+    console.log('Waiting for dev server to respond');
+    const serverReady = waitForServer(url, 90000);
+    const serverExited = new Promise((_, reject) => {
+      child.once('exit', (code, signal) => {
+        reject(
+          new Error(
+            `Vite dev server exited early (code ${code ?? 'null'}, signal ${
+              signal ?? 'null'
+            }).\n${output}`
+          )
+        );
+      });
+    });
+    await Promise.race([serverReady, serverExited]);
 
     const browser = await puppeteer.launch({
       headless: 'new',
@@ -155,7 +183,8 @@ test(
     });
     try {
       const page = await browser.newPage();
-      await page.goto(url, { waitUntil: 'networkidle2' });
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+      await page.waitForTimeout(500);
       await page.waitForFunction(
         () =>
           Array.from(document.querySelectorAll('button')).some((button) =>
