@@ -100,14 +100,10 @@ test(
     pkg.dependencies['@miden-sdk/use-miden-para-react'] = `file:${hookTarball}`;
     fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
 
-    const install = spawnSync(
-      'npm',
-      ['install', '--no-audit', '--no-fund', '--no-package-lock', '--ignore-scripts'],
-      {
-        cwd: tempExample,
-        stdio: 'inherit',
-      }
-    );
+    const install = spawnSync('yarn', ['install', '--ignore-scripts'], {
+      cwd: tempExample,
+      stdio: 'inherit',
+    });
     assert.strictEqual(install.status, 0);
 
     const port = await getFreePort();
@@ -120,8 +116,8 @@ test(
     };
 
     const child = spawn(
-      'npm',
-      ['run', 'dev', '--', '--host', '127.0.0.1', '--port', String(port), '--strictPort'],
+      'yarn',
+      ['dev', '--host', '127.0.0.1', '--port', String(port), '--strictPort'],
       {
         cwd: tempExample,
         env,
