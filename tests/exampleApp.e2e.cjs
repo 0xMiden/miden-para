@@ -184,7 +184,7 @@ test(
     try {
       const page = await browser.newPage();
       await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-      await page.waitForTimeout(500);
+      await wait(500);
       await page.waitForFunction(
         () =>
           Array.from(document.querySelectorAll('button')).some((button) =>
