@@ -13,7 +13,7 @@
 2. Resolve `targetDir` and run `npm create vite@latest <basename> --yes --no-install` from `dirname(targetDir)`, piping “n” to install prompts so the scaffold returns control before we patch files.
 3. Copy `template/vite.config.ts` into the new project root.
 4. Replace `src/App.tsx` with the starter from `template/src/App.tsx`.
-5. Patch `package.json` to ensure `devDependencies.vite-plugin-node-polyfills = ^0.24.0` and add Para/Miden + connector deps (mirror `examples/react`: @miden-sdk/miden-para, @miden-sdk/use-miden-para-react, @getpara/react-sdk, @demox-labs/miden-sdk, tanstack query, wagmi stack, graz, CosmJS, Solana adapters, etc.).
+5. Patch `package.json` to ensure Vite plugin dev deps (`vite-plugin-node-polyfills`, `vite-plugin-wasm`, `vite-plugin-top-level-await`) and add Para/Miden + connector deps (mirror `examples/react`: @miden-sdk/miden-para, @miden-sdk/use-miden-para-react, @getpara/react-sdk-lite, @demox-labs/miden-sdk, tanstack query, wagmi stack, etc.).
 6. Write `.npmrc` with `legacy-peer-deps=true` so `npm install` succeeds despite the @miden-sdk/use-miden-para-react/@miden-sdk/miden-para peer mismatch.
 7. Copy `template/src/polyfills.ts` and inject `import "./polyfills";` into `src/main.tsx` if missing.
 8. Detect package manager from `npm_config_user_agent` (`pnpm`, `yarn`, `bun`, fallback `npm`) and install deps unless skipped.

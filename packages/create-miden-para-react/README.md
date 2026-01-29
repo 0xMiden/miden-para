@@ -6,7 +6,7 @@
 - Runs `npm create vite@latest <target> -- --template react-ts` so you always start from the upstream default.
 - Replaces `vite.config.ts` with the Para + Miden-friendly config (dedupe/exclude and WASM asset handling).
 - Replaces `src/App.tsx` with a ParaProvider + `useParaMiden` starter that reports the account ID and client readiness.
-- Adds Para/Miden + connector deps (matching `examples/react`) so Para SDK peers resolve: `@miden-sdk/miden-para`, `@miden-sdk/use-miden-para-react`, `@getpara/react-sdk-lite`, `@getpara/evm-wallet-connectors`, `@demox-labs/miden-sdk`, `@tanstack/react-query`, `@wagmi/core`, `viem`, `wagmi`, and `vite-plugin-node-polyfills`.
+- Adds Para/Miden + connector deps (matching `examples/react`) so Para SDK peers resolve: `@miden-sdk/miden-para`, `@miden-sdk/use-miden-para-react`, `@getpara/react-sdk-lite`, `@getpara/evm-wallet-connectors`, `@demox-labs/miden-sdk`, `@tanstack/react-query`, `@wagmi/core`, `viem`, `wagmi`, plus dev plugins `vite-plugin-node-polyfills`, `vite-plugin-wasm`, and `vite-plugin-top-level-await`.
 - Installs dependencies using your detected package manager (`pnpm`, `yarn`, `bun`, or falls back to `npm`); `create-vite` is invoked with `--yes --no-install` and auto-answers “no” to install prompts to avoid reverting the patched files.
 - Writes `.npmrc` with `legacy-peer-deps=true` so `npm install` works despite a known peer mismatch between `@miden-sdk/use-miden-para-react` and `@miden-sdk/miden-para`.
 - Adds `src/polyfills.ts` and injects it into `src/main.tsx` to provide `Buffer`/`process` in the browser.

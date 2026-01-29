@@ -9,6 +9,37 @@ const cliPath = path.resolve(
   __dirname,
   '../packages/create-miden-para-react/bin/create-miden-para-react.mjs'
 );
+const repoRoot = path.resolve(__dirname, '..');
+
+const packPackage = (cwd) => {
+  const result = spawnSync('npm', ['pack', '--silent'], {
+    cwd,
+    encoding: 'utf8',
+  });
+
+  if (result.status !== 0) {
+    throw new Error(
+      `npm pack failed in ${cwd}:\n${result.stderr || result.stdout}`
+    );
+  }
+
+  const output = `${result.stdout || ''}${result.stderr || ''}`;
+  const matches = output.match(/[^\s]+\.tgz/g);
+  if (!matches || matches.length === 0) {
+    throw new Error(`npm pack did not output a tarball name:\n${output}`);
+  }
+
+  const tarballName = matches[matches.length - 1];
+  const directPath = path.join(cwd, tarballName);
+  const buildPath = path.join(cwd, 'build', tarballName);
+
+  if (fs.existsSync(directPath)) return directPath;
+  if (fs.existsSync(buildPath)) return buildPath;
+
+  throw new Error(
+    `Tarball ${tarballName} not found in ${cwd} or ${path.join(cwd, 'build')}`
+  );
+};
 
 const runCli = (targetDir, args = [], env = {}) => {
   const result = spawnSync('node', [cliPath, targetDir, ...args], {
@@ -60,6 +91,14 @@ test('CLI scaffolds template and patches package.json in test mode', () => {
     pkg.devDependencies['vite-plugin-node-polyfills'],
     'vite-plugin-node-polyfills should be injected'
   );
+  assert.ok(
+    pkg.devDependencies['vite-plugin-wasm'],
+    'vite-plugin-wasm should be injected'
+  );
+  assert.ok(
+    pkg.devDependencies['vite-plugin-top-level-await'],
+    'vite-plugin-top-level-await should be injected'
+  );
   assert.strictEqual(
     pkg.scripts.postinstall,
     'setup-para',
@@ -103,8 +142,17 @@ test(
       path.join(os.tmpdir(), 'miden-para-create-e2e-')
     );
     const targetDir = path.join(tmpRoot, 'app');
+    const rootTarball = packPackage(repoRoot);
+    const hookTarball = packPackage(
+      path.join(repoRoot, 'packages', 'use-miden-para-react')
+    );
 
-    runCli(targetDir, [], { npm_config_yes: 'true' });
+    runCli(targetDir, [], {
+      npm_config_yes: 'true',
+      MIDEN_PARA_LOCAL_DEPS: '1',
+      MIDEN_PARA_LOCAL_MIDEN_PARA_PATH: rootTarball,
+      MIDEN_PARA_LOCAL_USE_PARA_REACT_PATH: hookTarball,
+    });
 
     const build = spawnSync('npm', ['run', 'build'], {
       cwd: targetDir,
