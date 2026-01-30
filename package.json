@@ -1,6 +1,6 @@
 {
-  "name": "miden-para",
-  "version": "0.10.9",
+  "name": "@miden-sdk/miden-para",
+  "version": "0.10.10",
   "description": "Miden x Para Integration",
   "packageManager": "yarn@1.22.22",
   "license": "MIT",
@@ -25,6 +25,9 @@
     "eslint": "^9.39.1",
     "glob": "^11.0.1",
     "prettier": "^3.7.3",
+    "puppeteer": "^24.4.0",
+    "react": "^19.2.0",
+    "react-test-renderer": "^19.2.0",
     "typescript": "^5.8.3"
   },
   "peerDependencies": {

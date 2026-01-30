@@ -11,7 +11,7 @@
 ## Build & Publish
 - Install deps (`yarn install`) at repo root; this package relies on workspace tooling.
 - Build artifacts: `cd packages/use-miden-para-react && yarn build` (runs tsup → `dist/index.{mjs,cjs,d.ts}`).
-- Publishing: `npm run publish` from this folder builds then publishes `miden-para-react`.
+- Publishing: `npm run publish` from this folder builds then publishes `@miden-sdk/use-miden-para-react`.
 
 ## Hook Flow (src/useParaMiden.ts)
 1. Read Para context via `useClient`, `useAccount`, `useWallet`.
@@ -24,9 +24,9 @@
 - **API changes**: modify `src/useParaMiden.ts`, ensure type exports stay stable, update README docs, and consider version bump.
 - **New config surface**: extend the hook signature (e.g., accept `opts` bag), forward through to `createParaMidenClient`, and document defaults.
 - **Testing/validation**: this package currently relies on example usage; if adding complex logic, consider lightweight React Testing Library hooks tests (not yet present).
-- **Release hygiene**: confirm `peerDependencies` stay aligned with upstream (`miden-para`, Para SDKs, React). Breaking Para/Miden API changes should trigger a major/minor release here too.
+- **Release hygiene**: confirm `peerDependencies` stay aligned with upstream (`@miden-sdk/miden-para`, Para SDKs, React). Breaking Para/Miden API changes should trigger a major/minor release here too.
 
 ## External Contracts
-- `@getpara/react-sdk` — supplies `useClient`, `useAccount`, `useWallet`, and Para configuration context. Hook must only run when `useAccount().isConnected` is true.
-- `miden-para` — root SDK; `createParaMidenClient` handles modal UX and signing. Ensure versions stay compatible (`peerDependencies` enforce `^0.10.9`+).
+- `@getpara/react-sdk-lite` — supplies `useClient`, `useAccount`, `useWallet`, and Para configuration context. Hook must only run when `useAccount().isConnected` is true.
+- `@miden-sdk/miden-para` — root SDK; `createParaMidenClient` handles modal UX and signing. Ensure versions stay compatible (`peerDependencies` enforce `^0.10.10`+).
 - `@demox-labs/miden-sdk` — dynamically imported for runtime helpers like `AccountType`. Keep it externalized to avoid bundling WASM assets.

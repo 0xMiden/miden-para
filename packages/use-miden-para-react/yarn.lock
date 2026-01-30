@@ -608,11 +608,6 @@
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.8.0.tgz#cee43d801fcef9644b11b8194857695acd5f815a"
   integrity sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==
 
-"@noble/hashes@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-2.0.1.tgz#fc1a928061d1232b0a52bb754393c37a5216c89e"
-  integrity sha512-XlOlEbQcE9fmuXxrVTXCTlG2nlRXa9Rj3rr5Ue/+tX+nmkgbX720YHh0VR3hBF9xDvwnb8D2shVGOwNx+ulArw==
-
 "@noble/secp256k1@1.7.1":
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/@noble/secp256k1/-/secp256k1-1.7.1.tgz#b251c70f824ce3ca7f8dc3df08d58f005cc0507c"
@@ -1562,13 +1557,6 @@ micro-ftch@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/micro-ftch/-/micro-ftch-0.3.1.tgz#6cb83388de4c1f279a034fb0cf96dfc050853c5f"
   integrity sha512-/0LLxhzP0tfiR5hcQebtudP56gUurs2CLkGarnCiB/OqEyUFQ6U3paQi/tgLv0hBJYt2rnr9MNpxz4fiiugstg==
-
-miden-para@^0.10.9:
-  version "0.10.9"
-  resolved "https://registry.yarnpkg.com/miden-para/-/miden-para-0.10.9.tgz#bc1ae4df4d2cf992ef82d9d706291404a2fcab6f"
-  integrity sha512-QcbMOYa9dIgEhO2JAmG8PjjN0Nb28rwaArrb6oVTySSohl8bK0HnF12/ANNXxWf/93aq5hdciJwMtP0Oe28P9g==
-  dependencies:
-    "@noble/hashes" "^2.0.1"
 
 mime-db@1.52.0:
   version "1.52.0"

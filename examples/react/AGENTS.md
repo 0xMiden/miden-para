@@ -28,5 +28,5 @@
 ## External Contracts
 
 - Para: `@getpara/react-sdk` (modal/state hooks).
-- Miden: `miden-para-react`, `@demox-labs/miden-sdk`.
+- Miden: `@miden-sdk/use-miden-para-react`, `@demox-labs/miden-sdk`.
 - Vite plugins: `vite-plugin-node-polyfills`, `vite-plugin-wasm`, top-level-await for WASM.

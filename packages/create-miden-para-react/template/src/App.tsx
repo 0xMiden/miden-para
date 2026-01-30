@@ -1,7 +1,7 @@
 import './App.css';
 import '@getpara/react-sdk-lite/styles.css';
 import { ParaProvider, useAccount, useModal } from '@getpara/react-sdk-lite';
-import { useParaMiden } from 'miden-para-react';
+import { useParaMiden } from '@miden-sdk/use-miden-para-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();

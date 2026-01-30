@@ -1,21 +1,22 @@
-# miden-para
+# @miden-sdk/miden-para
 
 [![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/0xMiden/miden-para/blob/main/LICENSE)
 [![test](https://github.com/0xMiden/miden-para/actions/workflows/test.yml/badge.svg)](https://github.com/0xMiden/miden-para/actions/workflows/test.yml)
 [![build](https://github.com/0xMiden/miden-para/actions/workflows/build.yml/badge.svg)](https://github.com/0xMiden/miden-para/actions/workflows/build.yml)
 
-This is the Miden x Para SDK integration. Below, you'll find instructions for local building and linking the library. If you're looking for React integration, see [Miden x Para x React](./packages/use-miden-para-react/README.md). If you want to scaffold a fresh Vite `react-ts` app with our Vite config baked in, check [create-miden-para-react](./packages/create-miden-para-react/README.md).
+This is the Miden x Para SDK integration. Below, you'll find instructions for local building and linking the library. If you're looking for React integration, see [Miden x Para x React](./packages/use-miden-para-react/README.md) (package `@miden-sdk/use-miden-para-react`). If you want to scaffold a fresh Vite `react-ts` app with our Vite config baked in, check [create-miden-para-react](./packages/create-miden-para-react/README.md) (package `@miden-sdk/create-miden-para-react`).
 
 ## Requirements
 
 - **Yarn 1.22.22** (enforced via `packageManager` field)
 - Node.js (compatible with your project)
+- A Para API key. **Production deployments require a Para production API key**; use a non-prod key for local/dev.
 
 This project uses Yarn 1.22.22. The version is locked in `package.json` and will be automatically enforced by modern package managers that support the `packageManager` field.
 
 ## Peer Dependencies
 
-`miden-para` expects these packages to be provided by the consuming app. Install matching versions alongside this package to avoid duplicate copies:
+`@miden-sdk/miden-para` expects these packages to be provided by the consuming app. Install matching versions alongside this package to avoid duplicate copies:
 
 - `@demox-labs/miden-sdk@^0.12.5`
 - `@getpara/web-sdk@2.0.0-alpha.73`
@@ -23,7 +24,7 @@ This project uses Yarn 1.22.22. The version is locked in `package.json` and will
 Example install:
 
 ```bash
-yarn add miden-para @demox-labs/miden-sdk@^0.12.5 @getpara/web-sdk@2.0.0-alpha.73
+yarn add @miden-sdk/miden-para @demox-labs/miden-sdk@^0.12.5 @getpara/web-sdk@2.0.0-alpha.73
 ```
 
 When creating a client with `storageMode` set to `private`, supply an `accountSeed`; the initializer will throw if it is missing so that private accounts remain recoverable.
@@ -42,7 +43,7 @@ yarn build
 
 ## Publishing to npm
 
-1. Update the version in `package.json` (the published package is `miden-para`).
+1. Update the version in `package.json` (the published package is `@miden-sdk/miden-para`).
 2. Authenticate with npm if needed: `npm login`.
 3. Publish: `npm run publish`. The `prepack` hook rebuilds `dist/` and the `postpack` hook moves the generated tarball into `build/`.
-4. (Optional) Inspect the packed artifact without publishing via `npm pack` and check `build/` for the resulting `miden-para-<version>.tgz`.
+4. (Optional) Inspect the packed artifact without publishing via `npm pack` and check `build/` for the resulting `miden-sdk-miden-para-<version>.tgz`.

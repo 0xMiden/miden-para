@@ -1,34 +1,34 @@
-# miden-para-react
+# @miden-sdk/use-miden-para-react
 
 React hook that wires Para accounts into a Miden client.
 
 ## Install
 
 ```bash
-npm install miden-para-react
+npm install @miden-sdk/use-miden-para-react
 ```
 
 ## Peer Dependencies
 
-`miden-para-react` expects these packages to be provided by the consuming app. Install matching versions alongside this package to avoid duplicate copies:
+`@miden-sdk/use-miden-para-react` expects these packages to be provided by the consuming app. Install matching versions alongside this package to avoid duplicate copies:
 
 - `@demox-labs/miden-sdk@^0.12.5`
-- `@getpara/react-sdk@^2.0.0-alpha.73`
-- `miden-para@^0.10.9`
+- `@getpara/react-sdk-lite@^2.2.0`
+- `@miden-sdk/miden-para@^0.10.10`
 - `react@^18.0.0 || ^19.0.0`
 
 Example install:
 
 ```bash
-yarn add miden-para-react @demox-labs/miden-sdk@^0.12.5 @getpara/react-sdk@^2.0.0-alpha.73 miden-para@^0.10.9 react@^18.0.0
+yarn add @miden-sdk/use-miden-para-react @demox-labs/miden-sdk@^0.12.5 @getpara/react-sdk-lite@^2.2.0 @miden-sdk/miden-para@^0.10.10 react@^18.0.0
 ```
 
 ## Usage
 
 ```tsx
-import '@getpara/react-sdk/styles.css';
-import { ParaProvider, useAccount, useModal } from '@getpara/react-sdk';
-import { useParaMiden } from 'miden-para-react';
+import '@getpara/react-sdk-lite/styles.css';
+import { ParaProvider, useAccount, useModal } from '@getpara/react-sdk-lite';
+import { useParaMiden } from '@miden-sdk/use-miden-para-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
@@ -68,6 +68,8 @@ function Content() {
   );
 }
 ```
+
+For production apps, you must use a Para **production** API key. Use a non-prod key for local/dev environments.
 
 Pass a custom transaction confirmation step as the optional fourth argument if you want to show your own popup before Para signs:
 
