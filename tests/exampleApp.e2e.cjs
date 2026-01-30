@@ -71,6 +71,21 @@ const waitForServer = async (url, timeoutMs = 60000) => {
   throw new Error(`Server not reachable at ${url} after ${timeoutMs}ms`);
 };
 
+const waitForExit = (child, timeoutMs = 5000) =>
+  new Promise((resolve, reject) => {
+    if (child.exitCode !== null) {
+      resolve();
+      return;
+    }
+    const timeout = setTimeout(() => {
+      reject(new Error('Timed out waiting for process exit'));
+    }, timeoutMs);
+    child.once('close', () => {
+      clearTimeout(timeout);
+      resolve();
+    });
+  });
+
 const getFreePort = () =>
   new Promise((resolve, reject) => {
     const server = net.createServer();
@@ -133,8 +148,10 @@ test(
         cwd: tempExample,
         env,
         stdio: 'pipe',
+        detached: process.platform !== 'win32',
       }
     );
+    if (child.unref) child.unref();
 
     let output = '';
     child.stdout.on('data', (data) => {
@@ -149,12 +166,40 @@ test(
     });
 
     const shutdown = async () => {
-      if (!child.killed) {
-        child.kill('SIGTERM');
-        await wait(500);
+      if (child.exitCode !== null) return;
+      if (child.pid) {
+        try {
+          if (process.platform !== 'win32') {
+            process.kill(-child.pid, 'SIGTERM');
+          } else {
+            child.kill('SIGTERM');
+          }
+        } catch (error) {
+          child.kill('SIGTERM');
+        }
       }
-      if (!child.killed) {
-        child.kill('SIGKILL');
+      try {
+        await waitForExit(child, 5000);
+      } catch (error) {
+        if (child.pid) {
+          try {
+            if (process.platform !== 'win32') {
+              process.kill(-child.pid, 'SIGKILL');
+            } else {
+              child.kill('SIGKILL');
+            }
+          } catch (killError) {
+            child.kill('SIGKILL');
+          }
+        }
+        try {
+          await waitForExit(child, 5000);
+        } catch (finalError) {
+          // ignore
+        }
+      } finally {
+        if (child.stdout) child.stdout.destroy();
+        if (child.stderr) child.stderr.destroy();
       }
     };
 
@@ -175,6 +220,7 @@ test(
         );
       });
     });
+    serverExited.catch(() => {});
     await Promise.race([serverReady, serverExited]);
 
     const browser = await puppeteer.launch({
