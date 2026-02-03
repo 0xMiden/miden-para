@@ -6,3 +6,11 @@ export type {
   TxSummaryJson,
 } from './types.js';
 export type { CustomSignConfirmStep } from './midenClient.js';
+
+// React Signer Provider
+export {
+  ParaSignerProvider,
+  useParaSigner,
+  type ParaSignerProviderProps,
+  type ParaSignerExtras,
+} from './ParaSignerProvider.js';
