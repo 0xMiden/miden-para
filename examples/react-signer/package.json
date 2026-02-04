@@ -1,0 +1,34 @@
+{
+  "name": "miden-para-signer-example",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@getpara/react-sdk-lite": "^2.2.0",
+    "@getpara/evm-wallet-connectors": "^2.2.0",
+    "@miden-sdk/miden-sdk": "file:../../../miden-client/crates/web-client",
+    "@miden-sdk/react": "file:../../../miden-client/packages/react-sdk",
+    "@miden-sdk/miden-para": "file:../..",
+    "@tanstack/react-query": "^5.90.12",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "viem": "^2.38.5",
+    "wagmi": "^2.14.16"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "typescript": "~5.8.3",
+    "vite": "^6.2.4",
+    "vite-plugin-node-polyfills": "^0.24.0",
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vite-plugin-wasm": "^3.5.0"
+  },
+  "packageManager": "yarn@1.22.22"
+}

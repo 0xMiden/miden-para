@@ -7,24 +7,110 @@ import {
   useContext,
   type ReactNode,
 } from 'react';
-import { ParaWeb, type Wallet, type Environment } from '@getpara/web-sdk';
-import { SignerContext, type SignerContextValue } from '@miden-sdk/react';
+import { ParaWeb, Environment, type Wallet } from '@getpara/web-sdk';
 import { signCb as createSignCb, type CustomSignConfirmStep } from './midenClient.js';
 import { evmPkToCommitment, getUncompressedPublicKeyFromWallet } from './utils.js';
 
+// SIGNER CONTEXT TYPES
+// These mirror the types from @miden-sdk/react SignerContext.
+// We define them here so this package can build without requiring the
+// unreleased SignerContext feature from @miden-sdk/react.
+// ================================================================================================
+
+/**
+ * Sign callback for WebClient.createClientWithExternalKeystore.
+ */
+export type SignCallback = (
+  pubKey: Uint8Array,
+  signingInputs: Uint8Array
+) => Promise<Uint8Array>;
+
+/**
+ * Account type for signer accounts.
+ */
+export type SignerAccountType =
+  | 'RegularAccountImmutableCode'
+  | 'RegularAccountUpdatableCode'
+  | 'FungibleFaucet'
+  | 'NonFungibleFaucet';
+
+/**
+ * Account configuration provided by the signer.
+ */
+export interface SignerAccountConfig {
+  publicKeyCommitment: Uint8Array;
+  accountType: SignerAccountType;
+  storageMode: import('@demox-labs/miden-sdk').AccountStorageMode;
+  accountSeed?: Uint8Array;
+}
+
+/**
+ * Context value provided by signer providers.
+ */
+export interface SignerContextValue {
+  signCb: SignCallback;
+  accountConfig: SignerAccountConfig;
+  storeName: string;
+  name: string;
+  isConnected: boolean;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+}
+
+/**
+ * Default React context for signer - used when no external SignerContext is provided.
+ * For integration with MidenProvider from @miden-sdk/react, pass the SignerContext
+ * from that package via the `signerContext` prop.
+ */
+const DefaultSignerContext = createContext<SignerContextValue | null>(null);
+
+// Export the context for use in other packages
+export { DefaultSignerContext as SignerContext };
+
 // PARA SIGNER PROVIDER
 // ================================================================================================
+
+/** Environment string values accepted by ParaSignerProvider */
+export type ParaEnvironment = 'BETA' | 'PROD' | 'SANDBOX' | 'DEV' | 'DEVELOPMENT' | 'PRODUCTION';
+
+/**
+ * Convert environment string to Environment enum value.
+ * Handles the mapping safely for both ESM and CJS environments.
+ */
+function getEnvironmentValue(env: ParaEnvironment): Environment {
+  // Handle aliases
+  const normalizedEnv = env === 'DEVELOPMENT' ? 'BETA' : env === 'PRODUCTION' ? 'PROD' : env;
+
+  // Try accessing the enum - Environment may be undefined in some test environments
+  if (Environment && typeof Environment === 'object') {
+    const value = Environment[normalizedEnv as keyof typeof Environment];
+    if (value !== undefined) return value;
+  }
+
+  // Fallback: return the string directly (Para SDK may accept string values)
+  return normalizedEnv as unknown as Environment;
+}
 
 export interface ParaSignerProviderProps {
   children: ReactNode;
   /** Para API key */
   apiKey: string;
-  /** Para environment (PRODUCTION, DEVELOPMENT, SANDBOX) */
-  environment: Environment;
+  /** Para environment (BETA, PROD, SANDBOX, DEV, DEVELOPMENT, PRODUCTION) */
+  environment: ParaEnvironment;
   /** Whether to show the signing modal for transaction confirmation */
   showSigningModal?: boolean;
   /** Custom sign confirmation step callback */
   customSignConfirmStep?: CustomSignConfirmStep;
+  /**
+   * Optional SignerContext from @miden-sdk/react.
+   * Pass this when using with MidenProvider so they share the same context.
+   * @example
+   * ```tsx
+   * import { SignerContext } from '@miden-sdk/react';
+   * <ParaSignerProvider signerContext={SignerContext} ... />
+   * ```
+   */
+  signerContext?: React.Context<SignerContextValue | null>;
 }
 
 /**
@@ -57,10 +143,13 @@ export function ParaSignerProvider({
   environment,
   showSigningModal = true,
   customSignConfirmStep,
+  signerContext: SignerContextProp,
 }: ParaSignerProviderProps) {
+  // Use provided context or default
+  const SignerContext = SignerContextProp ?? DefaultSignerContext;
   // Create Para client once (stable instance)
   const para = useMemo(
-    () => new ParaWeb({ apiKey, environment }),
+    () => new ParaWeb(getEnvironmentValue(environment), apiKey),
     [apiKey, environment]
   );
 
@@ -107,9 +196,15 @@ export function ParaSignerProvider({
   }, [para]);
 
   // Connect/disconnect methods (stable references)
+  // Note: connect is a no-op here because Para authentication is handled by
+  // ParaProvider from @getpara/react-sdk-lite. Use their useModal().openModal()
+  // to trigger the authentication flow.
   const connect = useCallback(async () => {
-    await para.connect();
-  }, [para]);
+    console.warn(
+      'ParaSignerProvider: connect() called but Para authentication is handled by ParaProvider. ' +
+      'Use useModal().openModal() from @getpara/react-sdk-lite to connect.'
+    );
+  }, []);
 
   const disconnect = useCallback(async () => {
     await para.logout();
@@ -221,13 +316,23 @@ export function ParaSignerProvider({
  * Hook for Para-specific extras beyond the unified useSigner interface.
  * Use this to access the Para client or wallet details directly.
  *
+ * @param signerContext - Optional SignerContext to use (pass the same one used in ParaSignerProvider)
+ *
  * @example
  * ```tsx
+ * // Basic usage (uses default context)
  * const { para, wallet, isConnected } = useParaSigner();
+ *
+ * // With custom context from @miden-sdk/react
+ * import { SignerContext } from '@miden-sdk/react';
+ * const { para, wallet, isConnected } = useParaSigner(SignerContext);
  * ```
  */
-export function useParaSigner(): ParaSignerExtras & { isConnected: boolean } {
+export function useParaSigner(
+  signerContext?: React.Context<SignerContextValue | null>
+): ParaSignerExtras & { isConnected: boolean } {
   const extras = useContext(ParaSignerExtrasContext);
+  const SignerContext = signerContext ?? DefaultSignerContext;
   const signer = useContext(SignerContext);
   if (!extras) {
     throw new Error('useParaSigner must be used within ParaSignerProvider');
