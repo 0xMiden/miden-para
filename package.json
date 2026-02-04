@@ -20,6 +20,8 @@
   "devDependencies": {
     "@miden-sdk/miden-sdk": "^0.13.0",
     "@getpara/web-sdk": "2.0.0-alpha.73",
+    "@miden-sdk/react": "^0.13.0",
+    "@types/react": "^19.0.0",
     "@typescript-eslint/parser": "^8.48.0",
     "esbuild": "^0.24.0",
     "eslint": "^9.39.1",
@@ -32,7 +34,17 @@
   },
   "peerDependencies": {
     "@miden-sdk/miden-sdk": "^0.13.0",
-    "@getpara/web-sdk": "2.0.0-alpha.73"
+    "@getpara/web-sdk": "2.0.0-alpha.73",
+    "@miden-sdk/react": "^0.13.0",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@miden-sdk/react": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
   },
   "exports": {
     ".": {
