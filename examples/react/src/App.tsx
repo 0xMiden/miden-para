@@ -53,7 +53,7 @@ function App() {
   useEffect(() => {
     (async () => {
       const { AccountId, Address, NetworkId } =
-        await import('@demox-labs/miden-sdk');
+        await import('@miden-sdk/miden-sdk');
       if (accountId) {
         setAddress(
           Address.fromAccountId(AccountId.fromHex(accountId)).toBech32(

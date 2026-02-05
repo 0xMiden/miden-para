@@ -17,7 +17,7 @@
 1. Read Para context via `useClient`, `useAccount`, `useWallet`.
 2. Memoize `evmWallets` from the embedded wallet list.
 3. `useEffect` guards against running before Para connects or when a client already exists.
-4. Lazily import `@demox-labs/miden-sdk` for `AccountType` and call `createParaMidenClient` from the root package, passing node endpoint + storage mode.
+4. Lazily import `@miden-sdk/miden-sdk` for `AccountType` and call `createParaMidenClient` from the root package, passing node endpoint + storage mode.
 5. Persist the resulting client in a ref (so rerenders don’t trigger rebuilds) and expose the resolved `accountId`.
 
 ## Agent Playbooks
@@ -28,5 +28,5 @@
 
 ## External Contracts
 - `@getpara/react-sdk-lite` — supplies `useClient`, `useAccount`, `useWallet`, and Para configuration context. Hook must only run when `useAccount().isConnected` is true.
-- `@miden-sdk/miden-para` — root SDK; `createParaMidenClient` handles modal UX and signing. Ensure versions stay compatible (`peerDependencies` enforce `^0.10.10`+).
-- `@demox-labs/miden-sdk` — dynamically imported for runtime helpers like `AccountType`. Keep it externalized to avoid bundling WASM assets.
+- `@miden-sdk/miden-para` — root SDK; `createParaMidenClient` handles modal UX and signing. Ensure versions stay compatible (`peerDependencies` enforce `^0.13.0`+).
+- `@miden-sdk/miden-sdk` — dynamically imported for runtime helpers like `AccountType`. Keep it externalized to avoid bundling WASM assets.

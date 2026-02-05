@@ -27,7 +27,7 @@ export default defineConfig({
     // Keep Miden SDK unbundled and avoid prebundling Para's Stencil component bundles
     // to prevent multiple runtimes in dev.
     exclude: [
-      '@demox-labs/miden-sdk',
+      '@miden-sdk/miden-sdk',
       '@getpara/solana-wallet-connectors',
       '@getpara/cosmos-wallet-connectors',
     ],

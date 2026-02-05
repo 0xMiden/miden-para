@@ -27,7 +27,7 @@ export default defineConfig({
   assetsInclude: ['**/*.wasm'],
   optimizeDeps: {
     exclude: [
-      '@demox-labs/miden-sdk',
+      '@miden-sdk/miden-sdk',
       '@getpara/solana-wallet-connectors',
       '@getpara/cosmos-wallet-connectors',
     ],

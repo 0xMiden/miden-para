@@ -32,7 +32,7 @@ export const signCb = (
   customSignConfirmStep?: CustomSignConfirmStep
 ) => {
   return async (_: Uint8Array, signingInputs: Uint8Array) => {
-    const { SigningInputs } = await import('@demox-labs/miden-sdk');
+    const { SigningInputs } = await import('@miden-sdk/miden-sdk');
     const inputs = SigningInputs.deserialize(signingInputs);
     let commitment = inputs.toCommitment().toHex().slice(2);
     const hashed = bytesToHex(keccak256(hexToBytes(commitment)));
@@ -63,12 +63,12 @@ export const signCb = (
  * Attempts to import an existing account for public/network modes before creating a new one.
  */
 async function createAccount(
-  midenClient: import('@demox-labs/miden-sdk').WebClient,
+  midenClient: import('@miden-sdk/miden-sdk').WebClient,
   publicKey: string,
   opts: MidenAccountOpts
 ) {
   const { AccountBuilder, AccountComponent, AccountStorageMode } =
-    await import('@demox-labs/miden-sdk');
+    await import('@miden-sdk/miden-sdk');
 
   await midenClient.syncState();
   let pkc = await evmPkToCommitment(publicKey);
@@ -140,7 +140,7 @@ export async function createParaMidenClient(
   const wallet = evmWallets[selectedIndex] ?? evmWallets[0];
   const publicKey = accountKeys[selectedIndex] ?? accountKeys[0];
 
-  const { WebClient } = await import('@demox-labs/miden-sdk');
+  const { WebClient } = await import('@miden-sdk/miden-sdk');
   // SDK typings currently miss createClientWithExternalKeystore, so cast to any here.
   const createClientWithExternalKeystore = (
     WebClient as unknown as {

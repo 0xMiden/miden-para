@@ -176,7 +176,7 @@ test('evmPkToCommitment hashes compressed bytes with even/odd tagging', async ()
 
   const originalLoad = Module._load;
   Module._load = function patchedLoad(request, parent, isMain) {
-    if (request === '@demox-labs/miden-sdk') return mockSdk;
+    if (request === '@miden-sdk/miden-sdk') return mockSdk;
     return originalLoad.apply(this, [request, parent, isMain]);
   };
 
