@@ -14,13 +14,13 @@ npm install @miden-sdk/use-miden-para-react
 
 - `@miden-sdk/miden-sdk@^0.13.0`
 - `@getpara/react-sdk-lite@^2.2.0`
-- `@miden-sdk/miden-para@^0.11.0`
+- `@miden-sdk/miden-para@^0.13.0`
 - `react@^18.0.0 || ^19.0.0`
 
 Example install:
 
 ```bash
-yarn add @miden-sdk/use-miden-para-react @miden-sdk/miden-sdk@^0.13.0 @getpara/react-sdk-lite@^2.2.0 @miden-sdk/miden-para@^0.11.0 react@^18.0.0
+yarn add @miden-sdk/use-miden-para-react @miden-sdk/miden-sdk@^0.13.0 @getpara/react-sdk-lite@^2.2.0 @miden-sdk/miden-para@^0.13.0 react@^18.0.0
 ```
 
 ## Usage

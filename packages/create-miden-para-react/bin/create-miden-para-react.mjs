@@ -211,10 +211,10 @@ function ensureMidenParaDependencies(targetRoot) {
   pkg.scripts = pkg.scripts ?? {};
   const midenParaVersion = useLocalDeps
     ? `file:${localMidenParaPath}`
-    : "0.11.0";
+    : "0.13.0";
   const useMidenParaReactVersion = useLocalDeps
     ? `file:${localUseMidenParaReactPath}`
-    : "^0.11.0";
+    : "^0.13.0";
   // Align with examples/react so Para SDK connector peers are satisfied
   Object.assign(pkg.dependencies, {
     ...pkg.dependencies,
