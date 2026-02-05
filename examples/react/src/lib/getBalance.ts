@@ -1,5 +1,5 @@
 export async function getBalance(accountId: string) {
-  const { WebClient, AccountId } = await import('@demox-labs/miden-sdk');
+  const { WebClient, AccountId } = await import('@miden-sdk/miden-sdk');
 
   const client = await WebClient.createClient(); // default endpoint is tesnet
   await client.syncState();

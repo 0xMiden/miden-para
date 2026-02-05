@@ -11,6 +11,6 @@ export default defineConfig({
     'react',
     '@getpara/react-sdk-lite',
     '@miden-sdk/miden-para',
-    '@demox-labs/miden-sdk',
+    '@miden-sdk/miden-sdk',
   ],
 });

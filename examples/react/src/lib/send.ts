@@ -1,12 +1,12 @@
 export async function send(
-  midenParaClient: import('@demox-labs/miden-sdk').WebClient,
+  midenParaClient: import('@miden-sdk/miden-sdk').WebClient,
   fromAccountId: string,
   toAddress: string,
   faucetId: string,
   amount: bigint
 ) {
   const { Address, AccountId, NoteType } =
-    await import('@demox-labs/miden-sdk');
+    await import('@miden-sdk/miden-sdk');
 
   const toAddr = Address.fromBech32(toAddress);
   const fromAddr = AccountId.fromHex(fromAccountId);

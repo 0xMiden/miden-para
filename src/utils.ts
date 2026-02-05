@@ -35,7 +35,7 @@ export const accountSeedFromStr = (str?: string) => {
  * Assumes input format `0x04${x}${y}` where x and y are 64-char hex strings.
  */
 export const evmPkToCommitment = async (uncompressedPublicKey: string) => {
-  const { Felt, Rpo256, FeltArray } = await import('@demox-labs/miden-sdk');
+  const { Felt, Rpo256, FeltArray } = await import('@miden-sdk/miden-sdk');
   const withoutPrefix = uncompressedPublicKey.slice(4);
   const x = withoutPrefix.slice(0, 64);
   const y = withoutPrefix.slice(64); // hex encoded string
@@ -87,7 +87,7 @@ export const getUncompressedPublicKeyFromWallet = async (
 };
 
 export const txSummaryToJosn = (
-  txSummary: import('@demox-labs/miden-sdk').TransactionSummary
+  txSummary: import('@miden-sdk/miden-sdk').TransactionSummary
 ): TxSummaryJson => {
   const inputNotes = txSummary
     .inputNotes()
@@ -130,7 +130,7 @@ export const txSummaryToJosn = (
   };
 };
 
-function noteTypeToString(noteType: import('@demox-labs/miden-sdk').NoteType) {
+function noteTypeToString(noteType: import('@miden-sdk/miden-sdk').NoteType) {
   switch (noteType) {
     case 1:
       return 'public';

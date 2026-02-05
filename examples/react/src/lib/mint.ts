@@ -2,14 +2,14 @@ import type React from 'react';
 import { type MintAndConsumeProgress, MintAndConsumeStage } from './types';
 
 export async function createFaucetMintAndConsume(
-  client: import('@demox-labs/miden-sdk').WebClient,
+  client: import('@miden-sdk/miden-sdk').WebClient,
   accountId: string,
   setProgress: React.Dispatch<
     React.SetStateAction<MintAndConsumeProgress | null>
   >
 ) {
   const { WebClient, AccountStorageMode, NoteType, AccountId } =
-    await import('@demox-labs/miden-sdk');
+    await import('@miden-sdk/miden-sdk');
   setProgress({ stage: MintAndConsumeStage.CreatingFaucet });
   const newClient = await WebClient.createClient(); // default endpoint is tesnet
   await newClient.syncState();

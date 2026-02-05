@@ -18,13 +18,13 @@ This project uses Yarn 1.22.22. The version is locked in `package.json` and will
 
 `@miden-sdk/miden-para` expects these packages to be provided by the consuming app. Install matching versions alongside this package to avoid duplicate copies:
 
-- `@demox-labs/miden-sdk@^0.12.5`
+- `@miden-sdk/miden-sdk@^0.13.0`
 - `@getpara/web-sdk@2.0.0-alpha.73`
 
 Example install:
 
 ```bash
-yarn add @miden-sdk/miden-para @demox-labs/miden-sdk@^0.12.5 @getpara/web-sdk@2.0.0-alpha.73
+yarn add @miden-sdk/miden-para @miden-sdk/miden-sdk@^0.13.0 @getpara/web-sdk@2.0.0-alpha.73
 ```
 
 When creating a client with `storageMode` set to `private`, supply an `accountSeed`; the initializer will throw if it is missing so that private accounts remain recoverable.

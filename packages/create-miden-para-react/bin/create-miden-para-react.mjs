@@ -222,7 +222,7 @@ function ensureMidenParaDependencies(targetRoot) {
     "@getpara/evm-wallet-connectors": "^2.3.0",
     "@tanstack/react-query": "^5.90.12",
     "@wagmi/core": "^3.0.0",
-    "@demox-labs/miden-sdk": "^0.12.5",
+    "@miden-sdk/miden-sdk": "^0.13.0",
     "@miden-sdk/miden-para": midenParaVersion,
     "@miden-sdk/use-miden-para-react": useMidenParaReactVersion,
     viem: "^2.41.2",

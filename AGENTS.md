@@ -29,7 +29,7 @@
    - Dedicated tests (`tests/modalClient.test.cjs`) assert rendering, resolution semantics, and cleanup.
 3. **React integration (`packages/use-miden-para-react/src/useParaMiden.ts`)**
    - Leverages `useClient`, `useAccount`, `useWallet` (Para React SDK) to watch connection state.
-   - Lazily imports `@demox-labs/miden-sdk` for `AccountType`, spins up the Para-backed WebClient once wallets resolve, and memoizes the resulting client in a ref.
+   - Lazily imports `@miden-sdk/miden-sdk` for `AccountType`, spins up the Para-backed WebClient once wallets resolve, and memoizes the resulting client in a ref.
    - Imports the root npm package (`@miden-sdk/miden-para`).
 4. **Example consumer (`examples/react/src/components/ConsumeAllNotes.tsx`)**
    - Wraps UI with `ParaProvider` + TanStack Query.
@@ -47,7 +47,7 @@
 ## External Contracts
 
 - Para Web/React SDKs (`@getpara/web-sdk`, `@getpara/react-sdk`) — provide wallet discovery, JWT issuance, and signing.
-- Miden SDK (`@demox-labs/miden-sdk`) — supplies `WebClient`, account builders, Felt/RPO utilities, and transaction helpers.
+- Miden SDK (`@miden-sdk/miden-sdk`) — supplies `WebClient`, account builders, Felt/RPO utilities, and transaction helpers.
 - Noble hashes (`@noble/hashes`) — used for keccak hashing + hex conversions during signing.
 
 Keep peer dependency versions aligned with `package.json` to avoid duplicated SDK copies inside consuming apps.

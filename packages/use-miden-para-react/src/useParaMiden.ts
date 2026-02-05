@@ -32,7 +32,7 @@ export function useParaMiden(
 ) {
   const para = useClient();
   const { isConnected, embedded } = useAccount();
-  const clientRef = useRef<import('@demox-labs/miden-sdk').WebClient | null>(
+  const clientRef = useRef<import('@miden-sdk/miden-sdk').WebClient | null>(
     null
   );
   const [accountId, setAccountId] = useState<string>('');
@@ -55,7 +55,7 @@ export function useParaMiden(
         return;
       }
 
-      const { AccountType } = await import('@demox-labs/miden-sdk');
+      const { AccountType } = await import('@miden-sdk/miden-sdk');
 
       const { client: midenParaClient, accountId: aId } =
         await createParaMidenClient(

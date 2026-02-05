@@ -19,8 +19,8 @@ const loadUseParaMiden = (mocks = {}) => {
   const originalLoad = Module._load;
   Module._load = function patchedLoad(request, parent, isMain) {
     if (mocks[request]) return mocks[request];
-    if (request.startsWith('@demox-labs/miden-sdk')) {
-      return mocks['@demox-labs/miden-sdk'];
+    if (request.startsWith('@miden-sdk/miden-sdk')) {
+      return mocks['@miden-sdk/miden-sdk'];
     }
     if (request.startsWith('@miden-sdk/miden-para')) {
       return mocks['@miden-sdk/miden-para'];
@@ -104,7 +104,7 @@ const buildMocks = (state, calls, client) => ({
       return { client, accountId: 'acc-123' };
     },
   },
-  '@demox-labs/miden-sdk': {
+  '@miden-sdk/miden-sdk': {
     AccountType: { RegularAccountImmutableCode: 'RegularAccountImmutableCode' },
   },
 });

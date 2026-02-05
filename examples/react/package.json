@@ -11,7 +11,7 @@
     "postinstall": "setup-para"
   },
   "dependencies": {
-    "@demox-labs/miden-sdk": "^0.12.5",
+    "@miden-sdk/miden-sdk": "^0.13.0",
     "@getpara/evm-wallet-connectors": "^2.2.0",
     "@getpara/react-sdk-lite": "^2.2.0",
     "@miden-sdk/miden-para": "^0.10.10",

@@ -12,7 +12,7 @@ export type MidenAccountStorageMode = 'public' | 'private' | 'network';
 
 export interface MidenAccountOpts {
   accountSeed?: string;
-  type: import('@demox-labs/miden-sdk').AccountType;
+  type: import('@miden-sdk/miden-sdk').AccountType;
   storageMode: MidenAccountStorageMode;
 }
 export type Opts = MidenClientOpts & MidenAccountOpts;
