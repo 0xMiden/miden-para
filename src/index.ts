@@ -11,6 +11,8 @@ export type { CustomSignConfirmStep } from './midenClient.js';
 export {
   ParaSignerProvider,
   useParaSigner,
+  useModal,
+  useLogout,
   type ParaSignerProviderProps,
   type ParaSignerExtras,
 } from './ParaSignerProvider.js';

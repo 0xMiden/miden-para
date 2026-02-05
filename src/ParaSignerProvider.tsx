@@ -3,69 +3,27 @@ import {
   useEffect,
   useCallback,
   useMemo,
+  useRef,
   createContext,
   useContext,
   type ReactNode,
 } from 'react';
 import { ParaWeb, Environment, type Wallet } from '@getpara/web-sdk';
+import {
+  ParaProvider,
+  useModal,
+  useLogout,
+  type ParaProviderProps,
+} from '@getpara/react-sdk-lite';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SignerContext, type SignerContextValue } from '@miden-sdk/react';
 import { signCb as createSignCb, type CustomSignConfirmStep } from './midenClient.js';
 import { evmPkToCommitment, getUncompressedPublicKeyFromWallet } from './utils.js';
 
-// SIGNER CONTEXT TYPES
-// These mirror the types from @miden-sdk/react SignerContext.
-// We define them here so this package can build without requiring the
-// unreleased SignerContext feature from @miden-sdk/react.
-// ================================================================================================
+// Re-export Para hooks for convenience
+export { useModal, useLogout } from '@getpara/react-sdk-lite';
 
-/**
- * Sign callback for WebClient.createClientWithExternalKeystore.
- */
-export type SignCallback = (
-  pubKey: Uint8Array,
-  signingInputs: Uint8Array
-) => Promise<Uint8Array>;
-
-/**
- * Account type for signer accounts.
- */
-export type SignerAccountType =
-  | 'RegularAccountImmutableCode'
-  | 'RegularAccountUpdatableCode'
-  | 'FungibleFaucet'
-  | 'NonFungibleFaucet';
-
-/**
- * Account configuration provided by the signer.
- */
-export interface SignerAccountConfig {
-  publicKeyCommitment: Uint8Array;
-  accountType: SignerAccountType;
-  storageMode: import('@demox-labs/miden-sdk').AccountStorageMode;
-  accountSeed?: Uint8Array;
-}
-
-/**
- * Context value provided by signer providers.
- */
-export interface SignerContextValue {
-  signCb: SignCallback;
-  accountConfig: SignerAccountConfig;
-  storeName: string;
-  name: string;
-  isConnected: boolean;
-  connect: () => Promise<void>;
-  disconnect: () => Promise<void>;
-}
-
-/**
- * Default React context for signer - used when no external SignerContext is provided.
- * For integration with MidenProvider from @miden-sdk/react, pass the SignerContext
- * from that package via the `signerContext` prop.
- */
-const DefaultSignerContext = createContext<SignerContextValue | null>(null);
-
-// Export the context for use in other packages
-export { DefaultSignerContext as SignerContext };
+const defaultQueryClient = new QueryClient();
 
 // PARA SIGNER PROVIDER
 // ================================================================================================
@@ -97,20 +55,22 @@ export interface ParaSignerProviderProps {
   apiKey: string;
   /** Para environment (BETA, PROD, SANDBOX, DEV, DEVELOPMENT, PRODUCTION) */
   environment: ParaEnvironment;
+  /** App name displayed in Para modal */
+  appName?: string;
   /** Whether to show the signing modal for transaction confirmation */
   showSigningModal?: boolean;
   /** Custom sign confirmation step callback */
   customSignConfirmStep?: CustomSignConfirmStep;
   /**
-   * Optional SignerContext from @miden-sdk/react.
-   * Pass this when using with MidenProvider so they share the same context.
-   * @example
-   * ```tsx
-   * import { SignerContext } from '@miden-sdk/react';
-   * <ParaSignerProvider signerContext={SignerContext} ... />
-   * ```
+   * Optional custom QueryClient instance for React Query.
+   * If not provided, a default instance is used internally.
    */
-  signerContext?: React.Context<SignerContextValue | null>;
+  queryClient?: QueryClient;
+  /**
+   * Advanced: Additional config to pass to ParaProvider.
+   * Use this for customizing OAuth methods, external wallets, etc.
+   */
+  paraProviderConfig?: Partial<Omit<ParaProviderProps, 'children' | 'paraClientConfig'>>;
 }
 
 /**
@@ -127,10 +87,11 @@ const ParaSignerExtrasContext = createContext<ParaSignerExtras | null>(null);
 
 /**
  * ParaSignerProvider wraps MidenProvider to enable Para wallet signing.
+ * Includes ParaProvider internally, so you don't need to wrap with it separately.
  *
  * @example
  * ```tsx
- * <ParaSignerProvider apiKey="your-api-key" environment="PRODUCTION">
+ * <ParaSignerProvider apiKey="your-api-key" environment="BETA" appName="My App">
  *   <MidenProvider config={{ rpcUrl: "testnet" }}>
  *     <App />
  *   </MidenProvider>
@@ -141,12 +102,54 @@ export function ParaSignerProvider({
   children,
   apiKey,
   environment,
+  appName = 'Miden App',
   showSigningModal = true,
   customSignConfirmStep,
-  signerContext: SignerContextProp,
+  queryClient,
+  paraProviderConfig,
 }: ParaSignerProviderProps) {
-  // Use provided context or default
-  const SignerContext = SignerContextProp ?? DefaultSignerContext;
+  return (
+    <QueryClientProvider client={queryClient ?? defaultQueryClient}>
+      <ParaProvider
+        paraClientConfig={{
+          env: getEnvironmentValue(environment),
+          apiKey,
+        }}
+        config={{ appName }}
+        {...paraProviderConfig}
+      >
+        <ParaSignerProviderInner
+          apiKey={apiKey}
+          environment={environment}
+          showSigningModal={showSigningModal}
+          customSignConfirmStep={customSignConfirmStep}
+        >
+          {children}
+        </ParaSignerProviderInner>
+      </ParaProvider>
+    </QueryClientProvider>
+  );
+}
+
+/**
+ * Inner component that has access to ParaProvider context (useModal, etc.)
+ */
+function ParaSignerProviderInner({
+  children,
+  apiKey,
+  environment,
+  showSigningModal = true,
+  customSignConfirmStep,
+}: Omit<ParaSignerProviderProps, 'appName' | 'queryClient' | 'paraProviderConfig'>) {
+  // Access Para modal from ParaProvider.
+  // Store in refs to avoid re-render loops (these hooks return new objects each render).
+  const { openModal } = useModal();
+  const { logoutAsync } = useLogout();
+  const openModalRef = useRef(openModal);
+  const logoutAsyncRef = useRef(logoutAsync);
+  useEffect(() => { openModalRef.current = openModal; }, [openModal]);
+  useEffect(() => { logoutAsyncRef.current = logoutAsync; }, [logoutAsync]);
+
   // Create Para client once (stable instance)
   const para = useMemo(
     () => new ParaWeb(getEnvironmentValue(environment), apiKey),
@@ -195,18 +198,14 @@ export function ParaSignerProvider({
     };
   }, [para]);
 
-  // Connect/disconnect methods (stable references)
-  // Note: connect is a no-op here because Para authentication is handled by
-  // ParaProvider from @getpara/react-sdk-lite. Use their useModal().openModal()
-  // to trigger the authentication flow.
+  // Connect opens the Para modal
   const connect = useCallback(async () => {
-    console.warn(
-      'ParaSignerProvider: connect() called but Para authentication is handled by ParaProvider. ' +
-      'Use useModal().openModal() from @getpara/react-sdk-lite to connect.'
-    );
+    openModalRef.current();
   }, []);
 
+  // Disconnect logs out from Para
   const disconnect = useCallback(async () => {
+    await logoutAsyncRef.current();
     await para.logout();
     setIsConnected(false);
     setWallet(null);
@@ -316,23 +315,13 @@ export function ParaSignerProvider({
  * Hook for Para-specific extras beyond the unified useSigner interface.
  * Use this to access the Para client or wallet details directly.
  *
- * @param signerContext - Optional SignerContext to use (pass the same one used in ParaSignerProvider)
- *
  * @example
  * ```tsx
- * // Basic usage (uses default context)
  * const { para, wallet, isConnected } = useParaSigner();
- *
- * // With custom context from @miden-sdk/react
- * import { SignerContext } from '@miden-sdk/react';
- * const { para, wallet, isConnected } = useParaSigner(SignerContext);
  * ```
  */
-export function useParaSigner(
-  signerContext?: React.Context<SignerContextValue | null>
-): ParaSignerExtras & { isConnected: boolean } {
+export function useParaSigner(): ParaSignerExtras & { isConnected: boolean } {
   const extras = useContext(ParaSignerExtrasContext);
-  const SignerContext = signerContext ?? DefaultSignerContext;
   const signer = useContext(SignerContext);
   if (!extras) {
     throw new Error('useParaSigner must be used within ParaSignerProvider');

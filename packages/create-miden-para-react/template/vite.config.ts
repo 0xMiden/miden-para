@@ -48,7 +48,7 @@ export default defineConfig({
     format: 'es',
   },
   resolve: {
-    dedupe: ['@getpara/web-sdk', '@getpara/react-sdk-lite'],
+    dedupe: ['@getpara/web-sdk', '@getpara/react-sdk-lite', 'react', 'react-dom'],
     alias: {
       '@getpara/solana-wallet-connectors': optionalConnectorsPath,
       '@getpara/cosmos-wallet-connectors': optionalConnectorsPath,

@@ -7,7 +7,7 @@ This example demonstrates how to use `ParaSignerProvider` with `MidenProvider` f
 - Node.js 18+
 - A Para API key (get one from [developer.getpara.com](https://developer.getpara.com))
 - Local builds of:
-  - `~/miden/miden-client/packages/react-sdk` (must export `SignerContext`)
+  - `~/miden/miden-client/packages/react-sdk`
   - `~/miden/miden-client/crates/web-client`
 
 ## Setup
@@ -48,19 +48,15 @@ yarn dev
 The app demonstrates the unified signer pattern:
 
 ```tsx
-<ParaProvider>
-  <ParaSignerProvider signerContext={SignerContext}>
-    <MidenProvider>
-      <App />
-    </MidenProvider>
-  </ParaSignerProvider>
-</ParaProvider>
+<ParaSignerProvider apiKey="..." environment="BETA" appName="My App">
+  <MidenProvider config={{ rpcUrl: 'testnet' }}>
+    <App />
+  </MidenProvider>
+</ParaSignerProvider>
 ```
 
-- **ParaProvider**: Handles Para authentication UI (from `@getpara/react-sdk-lite`)
-- **ParaSignerProvider**: Bridges Para wallet to the unified signer interface
-- **MidenProvider**: Detects the signer context and uses external keystore mode
-- **SignerContext**: Shared between ParaSignerProvider and MidenProvider
+- **ParaSignerProvider**: Handles Para authentication, wallet signing, and bridges to the unified signer interface. Internally manages `QueryClientProvider` and `ParaProvider`.
+- **MidenProvider**: Detects the signer context and uses external keystore mode.
 
 ## Hooks Used
 
@@ -69,8 +65,3 @@ The app demonstrates the unified signer pattern:
 - `useMiden()` - Get the Miden client state and signer account ID
 - `useAccount()` - Get account details for the signer account
 - `useSyncState()` - Monitor sync state
-
-## Notes
-
-- This example requires the unreleased `SignerContext` feature from `@miden-sdk/react`
-- The `signerContext` prop must be passed to both `ParaSignerProvider` and `useParaSigner` for proper integration

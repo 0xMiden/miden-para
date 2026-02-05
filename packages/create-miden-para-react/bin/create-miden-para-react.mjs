@@ -26,9 +26,6 @@ const templateOptionalConnectorsPath = resolve(
 const repoRoot = resolve(__dirname, "..", "..", "..");
 const localMidenParaPath =
   process.env.MIDEN_PARA_LOCAL_MIDEN_PARA_PATH ?? repoRoot;
-const localUseMidenParaReactPath =
-  process.env.MIDEN_PARA_LOCAL_USE_PARA_REACT_PATH ??
-  resolve(repoRoot, "packages", "use-miden-para-react");
 const useLocalDeps = process.env.MIDEN_PARA_LOCAL_DEPS === "1";
 
 const args = process.argv.slice(2);
@@ -212,21 +209,14 @@ function ensureMidenParaDependencies(targetRoot) {
   const midenParaVersion = useLocalDeps
     ? `file:${localMidenParaPath}`
     : "0.13.0";
-  const useMidenParaReactVersion = useLocalDeps
-    ? `file:${localUseMidenParaReactPath}`
-    : "^0.13.0";
-  // Align with examples/react so Para SDK connector peers are satisfied
+  // Align with examples/react-signer so Para SDK connector peers are satisfied
   Object.assign(pkg.dependencies, {
     ...pkg.dependencies,
-    "@getpara/react-sdk-lite": "2.0.0-alpha.73",
-    "@getpara/evm-wallet-connectors": "^2.3.0",
-    "@tanstack/react-query": "^5.90.12",
-    "@wagmi/core": "^3.0.0",
+    "@getpara/react-sdk-lite": "^2.2.0",
+    "@getpara/evm-wallet-connectors": "^2.2.0",
     "@miden-sdk/miden-sdk": "^0.13.0",
     "@miden-sdk/miden-para": midenParaVersion,
-    "@miden-sdk/use-miden-para-react": useMidenParaReactVersion,
-    viem: "^2.41.2",
-    wagmi: "^3.1.0",
+    "@miden-sdk/react": "^0.13.0",
   });
 
   Object.assign(pkg.devDependencies, {

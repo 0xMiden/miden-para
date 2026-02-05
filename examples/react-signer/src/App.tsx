@@ -1,16 +1,12 @@
-import { useModal, useLogout } from '@getpara/react-sdk-lite';
-import { useSigner, useMiden, useAccount, useSyncState, SignerContext } from '@miden-sdk/react';
+import { useSigner, useMiden, useAccount, useSyncState } from '@miden-sdk/react';
 import { useParaSigner } from '@miden-sdk/miden-para';
 
 function App() {
-  const { openModal } = useModal();
-  const { logoutAsync } = useLogout();
-
   // Get signer context (from ParaSignerProvider)
   const signer = useSigner();
 
-  // Get Para-specific extras (pass SignerContext for consistency with ParaSignerProvider)
-  const { para, wallet, isConnected: paraConnected } = useParaSigner(SignerContext);
+  // Get Para-specific extras
+  const { para, wallet, isConnected: paraConnected } = useParaSigner();
 
   // Get Miden client state
   const { isReady, isInitializing, error, signerAccountId, sync } = useMiden();
@@ -23,10 +19,9 @@ function App() {
 
   const handleConnect = async () => {
     if (signer?.isConnected) {
-      await logoutAsync();
       await signer.disconnect();
     } else {
-      openModal();
+      await signer?.connect();
     }
   };
 

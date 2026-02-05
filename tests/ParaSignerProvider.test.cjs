@@ -38,11 +38,32 @@ const createMocks = (state = {}) => {
 
   const SignerContextReact = React.createContext(null);
 
+  // Mock providers as passthroughs that render children
+  const MockParaProvider = ({ children }) => children;
+  const MockQueryClientProvider = ({ children }) => children;
+
   return {
+    '@tanstack/react-query': {
+      QueryClient: function () {},
+      QueryClientProvider: MockQueryClientProvider,
+    },
     '@getpara/web-sdk': {
       ParaWeb: function () {
         return mockPara;
       },
+    },
+    '@getpara/react-sdk-lite': {
+      ParaProvider: MockParaProvider,
+      useModal: () => ({
+        openModal: () => {
+          state.openModalCalls = (state.openModalCalls || 0) + 1;
+        },
+      }),
+      useLogout: () => ({
+        logoutAsync: async () => {
+          state.logoutAsyncCalls = (state.logoutAsyncCalls || 0) + 1;
+        },
+      }),
     },
     '@miden-sdk/react': {
       SignerContext: SignerContextReact,
@@ -95,6 +116,12 @@ const loadParaSignerProvider = (mocks = {}) => {
     }
     if (request.startsWith('@getpara/web-sdk')) {
       return mocks['@getpara/web-sdk'];
+    }
+    if (request.startsWith('@getpara/react-sdk-lite')) {
+      return mocks['@getpara/react-sdk-lite'];
+    }
+    if (request.startsWith('@tanstack/react-query')) {
+      return mocks['@tanstack/react-query'];
     }
     if (request.startsWith('@miden-sdk/react')) {
       return mocks['@miden-sdk/react'];

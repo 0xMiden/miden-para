@@ -1,42 +1,45 @@
 import './App.css';
 import '@getpara/react-sdk-lite/styles.css';
-import { ParaProvider, useAccount, useModal } from '@getpara/react-sdk-lite';
-import { useParaMiden } from '@miden-sdk/use-miden-para-react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-const queryClient = new QueryClient();
+import { ParaSignerProvider, useParaSigner } from '@miden-sdk/miden-para';
+import { MidenProvider, useSigner, useMiden } from '@miden-sdk/react';
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ParaProvider
-        paraClientConfig={{
-          apiKey: import.meta.env.VITE_PARA_API_KEY,
-        }}
-        config={{ appName: 'Starter for MidenxPara' }}
-      >
+    <ParaSignerProvider
+      apiKey={import.meta.env.VITE_PARA_API_KEY}
+      environment="BETA"
+      appName="Starter for MidenxPara"
+    >
+      <MidenProvider config={{ rpcUrl: 'testnet' }}>
         <Content />
-      </ParaProvider>
-    </QueryClientProvider>
+      </MidenProvider>
+    </ParaSignerProvider>
   );
 }
 
 function Content() {
-  const { client, accountId, para } = useParaMiden(
-    'https://rpc.testnet.miden.io'
-  );
-  const { isConnected } = useAccount();
-  const { openModal } = useModal();
+  const signer = useSigner();
+  const { wallet } = useParaSigner();
+  const { isReady, signerAccountId } = useMiden();
+
+  const handleConnect = async () => {
+    if (signer?.isConnected) {
+      await signer.disconnect();
+    } else {
+      await signer?.connect();
+    }
+  };
 
   return (
     <div>
-      <button onClick={() => (isConnected ? para?.logout() : openModal?.())}>
-        {isConnected ? 'Disconnect Para' : 'Connect with Para'}
+      <button onClick={handleConnect}>
+        {signer?.isConnected ? 'Disconnect Para' : 'Connect with Para'}
       </button>
-      {isConnected && (
+      {signer?.isConnected && (
         <>
-          <p>Account: {accountId ?? '—'}</p>
-          <p>Client ready: {client ? 'yes' : 'no'}</p>
+          <p>Wallet: {wallet?.address ?? '—'}</p>
+          <p>Account: {signerAccountId ?? '—'}</p>
+          <p>Client ready: {isReady ? 'yes' : 'no'}</p>
         </>
       )}
     </div>
