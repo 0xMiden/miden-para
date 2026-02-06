@@ -1,5 +1,5 @@
 import { useSigner, useMiden, useAccount, useSyncState } from '@miden-sdk/react';
-import { useParaSigner } from '@miden-sdk/miden-para';
+import { useParaSigner } from '@miden-sdk/use-miden-para-react';
 
 function App() {
   // Get signer context (from ParaSignerProvider)

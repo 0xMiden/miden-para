@@ -14,6 +14,7 @@
     "@miden-sdk/miden-sdk": "file:../../../miden-client/crates/web-client",
     "@miden-sdk/react": "file:../../../miden-client/packages/react-sdk",
     "@miden-sdk/miden-para": "file:../..",
+    "@miden-sdk/use-miden-para-react": "file:../../packages/use-miden-para-react",
     "@tanstack/react-query": "^5.90.12",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

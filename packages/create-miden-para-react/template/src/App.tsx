@@ -1,6 +1,6 @@
 import './App.css';
 import '@getpara/react-sdk-lite/styles.css';
-import { ParaSignerProvider, useParaSigner } from '@miden-sdk/miden-para';
+import { ParaSignerProvider, useParaSigner } from '@miden-sdk/use-miden-para-react';
 import { MidenProvider, useSigner, useMiden } from '@miden-sdk/react';
 
 function App() {

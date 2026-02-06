@@ -4,7 +4,6 @@
     "module": "es2020",
     "moduleResolution": "node",
     "lib": ["es6", "DOM"],
-    "jsx": "react-jsx",
     "outDir": "./dist",
     "allowSyntheticDefaultImports": true,
     "declaration": false,
@@ -19,7 +18,7 @@
     "isolatedModules": true,
     "allowJs": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist", "examples", "packages"],
   "ts-node": {
     "compilerOptions": {

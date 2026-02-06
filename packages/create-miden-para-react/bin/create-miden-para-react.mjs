@@ -216,6 +216,7 @@ function ensureMidenParaDependencies(targetRoot) {
     "@getpara/evm-wallet-connectors": "^2.2.0",
     "@miden-sdk/miden-sdk": "^0.13.0",
     "@miden-sdk/miden-para": midenParaVersion,
+    "@miden-sdk/use-miden-para-react": "^0.10.10",
     "@miden-sdk/react": "^0.13.0",
   });
 

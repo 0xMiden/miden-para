@@ -105,7 +105,7 @@ test('CLI scaffolds template and patches package.json in test mode', () => {
   const appContents = fs.readFileSync(appPath, 'utf8');
   assert.match(appContents, /ParaSignerProvider/);
   assert.match(appContents, /MidenProvider/);
-  assert.match(appContents, /@miden-sdk\/miden-para/);
+  assert.match(appContents, /@miden-sdk\/use-miden-para-react/);
   assert.match(appContents, /@miden-sdk\/react/);
 
   const mainPath = path.join(targetDir, 'src', 'main.tsx');

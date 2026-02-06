@@ -16,9 +16,9 @@ import {
   type ParaProviderProps,
 } from '@getpara/react-sdk-lite';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SignerContext, type SignerContextValue } from '@miden-sdk/react';
-import { signCb as createSignCb, type CustomSignConfirmStep } from './midenClient.js';
-import { evmPkToCommitment, getUncompressedPublicKeyFromWallet } from './utils.js';
+import { SignerContext, type SignerContextValue } from './signer-types';
+import { signCb as createSignCb, type CustomSignConfirmStep } from '@miden-sdk/miden-para';
+import { evmPkToCommitment, getUncompressedPublicKeyFromWallet } from '@miden-sdk/miden-para';
 
 // Re-export Para hooks for convenience
 export { useModal, useLogout } from '@getpara/react-sdk-lite';
@@ -70,7 +70,7 @@ export interface ParaSignerProviderProps {
    * Advanced: Additional config to pass to ParaProvider.
    * Use this for customizing OAuth methods, external wallets, etc.
    */
-  paraProviderConfig?: Partial<Omit<ParaProviderProps, 'children' | 'paraClientConfig'>>;
+  paraProviderConfig?: Partial<Omit<ParaProviderProps<any, any>, 'children' | 'paraClientConfig'>>;
 }
 
 /**
@@ -239,6 +239,7 @@ function ParaSignerProviderInner({
       try {
         // Connected - build full context with signing capability
         const publicKey = await getUncompressedPublicKeyFromWallet(para, wallet);
+        if (!publicKey) throw new Error('Failed to get public key from wallet');
         const commitment = await evmPkToCommitment(publicKey);
 
         // Serialize the commitment Word to Uint8Array for SignerAccountConfig

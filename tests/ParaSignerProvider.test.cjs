@@ -68,6 +68,9 @@ const createMocks = (state = {}) => {
     '@miden-sdk/react': {
       SignerContext: SignerContextReact,
     },
+    './signer-types': {
+      SignerContext: SignerContextReact,
+    },
     '@demox-labs/miden-sdk': {
       AccountType: {
         RegularAccountImmutableCode: 'RegularAccountImmutableCode',
@@ -78,7 +81,7 @@ const createMocks = (state = {}) => {
         private: () => ({ toString: () => 'private' }),
       },
     },
-    './midenClient.js': {
+    '@miden-sdk/miden-para': {
       signCb: (para, wallet, showModal, customStep) => {
         return async (pubKey, signingInputs) => {
           state.signCbCalls = (state.signCbCalls || 0) + 1;
@@ -86,8 +89,6 @@ const createMocks = (state = {}) => {
           return new Uint8Array(67);
         };
       },
-    },
-    './utils.js': {
       getUncompressedPublicKeyFromWallet: async (para, wallet) => {
         return new Uint8Array(65).fill(0x04);
       },
@@ -123,6 +124,9 @@ const loadParaSignerProvider = (mocks = {}) => {
     if (request.startsWith('@tanstack/react-query')) {
       return mocks['@tanstack/react-query'];
     }
+    if (request.startsWith('@miden-sdk/miden-para')) {
+      return mocks['@miden-sdk/miden-para'];
+    }
     if (request.startsWith('@miden-sdk/react')) {
       return mocks['@miden-sdk/react'];
     }
@@ -130,7 +134,7 @@ const loadParaSignerProvider = (mocks = {}) => {
   };
 
   try {
-    const filePath = path.resolve(__dirname, '../src/ParaSignerProvider.tsx');
+    const filePath = path.resolve(__dirname, '../packages/use-miden-para-react/src/ParaSignerProvider.tsx');
     const source = fs.readFileSync(filePath, 'utf8');
     const { outputText } = ts.transpileModule(source, {
       compilerOptions: {

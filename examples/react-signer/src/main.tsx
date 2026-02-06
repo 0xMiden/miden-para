@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import '@getpara/react-sdk-lite/styles.css';
 
-import { ParaSignerProvider } from '@miden-sdk/miden-para';
+import { ParaSignerProvider } from '@miden-sdk/use-miden-para-react';
 import { MidenProvider } from '@miden-sdk/react';
 import App from './App';
 
