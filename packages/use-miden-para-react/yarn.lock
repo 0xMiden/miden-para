@@ -428,6 +428,21 @@
     inputmask "5.0.9"
     qrcode-with-logos "1.1.1"
 
+"@getpara/core-sdk@2.0.0-alpha.73":
+  version "2.0.0-alpha.73"
+  resolved "https://registry.yarnpkg.com/@getpara/core-sdk/-/core-sdk-2.0.0-alpha.73.tgz#262698ab3e7418279944d1dcfc0095f2e7235225"
+  integrity sha512-tCRMVyLXLb0z0YDWEgclnII8k/aSjpSCcS3mrcc5NdWEVtj9E8QYpdFeYItDOq9WWTbzhWjFHbvRVlLwIw1oPQ==
+  dependencies:
+    "@celo/utils" "^8.0.2"
+    "@cosmjs/encoding" "^0.32.4"
+    "@ethereumjs/util" "^9.1.0"
+    "@getpara/user-management-client" "2.0.0-alpha.73"
+    "@noble/hashes" "^1.5.0"
+    base64url "^3.0.1"
+    libphonenumber-js "^1.11.7"
+    node-forge "^1.3.1"
+    uuid "^11.1.0"
+
 "@getpara/core-sdk@2.3.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@getpara/core-sdk/-/core-sdk-2.3.0.tgz#712be7994eddb0b5507122ac9c29d89c8c4b74c1"
@@ -478,10 +493,24 @@
     zustand "^4.5.2"
     zustand-sync-tabs "^0.2.2"
 
+"@getpara/shared@1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@getpara/shared/-/shared-1.8.0.tgz#edaf9c58402c97b49fcc0938051735ed32fbf79a"
+  integrity sha512-zDZRtTfmrNvuve/99axHpgEl0HfwmESS37BfWk2yCCw397N6wThSKEFKJN/mpJCMVKCPcZjRrKtxq1iTjhmAEA==
+
 "@getpara/shared@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@getpara/shared/-/shared-1.9.0.tgz#a3e8bb65b682013e154b933b1ed1207396934e8a"
   integrity sha512-HiW+4tpACqhZeg2VjR428uGm9YMV1/CBh+NFemabKj+3B+fdOcI3y+7/MAhZMT7sa/7PemBdUNOJnc+Tbcxifg==
+
+"@getpara/user-management-client@2.0.0-alpha.73":
+  version "2.0.0-alpha.73"
+  resolved "https://registry.yarnpkg.com/@getpara/user-management-client/-/user-management-client-2.0.0-alpha.73.tgz#8f86e65fc8c069603d190baeb195da8359ecfcff"
+  integrity sha512-dcvWinImx58/rLF+eGvear9SqJ/hfD2MR0enzdVoX3e9aIVkcjDBt+3G2rK/Jo6kmgvY6TafMOJQ3/Eh/rfw8w==
+  dependencies:
+    "@getpara/shared" "1.8.0"
+    axios "^1.8.4"
+    libphonenumber-js "^1.11.7"
 
 "@getpara/user-management-client@2.3.0":
   version "2.3.0"
@@ -491,6 +520,19 @@
     "@getpara/shared" "1.9.0"
     axios "^1.8.4"
     libphonenumber-js "^1.11.7"
+
+"@getpara/web-sdk@2.0.0-alpha.73":
+  version "2.0.0-alpha.73"
+  resolved "https://registry.yarnpkg.com/@getpara/web-sdk/-/web-sdk-2.0.0-alpha.73.tgz#66bc5b86b1c89ed3dd3e67b7c06a262ec346c8a3"
+  integrity sha512-EIBWnFDjpwKwXBVVJnAMuQinw/r/RuH20XtKZ7I9ii4bfTV7xVIsOdFyEa641rOcz6KmV7KmWjiswz3zVJczaw==
+  dependencies:
+    "@getpara/core-sdk" "2.0.0-alpha.73"
+    "@getpara/user-management-client" "2.0.0-alpha.73"
+    base64url "^3.0.1"
+    buffer "6.0.3"
+    cbor-web "^9.0.2"
+    node-forge "1.3.1"
+    ua-parser-js "^2.0.2"
 
 "@getpara/web-sdk@2.3.0":
   version "2.3.0"
@@ -563,6 +605,13 @@
     "@rollup/plugin-typescript" "^12.3.0"
     dexie "^4.0.1"
     glob "^11.0.0"
+
+"@miden-sdk/react@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@miden-sdk/react/-/react-0.13.0.tgz#93474f77f18c87c7b924e58232780fc7a2a175bd"
+  integrity sha512-OTFCvkm8S7n6QQIkHEsof/OntMR8MMD8Apvp2VDFlRsC9po6e82xZZmM+5E65Jo9jUOxoe2W0pQAwT1GnYBE6A==
+  dependencies:
+    zustand "^5.0.0"
 
 "@moonpay/moonpay-react@^1.8.3":
   version "1.10.6"
@@ -844,6 +893,18 @@
     "@rollup/rollup-linux-x64-musl" "4.34.9"
     "@rollup/rollup-win32-arm64-msvc" "4.34.9"
     "@rollup/rollup-win32-x64-msvc" "4.34.9"
+
+"@tanstack/query-core@5.90.20":
+  version "5.90.20"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.90.20.tgz#e12128e39210715d4ce4fb299c33498ac297771e"
+  integrity sha512-OMD2HLpNouXEfZJWcKeVKUgQ5n+n3A2JFmBaScpNDUqSrQSjiveC7dKMe53uJUg1nDG16ttFPz2xfilz6i2uVg==
+
+"@tanstack/react-query@^5.90.12":
+  version "5.90.20"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.90.20.tgz#42bb7018bfedc72f216b6e9b4052c919063f350b"
+  integrity sha512-vXBxa+qeyveVO7OA0jX1z+DeyCA4JKnThKv411jd5SORpBKgkcVnYKCiBgECvADvniBX7tobwBmg01qq9JmMJw==
+  dependencies:
+    "@tanstack/query-core" "5.90.20"
 
 "@types/bn.js@^5.1.0":
   version "5.2.0"
@@ -2207,3 +2268,8 @@ zustand@^4.5.2:
   integrity sha512-CHOUy7mu3lbD6o6LJLfllpjkzhHXSBlX8B9+qPddUsIfeF5S/UZ5q0kmCsnRqT1UHFQZchNFDDzMbQsuesHWlw==
   dependencies:
     use-sync-external-store "^1.2.2"
+
+zustand@^5.0.0:
+  version "5.0.11"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.11.tgz#99f912e590de1ca9ce6c6d1cab6cdb1f034ab494"
+  integrity sha512-fdZY+dk7zn/vbWNCYmzZULHRrss0jx5pPFiOuMZ/5HJN6Yv3u+1Wswy/4MpZEkEGhtNH+pwxZB8OKgUBPzYAGg==

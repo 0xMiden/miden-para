@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import wasm from 'vite-plugin-wasm';
-import topLevelAwait from 'vite-plugin-top-level-await';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import wasm from 'vite-plugin-wasm';
+import topLevelAwait from 'vite-plugin-top-level-await';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const optionalConnectorsPath = path.resolve(
@@ -13,7 +13,6 @@ const optionalConnectorsPath = path.resolve(
   'optional-connectors.ts'
 );
 
-// Keep the miden SDK unbundled so its WASM asset path stays valid in dev.
 export default defineConfig({
   plugins: [
     wasm(),
@@ -23,9 +22,8 @@ export default defineConfig({
       include: ['buffer', 'crypto', 'stream', 'util'],
     }),
   ],
+  assetsInclude: ['**/*.wasm'],
   optimizeDeps: {
-    // Keep Miden SDK unbundled and avoid prebundling Para's Stencil component bundles
-    // to prevent multiple runtimes in dev.
     exclude: [
       '@miden-sdk/miden-sdk',
       '@getpara/solana-wallet-connectors',
@@ -44,9 +42,6 @@ export default defineConfig({
       ],
     },
   },
-  worker: {
-    format: 'es',
-  },
   resolve: {
     dedupe: ['@getpara/web-sdk', '@getpara/react-sdk-lite', 'react', 'react-dom'],
     alias: {
@@ -54,11 +49,16 @@ export default defineConfig({
       '@getpara/cosmos-wallet-connectors': optionalConnectorsPath,
     },
   },
-  // Ensure Vite treats wasm as a static asset with the correct MIME type.
-  assetsInclude: ['**/*.wasm'],
+  worker: {
+    format: 'es',
+  },
   server: {
     fs: {
-      allow: [process.cwd()],
+      allow: [
+        process.cwd(),
+        // Allow access to local miden-client packages
+        path.resolve(__dirname, '../../../../miden-client'),
+      ],
     },
   },
 });
