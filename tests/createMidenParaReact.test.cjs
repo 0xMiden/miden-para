@@ -144,12 +144,15 @@ test(
     );
     const targetDir = path.join(tmpRoot, 'app');
     const rootTarball = packPackage(repoRoot);
+    const useMidenParaReactDir = path.join(repoRoot, 'packages', 'use-miden-para-react');
+    const useMidenParaReactTarball = packPackage(useMidenParaReactDir);
 
     runCli(targetDir, [], {
       npm_config_yes: 'true',
       npm_config_ignore_scripts: 'true',
       MIDEN_PARA_LOCAL_DEPS: '1',
       MIDEN_PARA_LOCAL_MIDEN_PARA_PATH: rootTarball,
+      MIDEN_PARA_LOCAL_USE_MIDEN_PARA_REACT_PATH: useMidenParaReactTarball,
     });
 
     const build = spawnSync('npm', ['run', 'build'], {
