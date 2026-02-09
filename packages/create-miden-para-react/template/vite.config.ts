@@ -41,6 +41,7 @@ export default defineConfig({
       external: [
         '@getpara/solana-wallet-connectors',
         '@getpara/cosmos-wallet-connectors',
+        'wagmi',
       ],
     },
   },
@@ -52,6 +53,7 @@ export default defineConfig({
     alias: {
       '@getpara/solana-wallet-connectors': optionalConnectorsPath,
       '@getpara/cosmos-wallet-connectors': optionalConnectorsPath,
+      'wagmi': optionalConnectorsPath,
     },
   },
   // Ensure Vite treats wasm as a static asset with the correct MIME type.
