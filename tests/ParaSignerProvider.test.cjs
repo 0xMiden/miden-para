@@ -190,6 +190,9 @@ const renderProvider = async (ParaSignerProvider, mocks, props = {}) => {
 
   return {
     testRenderer,
+    unmount: () => {
+      testRenderer.unmount();
+    },
     rerender: async (newProps) => {
       await act(async () => {
         testRenderer.update(
@@ -234,6 +237,9 @@ const renderHookInProvider = async (
 
   return {
     getLatest: () => latest,
+    unmount: () => {
+      testRenderer.unmount();
+    },
     rerender: async (newProps) => {
       await act(async () => {
         testRenderer.update(
@@ -258,12 +264,13 @@ test('ParaSignerProvider renders children', async () => {
 
   try {
     const childText = 'Test Child Content';
-    const { testRenderer } = await renderProvider(ParaSignerProvider, mocks, {
+    const { testRenderer, unmount } = await renderProvider(ParaSignerProvider, mocks, {
       children: React.createElement('div', null, childText),
     });
 
     const tree = testRenderer.toJSON();
     assert.ok(tree || true, 'Provider should render');
+    unmount();
   } finally {
     restore();
   }
@@ -278,8 +285,9 @@ test('ParaSignerProvider provides SignerContext to descendants', async () => {
   const { ParaSignerProvider, restore } = loadParaSignerProvider(mocks);
 
   try {
-    await renderProvider(ParaSignerProvider, mocks);
+    const { unmount } = await renderProvider(ParaSignerProvider, mocks);
     assert.ok(true, 'Provider should render with SignerContext');
+    unmount();
   } finally {
     restore();
   }
@@ -329,7 +337,7 @@ test('useParaSigner returns para client and wallet', async () => {
     loadParaSignerProvider(mocks);
 
   try {
-    const { getLatest } = await renderHookInProvider(
+    const { getLatest, unmount } = await renderHookInProvider(
       ParaSignerProvider,
       useParaSigner,
       mocks
@@ -338,6 +346,7 @@ test('useParaSigner returns para client and wallet', async () => {
     const result = getLatest();
     assert.ok(result.para, 'Should have para client');
     assert.ok('wallet' in result, 'Should have wallet property');
+    unmount();
   } finally {
     restore();
   }
@@ -353,7 +362,7 @@ test('isConnected is false initially when not logged in', async () => {
     loadParaSignerProvider(mocks);
 
   try {
-    const { getLatest } = await renderHookInProvider(
+    const { getLatest, unmount } = await renderHookInProvider(
       ParaSignerProvider,
       useParaSigner,
       mocks
@@ -361,6 +370,7 @@ test('isConnected is false initially when not logged in', async () => {
 
     const result = getLatest();
     assert.strictEqual(result.isConnected, false, 'Should not be connected initially');
+    unmount();
   } finally {
     restore();
   }
@@ -376,7 +386,7 @@ test('isConnected is true after Para login with EVM wallet', async () => {
     loadParaSignerProvider(mocks);
 
   try {
-    const { getLatest } = await renderHookInProvider(
+    const { getLatest, unmount } = await renderHookInProvider(
       ParaSignerProvider,
       useParaSigner,
       mocks
@@ -390,6 +400,7 @@ test('isConnected is true after Para login with EVM wallet', async () => {
 
     const result = getLatest();
     assert.strictEqual(result.isConnected, true, 'Should be connected after login');
+    unmount();
   } finally {
     restore();
   }
@@ -404,9 +415,10 @@ test("SignerContext includes correct name ('Para')", async () => {
   const { ParaSignerProvider, restore } = loadParaSignerProvider(mocks);
 
   try {
-    await renderProvider(ParaSignerProvider, mocks);
+    const { unmount } = await renderProvider(ParaSignerProvider, mocks);
     // The name 'Para' is hardcoded in ParaSignerProvider
     assert.ok(true, "SignerContext should have name 'Para'");
+    unmount();
   } finally {
     restore();
   }
@@ -425,7 +437,7 @@ test('Only EVM wallets are used for connection', async () => {
     loadParaSignerProvider(mocks);
 
   try {
-    const { getLatest } = await renderHookInProvider(
+    const { getLatest, unmount } = await renderHookInProvider(
       ParaSignerProvider,
       useParaSigner,
       mocks
@@ -443,6 +455,7 @@ test('Only EVM wallets are used for connection', async () => {
       false,
       'Should not be connected without EVM wallet'
     );
+    unmount();
   } finally {
     restore();
   }
