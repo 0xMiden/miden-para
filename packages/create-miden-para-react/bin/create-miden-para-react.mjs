@@ -224,6 +224,7 @@ function ensureMidenParaDependencies(targetRoot) {
     "@miden-sdk/miden-para": midenParaVersion,
     "@miden-sdk/use-miden-para-react": useMidenParaReactVersion,
     "@miden-sdk/react": "^0.13.1",
+    "@tanstack/react-query": "^5.0.0",
   });
 
   Object.assign(pkg.devDependencies, {
