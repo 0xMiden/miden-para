@@ -13,6 +13,17 @@ const optionalConnectorsPath = path.resolve(
   'optional-connectors.ts'
 );
 
+// Optional connector families that are never imported by the starter template.
+// Alias them to an empty module so Vite doesn't try to resolve their deps.
+const optionalPackages = [
+  '@getpara/solana-wallet-connectors',
+  '@getpara/cosmos-wallet-connectors',
+  '@getpara/wagmi-v2-connector',
+  'wagmi',
+  '@wagmi/core',
+  '@wagmi/connectors',
+];
+
 // Keep the miden SDK unbundled so its WASM asset path stays valid in dev.
 export default defineConfig({
   plugins: [
@@ -28,8 +39,7 @@ export default defineConfig({
     // to prevent multiple runtimes in dev.
     exclude: [
       '@miden-sdk/miden-sdk',
-      '@getpara/solana-wallet-connectors',
-      '@getpara/cosmos-wallet-connectors',
+      ...optionalPackages,
     ],
     esbuildOptions: {
       target: 'esnext',
@@ -38,11 +48,7 @@ export default defineConfig({
   build: {
     target: 'esnext',
     rollupOptions: {
-      external: [
-        '@getpara/solana-wallet-connectors',
-        '@getpara/cosmos-wallet-connectors',
-        'wagmi',
-      ],
+      external: optionalPackages,
     },
   },
   worker: {
@@ -50,11 +56,9 @@ export default defineConfig({
   },
   resolve: {
     dedupe: ['@getpara/web-sdk', '@getpara/react-sdk-lite', 'react', 'react-dom'],
-    alias: {
-      '@getpara/solana-wallet-connectors': optionalConnectorsPath,
-      '@getpara/cosmos-wallet-connectors': optionalConnectorsPath,
-      'wagmi': optionalConnectorsPath,
-    },
+    alias: Object.fromEntries(
+      optionalPackages.map((pkg) => [pkg, optionalConnectorsPath])
+    ),
   },
   // Ensure Vite treats wasm as a static asset with the correct MIME type.
   assetsInclude: ['**/*.wasm'],
