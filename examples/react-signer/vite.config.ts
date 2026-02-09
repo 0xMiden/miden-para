@@ -43,7 +43,7 @@ export default defineConfig({
     },
   },
   resolve: {
-    dedupe: ['@getpara/web-sdk', '@getpara/react-sdk-lite', '@tanstack/react-query', 'react', 'react-dom'],
+    dedupe: ['@getpara/web-sdk', '@getpara/react-sdk-lite', '@miden-sdk/miden-sdk', '@miden-sdk/react', '@tanstack/react-query', 'react', 'react-dom'],
     alias: {
       '@getpara/solana-wallet-connectors': optionalConnectorsPath,
       '@getpara/cosmos-wallet-connectors': optionalConnectorsPath,
@@ -56,8 +56,6 @@ export default defineConfig({
     fs: {
       allow: [
         process.cwd(),
-        // Allow access to local miden-client packages
-        path.resolve(__dirname, '../../../../miden-client'),
       ],
     },
   },

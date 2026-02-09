@@ -16,7 +16,7 @@ import {
   type ParaProviderProps,
 } from '@getpara/react-sdk-lite';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SignerContext, type SignerContextValue } from './signer-types';
+import { SignerContext, type SignerContextValue } from '@miden-sdk/react';
 import { signCb as createSignCb, type CustomSignConfirmStep } from '@miden-sdk/miden-para';
 import { evmPkToCommitment, getUncompressedPublicKeyFromWallet } from '@miden-sdk/miden-para';
 

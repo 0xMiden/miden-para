@@ -69,9 +69,6 @@ const createMocks = (state = {}) => {
     '@miden-sdk/react': {
       SignerContext: SignerContextReact,
     },
-    './signer-types': {
-      SignerContext: SignerContextReact,
-    },
     '@miden-sdk/miden-sdk': {
       AccountStorageMode: {
         public: () => ({ toString: () => 'public' }),

@@ -606,10 +606,10 @@
     dexie "^4.0.1"
     glob "^11.0.0"
 
-"@miden-sdk/react@^0.13.0":
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/@miden-sdk/react/-/react-0.13.0.tgz#93474f77f18c87c7b924e58232780fc7a2a175bd"
-  integrity sha512-OTFCvkm8S7n6QQIkHEsof/OntMR8MMD8Apvp2VDFlRsC9po6e82xZZmM+5E65Jo9jUOxoe2W0pQAwT1GnYBE6A==
+"@miden-sdk/react@^0.13.1":
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/@miden-sdk/react/-/react-0.13.1.tgz#c84465d1785afe70da111e8f4763a0e8438d9c24"
+  integrity sha512-xkTJ6P308OwakeILH6DEAklMHLq3FHzZmQCKOTSldeRygm4iogM0HPP+GIVAnBoouGFWD/mslDUTGfE90VIkUQ==
   dependencies:
     zustand "^5.0.0"
 
