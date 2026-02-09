@@ -253,8 +253,8 @@ function ParaSignerProviderInner({
         );
 
         if (!cancelled) {
-          const { AccountType, AccountStorageMode } = await import(
-            '@demox-labs/miden-sdk'
+          const { AccountStorageMode } = await import(
+            '@miden-sdk/miden-sdk'
           );
 
           setSignerContext({
