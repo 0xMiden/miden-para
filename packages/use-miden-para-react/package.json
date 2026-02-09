@@ -1,6 +1,6 @@
 {
   "name": "@miden-sdk/use-miden-para-react",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "React hook that wires Para accounts into a Miden client",
   "license": "MIT",
   "author": "Miden Labs",
