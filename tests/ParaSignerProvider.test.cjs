@@ -54,6 +54,7 @@ const createMocks = (state = {}) => {
     },
     '@getpara/react-sdk-lite': {
       ParaProvider: MockParaProvider,
+      useClient: () => mockPara,
       useModal: () => ({
         openModal: () => {
           state.openModalCalls = (state.openModalCalls || 0) + 1;
@@ -71,11 +72,7 @@ const createMocks = (state = {}) => {
     './signer-types': {
       SignerContext: SignerContextReact,
     },
-    '@demox-labs/miden-sdk': {
-      AccountType: {
-        RegularAccountImmutableCode: 'RegularAccountImmutableCode',
-        RegularAccountUpdatableCode: 'RegularAccountUpdatableCode',
-      },
+    '@miden-sdk/miden-sdk': {
       AccountStorageMode: {
         public: () => ({ toString: () => 'public' }),
         private: () => ({ toString: () => 'private' }),
@@ -112,8 +109,8 @@ const loadParaSignerProvider = (mocks = {}) => {
   Module._load = function patchedLoad(request, parent, isMain) {
     if (request === 'react') return React;
     if (mocks[request]) return mocks[request];
-    if (request.startsWith('@demox-labs/miden-sdk')) {
-      return mocks['@demox-labs/miden-sdk'];
+    if (request.startsWith('@miden-sdk/miden-sdk')) {
+      return mocks['@miden-sdk/miden-sdk'];
     }
     if (request.startsWith('@getpara/web-sdk')) {
       return mocks['@getpara/web-sdk'];
