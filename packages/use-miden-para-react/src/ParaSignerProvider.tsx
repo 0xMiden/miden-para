@@ -2,7 +2,6 @@ import {
   useState,
   useEffect,
   useCallback,
-  useMemo,
   useRef,
   createContext,
   useContext,
@@ -11,6 +10,7 @@ import {
 import { ParaWeb, Environment, type Wallet } from '@getpara/web-sdk';
 import {
   ParaProvider,
+  useClient,
   useModal,
   useLogout,
   type ParaProviderProps,
@@ -119,8 +119,6 @@ export function ParaSignerProvider({
         {...paraProviderConfig}
       >
         <ParaSignerProviderInner
-          apiKey={apiKey}
-          environment={environment}
           showSigningModal={showSigningModal}
           customSignConfirmStep={customSignConfirmStep}
         >
@@ -136,11 +134,9 @@ export function ParaSignerProvider({
  */
 function ParaSignerProviderInner({
   children,
-  apiKey,
-  environment,
   showSigningModal = true,
   customSignConfirmStep,
-}: Omit<ParaSignerProviderProps, 'appName' | 'queryClient' | 'paraProviderConfig'>) {
+}: Pick<ParaSignerProviderProps, 'children' | 'showSigningModal' | 'customSignConfirmStep'>) {
   // Access Para modal from ParaProvider.
   // Store in refs to avoid re-render loops (these hooks return new objects each render).
   const { openModal } = useModal();
@@ -150,11 +146,8 @@ function ParaSignerProviderInner({
   useEffect(() => { openModalRef.current = openModal; }, [openModal]);
   useEffect(() => { logoutAsyncRef.current = logoutAsync; }, [logoutAsync]);
 
-  // Create Para client once (stable instance)
-  const para = useMemo(
-    () => new ParaWeb(getEnvironmentValue(environment), apiKey),
-    [apiKey, environment]
-  );
+  // Get the Para client from ParaProvider context (avoids creating a duplicate instance)
+  const para = useClient()!;
 
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [isConnected, setIsConnected] = useState(false);
