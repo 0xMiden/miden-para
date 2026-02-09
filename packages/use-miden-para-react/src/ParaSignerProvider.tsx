@@ -146,8 +146,17 @@ function ParaSignerProviderInner({
   useEffect(() => { openModalRef.current = openModal; }, [openModal]);
   useEffect(() => { logoutAsyncRef.current = logoutAsync; }, [logoutAsync]);
 
-  // Get the Para client from ParaProvider context (avoids creating a duplicate instance)
+  // Get the Para client from ParaProvider context (avoids creating a duplicate instance).
+  // Store in a ref so downstream effects don't re-fire when the hook returns a new wrapper.
   const para = useClient()!;
+  const paraRef = useRef(para);
+  useEffect(() => { paraRef.current = para; }, [para]);
+
+  // Keep props in refs so buildContext doesn't re-run when parent re-renders with new closures.
+  const showSigningModalRef = useRef(showSigningModal);
+  const customSignConfirmStepRef = useRef(customSignConfirmStep);
+  useEffect(() => { showSigningModalRef.current = showSigningModal; }, [showSigningModal]);
+  useEffect(() => { customSignConfirmStepRef.current = customSignConfirmStep; }, [customSignConfirmStep]);
 
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -158,18 +167,18 @@ function ParaSignerProviderInner({
 
     async function checkConnection() {
       try {
-        const isLoggedIn = await para.isFullyLoggedIn();
+        const isLoggedIn = await paraRef.current.isFullyLoggedIn();
         if (!isLoggedIn || cancelled) {
           setIsConnected(false);
           setWallet(null);
           return;
         }
 
-        const wallets = Object.values(await para.getWallets());
+        const wallets = Object.values(await paraRef.current.getWallets());
         const evmWallets = wallets.filter((w) => w.type === 'EVM');
 
         if (evmWallets.length > 0 && !cancelled) {
-          setWallet(evmWallets[0]);
+          setWallet((prev) => prev?.id === evmWallets[0].id ? prev : evmWallets[0]);
           setIsConnected(true);
         } else if (!cancelled) {
           setIsConnected(false);
@@ -189,7 +198,7 @@ function ParaSignerProviderInner({
       cancelled = true;
       clearInterval(interval);
     };
-  }, [para]);
+  }, []);
 
   // Connect opens the Para modal
   const connect = useCallback(async () => {
@@ -199,14 +208,32 @@ function ParaSignerProviderInner({
   // Disconnect logs out from Para
   const disconnect = useCallback(async () => {
     await logoutAsyncRef.current();
-    await para.logout();
+    await paraRef.current.logout();
     setIsConnected(false);
     setWallet(null);
-  }, [para]);
+  }, []);
 
-  // Build signer context (includes connect/disconnect for unified useSigner hook)
-  const [signerContext, setSignerContext] = useState<SignerContextValue | null>(
-    null
+  // Build signer context (includes connect/disconnect for unified useSigner hook).
+  // Only depends on isConnected and wallet — everything else is accessed via refs
+  // so that MidenProvider doesn't see a new context object on every poll cycle.
+  //
+  // IMPORTANT: initialise with a disconnected placeholder (isConnected:false) rather
+  // than null.  When signerContext is null MidenProvider creates a local-keystore
+  // client whose auto-sync accesses the WASM module; our buildContext also touches
+  // WASM (evmPkToCommitment / AccountStorageMode) → concurrent WASM access → crash.
+  // A {isConnected:false} context makes MidenProvider's init effect return early
+  // without creating any client, keeping the WASM module free for buildContext.
+  const disconnectedCtx = useRef<SignerContextValue>({
+    signCb: async () => { throw new Error('Para wallet not connected'); },
+    accountConfig: null as any,
+    storeName: '',
+    name: 'Para',
+    isConnected: false,
+    connect,
+    disconnect,
+  });
+  const [signerContext, setSignerContext] = useState<SignerContextValue>(
+    disconnectedCtx.current
   );
 
   useEffect(() => {
@@ -214,24 +241,14 @@ function ParaSignerProviderInner({
 
     async function buildContext() {
       if (!isConnected || !wallet) {
-        // Not connected - provide context with connect/disconnect but no signing capability
-        setSignerContext({
-          signCb: async () => {
-            throw new Error('Para wallet not connected');
-          },
-          accountConfig: null as any,
-          storeName: '',
-          name: 'Para',
-          isConnected: false,
-          connect,
-          disconnect,
-        });
+        setSignerContext(disconnectedCtx.current);
         return;
       }
 
       try {
         // Connected - build full context with signing capability
-        const publicKey = await getUncompressedPublicKeyFromWallet(para, wallet);
+        const p = paraRef.current;
+        const publicKey = await getUncompressedPublicKeyFromWallet(p, wallet);
         if (!publicKey) throw new Error('Failed to get public key from wallet');
         const commitment = await evmPkToCommitment(publicKey);
 
@@ -239,10 +256,10 @@ function ParaSignerProviderInner({
         const commitmentBytes = commitment.serialize();
 
         const signCallback = createSignCb(
-          para,
+          p,
           wallet,
-          showSigningModal,
-          customSignConfirmStep
+          showSigningModalRef.current,
+          customSignConfirmStepRef.current
         );
 
         if (!cancelled) {
@@ -267,17 +284,7 @@ function ParaSignerProviderInner({
       } catch (error) {
         console.error('Failed to build Para signer context:', error);
         if (!cancelled) {
-          setSignerContext({
-            signCb: async () => {
-              throw new Error('Para wallet not connected');
-            },
-            accountConfig: null as any,
-            storeName: '',
-            name: 'Para',
-            isConnected: false,
-            connect,
-            disconnect,
-          });
+          setSignerContext(disconnectedCtx.current);
         }
       }
     }
@@ -286,15 +293,7 @@ function ParaSignerProviderInner({
     return () => {
       cancelled = true;
     };
-  }, [
-    isConnected,
-    wallet,
-    para,
-    showSigningModal,
-    customSignConfirmStep,
-    connect,
-    disconnect,
-  ]);
+  }, [isConnected, wallet, connect, disconnect]);
 
   return (
     <ParaSignerExtrasContext.Provider value={{ para, wallet }}>

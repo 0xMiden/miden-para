@@ -17,7 +17,7 @@ createRoot(document.getElementById('root')!).render(
     environment="BETA"
     appName="Miden Para Signer Example"
   >
-    <MidenProvider config={{ rpcUrl: 'testnet' }}>
+    <MidenProvider config={{ rpcUrl: 'devnet', prover: 'devnet' }}>
       <App />
     </MidenProvider>
   </ParaSignerProvider>

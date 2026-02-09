@@ -47,6 +47,12 @@ export default defineConfig({
     alias: {
       '@getpara/solana-wallet-connectors': optionalConnectorsPath,
       '@getpara/cosmos-wallet-connectors': optionalConnectorsPath,
+      // Force a single copy of WASM-bearing packages.
+      // With file: references each package gets its own node_modules copy;
+      // without these aliases each copy loads a separate WASM instance,
+      // causing "recursive use of an object" crashes.
+      '@miden-sdk/miden-sdk': path.resolve(__dirname, 'node_modules', '@miden-sdk', 'miden-sdk'),
+      '@miden-sdk/react': path.resolve(__dirname, 'node_modules', '@miden-sdk', 'react'),
     },
   },
   worker: {
@@ -56,6 +62,8 @@ export default defineConfig({
     fs: {
       allow: [
         process.cwd(),
+        path.resolve(__dirname, '..', '..'),           // miden-para root
+        path.resolve(__dirname, '..', '..', '..', 'miden-client'), // miden-client root
       ],
     },
   },
