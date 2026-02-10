@@ -1,14 +1,14 @@
 # @miden-sdk/create-miden-para-react
 
-`npm create @miden-sdk/miden-para-react@latest my-app` scaffolds the latest Vite `react-ts` starter, overwrites it with this repo's `vite.config.ts`, swaps in a Para + Miden-ready `App.tsx`, and adds the deps needed to run it out of the box. The scaffold always runs `create-vite` with `--yes --no-install` and pipes “no” to the install prompt to prevent upstream installs from overwriting the template before we patch it.
+`npm create @miden-sdk/miden-para-react@latest my-app` scaffolds the latest Vite `react-ts` starter, overwrites it with this repo's `vite.config.ts`, swaps in a Para + Miden-ready `App.tsx`, and adds the deps needed to run it out of the box. The scaffold always runs `create-vite` with `--yes --no-install` and pipes "no" to the install prompt to prevent upstream installs from overwriting the template before we patch it.
 
 ## What it does
 - Runs `npm create vite@latest <target> -- --template react-ts` so you always start from the upstream default.
 - Replaces `vite.config.ts` with the Para + Miden-friendly config (dedupe/exclude and WASM asset handling).
-- Replaces `src/App.tsx` with a ParaProvider + `useParaMiden` starter that reports the account ID and client readiness.
-- Adds Para/Miden + connector deps (matching `examples/react`) so Para SDK peers resolve: `@miden-sdk/miden-para`, `@miden-sdk/use-miden-para-react`, `@getpara/react-sdk-lite`, `@getpara/evm-wallet-connectors`, `@miden-sdk/miden-sdk`, `@tanstack/react-query`, `@wagmi/core`, `viem`, `wagmi`, plus dev plugins `vite-plugin-node-polyfills`, `vite-plugin-wasm`, and `vite-plugin-top-level-await`.
-- Installs dependencies using your detected package manager (`pnpm`, `yarn`, `bun`, or falls back to `npm`); `create-vite` is invoked with `--yes --no-install` and auto-answers “no” to install prompts to avoid reverting the patched files.
-- Writes `.npmrc` with `legacy-peer-deps=true` so `npm install` works despite a known peer mismatch between `@miden-sdk/use-miden-para-react` and `@miden-sdk/miden-para`.
+- Replaces `src/App.tsx` with a `ParaSignerProvider` + `MidenProvider` starter that reports wallet, account ID, and client readiness.
+- Adds Para/Miden deps: `@miden-sdk/miden-para`, `@miden-sdk/react`, `@getpara/react-sdk-lite`, `@getpara/evm-wallet-connectors`, `@miden-sdk/miden-sdk`, plus dev plugins `vite-plugin-node-polyfills`, `vite-plugin-wasm`, and `vite-plugin-top-level-await`.
+- Installs dependencies using your detected package manager (`pnpm`, `yarn`, `bun`, or falls back to `npm`); `create-vite` is invoked with `--yes --no-install` and auto-answers "no" to install prompts to avoid reverting the patched files.
+- Writes `.npmrc` with `legacy-peer-deps=true` for peer dependency resolution.
 - Adds `src/polyfills.ts` and injects it into `src/main.tsx` to provide `Buffer`/`process` in the browser.
 
 ## Usage

@@ -1,4 +1,8 @@
 export * from './midenClient.js';
+export {
+  evmPkToCommitment,
+  getUncompressedPublicKeyFromWallet,
+} from './utils.js';
 export type {
   MidenAccountOpts,
   Opts,

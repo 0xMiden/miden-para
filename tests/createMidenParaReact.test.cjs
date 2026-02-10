@@ -71,8 +71,8 @@ test('CLI scaffolds template and patches package.json in test mode', () => {
     'miden-para dependency should be injected'
   );
   assert.ok(
-    pkg.dependencies['@miden-sdk/use-miden-para-react'],
-    'use-miden-para-react dependency should be injected'
+    pkg.dependencies['@miden-sdk/react'],
+    '@miden-sdk/react dependency should be injected'
   );
   assert.ok(
     pkg.dependencies['@getpara/react-sdk-lite'],
@@ -82,9 +82,6 @@ test('CLI scaffolds template and patches package.json in test mode', () => {
     pkg.dependencies['@getpara/evm-wallet-connectors'],
     'Para EVM connectors should be injected'
   );
-  assert.ok(pkg.dependencies.wagmi, 'wagmi should be injected');
-  assert.ok(pkg.dependencies.viem, 'viem should be injected');
-  assert.ok(pkg.dependencies['@wagmi/core'], 'wagmi core should be injected');
   assert.ok(
     pkg.devDependencies['vite-plugin-node-polyfills'],
     'vite-plugin-node-polyfills should be injected'
@@ -106,8 +103,10 @@ test('CLI scaffolds template and patches package.json in test mode', () => {
 
   const appPath = path.join(targetDir, 'src', 'App.tsx');
   const appContents = fs.readFileSync(appPath, 'utf8');
-  assert.match(appContents, /useParaMiden/);
+  assert.match(appContents, /ParaSignerProvider/);
+  assert.match(appContents, /MidenProvider/);
   assert.match(appContents, /@miden-sdk\/use-miden-para-react/);
+  assert.match(appContents, /@miden-sdk\/react/);
 
   const mainPath = path.join(targetDir, 'src', 'main.tsx');
   const mainContents = fs.readFileSync(mainPath, 'utf8');
@@ -145,16 +144,15 @@ test(
     );
     const targetDir = path.join(tmpRoot, 'app');
     const rootTarball = packPackage(repoRoot);
-    const hookTarball = packPackage(
-      path.join(repoRoot, 'packages', 'use-miden-para-react')
-    );
+    const useMidenParaReactDir = path.join(repoRoot, 'packages', 'use-miden-para-react');
+    const useMidenParaReactTarball = packPackage(useMidenParaReactDir);
 
     runCli(targetDir, [], {
       npm_config_yes: 'true',
       npm_config_ignore_scripts: 'true',
       MIDEN_PARA_LOCAL_DEPS: '1',
       MIDEN_PARA_LOCAL_MIDEN_PARA_PATH: rootTarball,
-      MIDEN_PARA_LOCAL_USE_PARA_REACT_PATH: hookTarball,
+      MIDEN_PARA_LOCAL_USE_MIDEN_PARA_REACT_PATH: useMidenParaReactTarball,
     });
 
     const build = spawnSync('npm', ['run', 'build'], {
