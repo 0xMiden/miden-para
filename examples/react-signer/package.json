@@ -4,7 +4,6 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "postinstall": "rm -rf node_modules/@miden-sdk/react/node_modules/@miden-sdk/miden-sdk node_modules/@miden-sdk/use-miden-para-react/node_modules/@miden-sdk/miden-sdk node_modules/@miden-sdk/miden-para/node_modules/@miden-sdk/miden-sdk",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
@@ -12,8 +11,8 @@
   "dependencies": {
     "@getpara/react-sdk-lite": "^2.2.0",
     "@getpara/evm-wallet-connectors": "^2.2.0",
-    "@miden-sdk/miden-sdk": "file:../../../miden-client/crates/web-client",
-    "@miden-sdk/react": "file:../../../miden-client/packages/react-sdk",
+    "@miden-sdk/miden-sdk": "^0.13.0",
+    "@miden-sdk/react": "^0.13.2",
     "@miden-sdk/miden-para": "file:../..",
     "@miden-sdk/use-miden-para-react": "file:../../packages/use-miden-para-react",
     "@tanstack/react-query": "^5.90.12",
@@ -33,8 +32,8 @@
     "vite-plugin-wasm": "^3.5.0"
   },
   "resolutions": {
-    "@miden-sdk/miden-sdk": "file:../../../miden-client/crates/web-client",
-    "@miden-sdk/react": "file:../../../miden-client/packages/react-sdk"
+    "@miden-sdk/miden-sdk": "^0.13.0",
+    "@miden-sdk/react": "^0.13.2"
   },
   "packageManager": "yarn@1.22.22"
 }

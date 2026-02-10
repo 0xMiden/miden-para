@@ -574,13 +574,6 @@
     dexie "^4.0.1"
     glob "^11.0.0"
 
-"@miden-sdk/react@^0.13.0":
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/@miden-sdk/react/-/react-0.13.0.tgz#93474f77f18c87c7b924e58232780fc7a2a175bd"
-  integrity sha512-OTFCvkm8S7n6QQIkHEsof/OntMR8MMD8Apvp2VDFlRsC9po6e82xZZmM+5E65Jo9jUOxoe2W0pQAwT1GnYBE6A==
-  dependencies:
-    zustand "^5.0.0"
-
 "@noble/ciphers@1.1.3":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@noble/ciphers/-/ciphers-1.1.3.tgz#eb27085aa7ce94d8c6eaeb64299bab0589920ec1"
@@ -2533,8 +2526,3 @@ zod@^3.24.1:
   version "3.25.76"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.76.tgz#26841c3f6fd22a6a2760e7ccb719179768471e34"
   integrity sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==
-
-zustand@^5.0.0:
-  version "5.0.11"
-  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.11.tgz#99f912e590de1ca9ce6c6d1cab6cdb1f034ab494"
-  integrity sha512-fdZY+dk7zn/vbWNCYmzZULHRrss0jx5pPFiOuMZ/5HJN6Yv3u+1Wswy/4MpZEkEGhtNH+pwxZB8OKgUBPzYAGg==
