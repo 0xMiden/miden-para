@@ -142,11 +142,6 @@ export async function createParaMidenClient(
 
   const { WebClient } = await import('@miden-sdk/miden-sdk');
   // SDK typings currently miss createClientWithExternalKeystore, so cast to any here.
-  const createClientWithExternalKeystore = (
-    WebClient as unknown as {
-      createClientWithExternalKeystore: (...args: any[]) => Promise<any>;
-    }
-  ).createClientWithExternalKeystore;
   if (opts.storageMode === 'private' && !opts.accountSeed) {
     throw new Error('accountSeed is required when using private storage mode');
   }
@@ -154,10 +149,11 @@ export async function createParaMidenClient(
     opts.noteTransportUrl ||
     opts.nodeTransportUrl ||
     'https://transport.miden.io';
-  const client = await createClientWithExternalKeystore(
+  const client = await WebClient.createClientWithExternalKeystore(
     opts.endpoint,
     noteTransportUrl,
-    opts.seed,
+    accountSeedFromStr(opts.seed),
+    undefined,
     undefined,
     undefined,
     signCb(para, wallet, showSigningModal, customSignConfirmStep)
