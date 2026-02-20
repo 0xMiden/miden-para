@@ -141,7 +141,6 @@ export async function createParaMidenClient(
   const publicKey = accountKeys[selectedIndex] ?? accountKeys[0];
 
   const { WebClient } = await import('@miden-sdk/miden-sdk');
-  // SDK typings currently miss createClientWithExternalKeystore, so cast to any here.
   if (opts.storageMode === 'private' && !opts.accountSeed) {
     throw new Error('accountSeed is required when using private storage mode');
   }
