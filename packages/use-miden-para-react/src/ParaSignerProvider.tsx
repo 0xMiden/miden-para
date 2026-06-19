@@ -299,7 +299,6 @@ function ParaSignerProviderInner({
             signCb: signCallback,
             accountConfig: {
               publicKeyCommitment: commitmentBytes,
-              accountType: 'RegularAccountImmutableCode',
               storageMode: AccountStorageMode.public(),
               ...(customComponents?.length ? { customComponents } : {}),
               ...(importAccountId ? { importAccountId } : {}),

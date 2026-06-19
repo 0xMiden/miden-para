@@ -61,7 +61,7 @@ export const signCb = (
 
 /**
  * Ensures a Miden account exists for the given Para wallet public key.
- * Attempts to import an existing account for public/network modes before creating a new one.
+ * Attempts to import an existing account for public mode before creating a new one.
  */
 async function createAccount(
   client: MidenClient,
@@ -78,26 +78,22 @@ async function createAccount(
     accountSeedFromStr(opts.accountSeed) ?? new Uint8Array(32).fill(0)
   );
 
-  let accountStorageMode;
-
-  if (opts.storageMode === 'public') {
-    accountStorageMode = AccountStorageMode.public();
-  } else if (opts.storageMode === 'private') {
-    accountStorageMode = AccountStorageMode.private();
-  } else {
-    accountStorageMode = AccountStorageMode.network();
-  }
+  // In protocol 0.15 the account type IS the storage mode (public/private visibility);
+  // faucet-vs-wallet is determined by the components, not an account-type flag.
+  const accountStorageMode =
+    opts.storageMode === 'private'
+      ? AccountStorageMode.private()
+      : AccountStorageMode.public();
 
   const account = accountBuilder
     .withAuthComponent(
       AccountComponent.createAuthComponentFromCommitment(pkc, 1)
     )
-    .accountType(opts.type)
     .storageMode(accountStorageMode)
     .withBasicWalletComponent()
     .build().account;
 
-  // If the account already exists on-chain (e.g. public/network), hydrate it instead of
+  // If the account already exists on-chain (e.g. public), hydrate it instead of
   // recreating a “new” account with zero commitment, which causes submission to fail.
   if (opts.storageMode !== 'private') {
     try {

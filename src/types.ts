@@ -1,5 +1,3 @@
-import type { AccountType } from '@miden-sdk/miden-sdk';
-
 export interface MidenClientOpts {
   endpoint?: string;
   noteTransportUrl?: string;
@@ -10,11 +8,10 @@ export interface MidenClientOpts {
   seed?: string;
 }
 
-export type MidenAccountStorageMode = 'public' | 'private' | 'network';
+export type MidenAccountStorageMode = 'public' | 'private';
 
 export interface MidenAccountOpts {
   accountSeed?: string;
-  type: AccountType;
   storageMode: MidenAccountStorageMode;
 }
 export type Opts = MidenClientOpts & MidenAccountOpts;

@@ -104,9 +104,7 @@ const buildMocks = (state, calls, client) => ({
       return { client, accountId: 'acc-123' };
     },
   },
-  '@miden-sdk/miden-sdk': {
-    AccountType: { RegularAccountImmutableCode: 'RegularAccountImmutableCode' },
-  },
+  '@miden-sdk/miden-sdk': {},
 });
 
 test('useParaMiden returns defaults when disconnected', async () => {
@@ -179,7 +177,6 @@ test('useParaMiden filters EVM wallets and forwards options', async () => {
       optsArg.noteTransportUrl,
       'https://transport.miden.io'
     );
-    assert.strictEqual(optsArg.type, 'RegularAccountImmutableCode');
     assert.strictEqual(showSigningModalArg, false);
     assert.strictEqual(confirmArg, confirmStep);
 

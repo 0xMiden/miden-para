@@ -29,7 +29,7 @@
    - Dedicated tests (`tests/modalClient.test.cjs`) assert rendering, resolution semantics, and cleanup.
 3. **React integration (`packages/use-miden-para-react/src/useParaMiden.ts`)**
    - Leverages `useClient`, `useAccount`, `useWallet` (Para React SDK) to watch connection state.
-   - Lazily imports `@miden-sdk/miden-sdk` for `AccountType`, spins up the Para-backed WebClient once wallets resolve, and memoizes the resulting client in a ref.
+   - Spins up the Para-backed WebClient via `createParaMidenClient` once wallets resolve, and memoizes the resulting client in a ref.
    - Imports the root npm package (`@miden-sdk/miden-para`).
 4. **Example consumer (`examples/react/src/components/ConsumeAllNotes.tsx`)**
    - Wraps UI with `ParaProvider` + TanStack Query.
