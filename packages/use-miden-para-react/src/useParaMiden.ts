@@ -27,7 +27,7 @@ import {
 export function useParaMiden(
   nodeUrl: string,
   storageMode: MidenAccountStorageMode = 'public',
-  opts: Omit<Opts, 'endpoint' | 'type' | 'storageMode'> = {},
+  opts: Omit<Opts, 'endpoint' | 'storageMode'> = {},
   showSigningModal: boolean = true,
   customSignConfirmStep?: CustomSignConfirmStep
 ) {
@@ -54,8 +54,6 @@ export function useParaMiden(
         return;
       }
 
-      const { AccountType } = await import('@miden-sdk/miden-sdk');
-
       const { client: midenParaClient, accountId: aId } =
         await createParaMidenClient(
           para,
@@ -63,7 +61,6 @@ export function useParaMiden(
           {
             ...opts,
             endpoint: nodeUrl,
-            type: AccountType.RegularAccountImmutableCode,
             storageMode,
           },
           showSigningModal,

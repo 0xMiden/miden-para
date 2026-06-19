@@ -132,10 +132,11 @@ export const txSummaryToJosn = (
 };
 
 function noteTypeToString(noteType: NoteType) {
+  // protocol 0.15 NoteType encoding: Private = 0, Public = 1.
   switch (noteType) {
     case 1:
       return 'public';
-    case 2:
+    case 0:
       return 'private';
     default:
       return 'UNKNOWN';
