@@ -1086,7 +1086,7 @@ __metadata:
   resolution: "@miden-sdk/miden-para@workspace:."
   dependencies:
     "@getpara/web-sdk": "npm:^2.11.0"
-    "@miden-sdk/miden-sdk": "npm:^0.15.0"
+    "@miden-sdk/miden-sdk": "npm:^0.15.1"
     "@noble/hashes": "npm:^2.0.1"
     "@types/react": "npm:^19.0.0"
     "@typescript-eslint/parser": "npm:^8.48.0"
@@ -1100,17 +1100,17 @@ __metadata:
     typescript: "npm:^5.8.3"
   peerDependencies:
     "@getpara/web-sdk": ^2.11.0
-    "@miden-sdk/miden-sdk": ^0.15.0
+    "@miden-sdk/miden-sdk": ^0.15.1
   languageName: unknown
   linkType: soft
 
-"@miden-sdk/miden-sdk@npm:^0.15.0":
-  version: 0.15.0
-  resolution: "@miden-sdk/miden-sdk@npm:0.15.0"
+"@miden-sdk/miden-sdk@npm:^0.15.1":
+  version: 0.15.1
+  resolution: "@miden-sdk/miden-sdk@npm:0.15.1"
   dependencies:
-    "@miden-sdk/node-darwin-arm64": "npm:0.15.0"
-    "@miden-sdk/node-darwin-x64": "npm:0.15.0"
-    "@miden-sdk/node-linux-x64-gnu": "npm:0.15.0"
+    "@miden-sdk/node-darwin-arm64": "npm:0.15.1"
+    "@miden-sdk/node-darwin-x64": "npm:0.15.1"
+    "@miden-sdk/node-linux-x64-gnu": "npm:0.15.1"
     dexie: "npm:^4.0.1"
     glob: "npm:^11.0.0"
   dependenciesMeta:
@@ -1120,40 +1120,40 @@ __metadata:
       optional: true
     "@miden-sdk/node-linux-x64-gnu":
       optional: true
-  checksum: 10c0/94b1849c584c5480893ab368dc491e1b73487c89551324fc57fd0eba15287802a8581e3ebaf1ebd8ea66ffc3387ba88703ddb3a8621d1de3bbf4df1d9b5a108e
+  checksum: 10c0/6ace9a5da79df693e32f874adcb011d1dda927a8bafe3cbb65d725e9a17df3106b24b3d21dcd60e10274e13633c9fca08d42ba757e3abac4c598c1c8119dd143
   languageName: node
   linkType: hard
 
-"@miden-sdk/node-darwin-arm64@npm:0.15.0":
-  version: 0.15.0
-  resolution: "@miden-sdk/node-darwin-arm64@npm:0.15.0"
+"@miden-sdk/node-darwin-arm64@npm:0.15.1":
+  version: 0.15.1
+  resolution: "@miden-sdk/node-darwin-arm64@npm:0.15.1"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@miden-sdk/node-darwin-x64@npm:0.15.0":
-  version: 0.15.0
-  resolution: "@miden-sdk/node-darwin-x64@npm:0.15.0"
+"@miden-sdk/node-darwin-x64@npm:0.15.1":
+  version: 0.15.1
+  resolution: "@miden-sdk/node-darwin-x64@npm:0.15.1"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@miden-sdk/node-linux-x64-gnu@npm:0.15.0":
-  version: 0.15.0
-  resolution: "@miden-sdk/node-linux-x64-gnu@npm:0.15.0"
+"@miden-sdk/node-linux-x64-gnu@npm:0.15.1":
+  version: 0.15.1
+  resolution: "@miden-sdk/node-linux-x64-gnu@npm:0.15.1"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"@miden-sdk/react@npm:^0.15.0":
-  version: 0.15.0
-  resolution: "@miden-sdk/react@npm:0.15.0"
+"@miden-sdk/react@npm:^0.15.1":
+  version: 0.15.1
+  resolution: "@miden-sdk/react@npm:0.15.1"
   dependencies:
     zustand: "npm:^5.0.0"
   peerDependencies:
-    "@miden-sdk/miden-sdk": ^0.15.0
+    "@miden-sdk/miden-sdk": ^0.15.1
     react: ">=18.0.0"
-  checksum: 10c0/1e9673785547b06d9a68de7fa72cf11bfd05045d19eae90df4cf9350ef38e29795478883bd9aaef78a0866e87682d1e5b48cff15c1537550d398b6d25e3a585f
+  checksum: 10c0/a09e3cb81e8e196be18ffd0ff6620d4dd6a24910bdc9f32166e162b9966cf0518232426799f543021b657fd063130374e6178548cc434e2fbf49f7c3ad11e5f2
   languageName: node
   linkType: hard
 
@@ -1163,8 +1163,8 @@ __metadata:
   dependencies:
     "@getpara/react-sdk-lite": "npm:^2.11.0"
     "@getpara/web-sdk": "npm:^2.11.0"
-    "@miden-sdk/miden-sdk": "npm:^0.15.0"
-    "@miden-sdk/react": "npm:^0.15.0"
+    "@miden-sdk/miden-sdk": "npm:^0.15.1"
+    "@miden-sdk/react": "npm:^0.15.1"
     "@tanstack/react-query": "npm:^5.90.12"
     "@types/node": "npm:^25.3.5"
     "@types/react": "npm:^19.2.5"
@@ -1174,9 +1174,9 @@ __metadata:
   peerDependencies:
     "@getpara/react-sdk-lite": ^2.11.0
     "@getpara/web-sdk": ^2.11.0
-    "@miden-sdk/miden-para": ^0.15.0
-    "@miden-sdk/miden-sdk": ^0.15.0
-    "@miden-sdk/react": ^0.15.0
+    "@miden-sdk/miden-para": ^0.15.1
+    "@miden-sdk/miden-sdk": ^0.15.1
+    "@miden-sdk/react": ^0.15.1
     "@tanstack/react-query": ^5.0.0
     react: ^18.0.0 || ^19.0.0
     vite-plugin-node-polyfills: ^0.22.0

@@ -216,19 +216,19 @@ function ensureMidenParaDependencies(targetRoot) {
   pkg.scripts = pkg.scripts ?? {};
   const midenParaVersion = useLocalDeps
     ? `file:${localMidenParaPath}`
-    : "0.15.0";
+    : "0.15.1";
   const useMidenParaReactVersion = useLocalDeps
     ? `file:${localUseMidenParaReactPath}`
-    : "^0.15.0";
+    : "^0.15.1";
   // Align with examples/react-signer so Para SDK connector peers are satisfied
   Object.assign(pkg.dependencies, {
     ...pkg.dependencies,
     "@getpara/react-sdk-lite": "^2.2.0",
     "@getpara/evm-wallet-connectors": "^2.2.0",
-    "@miden-sdk/miden-sdk": "^0.15.0",
+    "@miden-sdk/miden-sdk": "^0.15.1",
     "@miden-sdk/miden-para": midenParaVersion,
     "@miden-sdk/use-miden-para-react": useMidenParaReactVersion,
-    "@miden-sdk/react": "^0.15.0",
+    "@miden-sdk/react": "^0.15.1",
     "@tanstack/react-query": "^5.0.0",
   });
 
