@@ -32,11 +32,11 @@ export const accountSeedFromStr = (str?: string) => {
 };
 
 /**
- * Converts an uncompressed EVM public key into a Miden commitment (RPO hash of tagged X coord).
+ * Converts an uncompressed EVM public key into a Miden commitment (Poseidon2 hash of the tagged X coord).
  * Assumes input format `0x04${x}${y}` where x and y are 64-char hex strings.
  */
 export const evmPkToCommitment = async (uncompressedPublicKey: string) => {
-  const { Felt, Rpo256, FeltArray } = await import('@miden-sdk/miden-sdk');
+  const { Felt, Poseidon2, FeltArray } = await import('@miden-sdk/miden-sdk');
   const withoutPrefix = uncompressedPublicKey.slice(4);
   const x = withoutPrefix.slice(0, 64);
   const y = withoutPrefix.slice(64); // hex encoded string
@@ -60,7 +60,7 @@ export const evmPkToCommitment = async (uncompressedPublicKey: string) => {
   // push the last 33rd byte
   felts.push(new Felt(BigInt(bytes[32])));
 
-  return Rpo256.hashElements(new FeltArray(felts));
+  return Poseidon2.hashElements(new FeltArray(felts));
 };
 
 /**
