@@ -60,6 +60,7 @@ ensurePolyfills(targetDir);
 ensureOptionalConnectorsShim(targetDir);
 ensurePolyfillDependency(targetDir);
 ensureMidenParaDependencies(targetDir);
+ensureViteConfigTsconfig(targetDir);
 ensureNpmRc(targetDir);
 logEnvReminder(targetName);
 
@@ -181,8 +182,62 @@ function ensurePolyfillDependency(targetRoot) {
   // no longer installs either transitively, so pin them explicitly.
   pkg.devDependencies["rollup"] ??= "^4.0.0";
   pkg.devDependencies["esbuild"] ??= "^0.27.0";
+  // vite-plugin-top-level-await depends on `@swc/core: ^1.12.14` and drives it
+  // through the AST printer. swc 1.16 changed that AST's schema, so the caret
+  // range resolves to a version the plugin cannot use and the build fails at
+  // `generateBundle` with `Error: missing field \`type\``. Hold it on 1.15.x
+  // until the plugin catches up.
+  pkg.devDependencies["@swc/core"] ??= "~1.15.47";
   writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
   logStep("Added Vite plugin deps (polyfills/wasm/top-level-await)");
+}
+
+function ensureViteConfigTsconfig(targetRoot) {
+  // create-vite scaffolds `tsconfig.node.json` (the project that compiles
+  // vite.config.ts) with `"module": "nodenext"`. Under nodenext, TypeScript
+  // decides a dependency's .d.ts is CJS or ESM from that package's own
+  // `type` field — and vite-plugin-wasm / vite-plugin-top-level-await ship
+  // ESM-only `dist/*.d.ts` without declaring `"type": "module"`. Both are
+  // therefore read as CJS, so `import wasm from "vite-plugin-wasm"` resolves
+  // to the module namespace rather than the default export and the build
+  // dies with `TS2349: This expression is not callable`.
+  //
+  // Bundler resolution is what actually matches how Vite loads its own
+  // config, and it does not apply that CJS/ESM detection. Patch it back.
+  const tsconfigPath = join(targetRoot, "tsconfig.node.json");
+  if (!existsSync(tsconfigPath)) {
+    logStep("No tsconfig.node.json found after scaffolding; nothing to patch");
+    return;
+  }
+
+  const raw = readFileSync(tsconfigPath, "utf8");
+  let tsconfig;
+  try {
+    tsconfig = JSON.parse(stripJsonComments(raw));
+  } catch {
+    logStep("Could not parse tsconfig.node.json; leaving it untouched");
+    return;
+  }
+
+  const options = tsconfig.compilerOptions ?? {};
+  if (options.moduleResolution === "bundler" && options.module === "esnext") {
+    logStep("tsconfig.node.json already uses bundler resolution");
+    return;
+  }
+
+  options.module = "esnext";
+  options.moduleResolution = "bundler";
+  tsconfig.compilerOptions = options;
+  writeFileSync(tsconfigPath, `${JSON.stringify(tsconfig, null, 2)}\n`);
+  logStep("Set bundler module resolution for vite.config.ts");
+}
+
+// tsconfig files scaffolded by create-vite carry `/* ... */` comments, which
+// JSON.parse rejects. Strip them rather than pulling in a dependency.
+function stripJsonComments(text) {
+  return text
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/(^|[^:])\/\/.*$/gm, "$1");
 }
 
 function ensureNpmRc(targetRoot) {
