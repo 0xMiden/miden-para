@@ -6,26 +6,36 @@
   "author": "Miden Labs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/0xMiden/miden-para",
+    "url": "git+https://github.com/0xMiden/para-sdk.git",
     "directory": "packages/use-miden-para-react"
   },
   "homepage": "https://miden.xyz/",
   "bugs": {
-    "url": "https://github.com/0xMiden/miden-para/issues"
+    "url": "https://github.com/0xMiden/para-sdk/issues"
   },
-  "main": "dist/index.cjs",
+  "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
     },
     "./vite": {
-      "types": "./dist/paraVitePlugin.d.ts",
-      "import": "./dist/paraVitePlugin.mjs",
-      "require": "./dist/paraVitePlugin.cjs"
+      "import": {
+        "types": "./dist/paraVitePlugin.d.mts",
+        "default": "./dist/paraVitePlugin.mjs"
+      },
+      "require": {
+        "types": "./dist/paraVitePlugin.d.ts",
+        "default": "./dist/paraVitePlugin.js"
+      }
     }
   },
   "files": [
@@ -81,5 +91,6 @@
     "react",
     "hook",
     "wallet"
-  ]
+  ],
+  "type": "commonjs"
 }
