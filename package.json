@@ -10,12 +10,12 @@
   "author": "Miden Labs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/0xMiden/miden-para.git"
+    "url": "git+https://github.com/0xMiden/para-sdk.git"
   },
   "homepage": "https://miden.xyz/",
   "readmeFilename": "README.md",
   "bugs": {
-    "url": "https://github.com/0xMiden/miden-para/issues"
+    "url": "https://github.com/0xMiden/para-sdk/issues"
   },
   "dependencies": {
     "@noble/hashes": "^2.0.1"
