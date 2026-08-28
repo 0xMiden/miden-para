@@ -1,8 +1,8 @@
 # @miden-sdk/miden-para
 
-[![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/0xMiden/miden-para/blob/main/LICENSE)
-[![test](https://github.com/0xMiden/miden-para/actions/workflows/test.yml/badge.svg)](https://github.com/0xMiden/miden-para/actions/workflows/test.yml)
-[![build](https://github.com/0xMiden/miden-para/actions/workflows/build.yml/badge.svg)](https://github.com/0xMiden/miden-para/actions/workflows/build.yml)
+[![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/0xMiden/para-sdk/blob/main/LICENSE)
+[![test](https://github.com/0xMiden/para-sdk/actions/workflows/test.yml/badge.svg)](https://github.com/0xMiden/para-sdk/actions/workflows/test.yml)
+[![build](https://github.com/0xMiden/para-sdk/actions/workflows/build.yml/badge.svg)](https://github.com/0xMiden/para-sdk/actions/workflows/build.yml)
 
 This is the Miden x Para SDK integration. Below, you'll find instructions for local building and linking the library. If you're looking for React integration, see [Miden x Para x React](./packages/use-miden-para-react/README.md) (package `@miden-sdk/use-miden-para-react`). If you want to scaffold a fresh Vite `react-ts` app with our Vite config baked in, check [create-miden-para-react](./packages/create-miden-para-react/README.md) (package `@miden-sdk/create-miden-para-react`).
 
